@@ -1,7 +1,9 @@
-'use client';
+"use client";
 
+import { Box, Text } from "@chakra-ui/react";
+import { keyframes } from "@emotion/react";
 import Link from "next/link";
-import styled, { keyframes } from "styled-components";
+import { PALLETE } from "@/constants";
 
 type NavItem = {
 	label: string;
@@ -17,66 +19,52 @@ const float = keyframes`
   100% { transform: translate(0px, 0px); }
 `;
 
-const NavLayer = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 200px;
-  pointer-events: none;
-  z-index: 2;
-`;
-
-const Bubble = styled(Link)<{ $x: number; $y: number; $duration: number; $delay: number }>`
-  position: absolute;
-  width: 112px;
-  height: 112px;
-  border-radius: 50%;
-  background: #ffffff;
-  border: 1px solid rgba(108, 99, 255, 0.12);
-  box-shadow: 0 18px 55px rgba(47, 46, 65, 0.18);
-  display: grid;
-  place-items: center;
-  color: #2f2e41;
-  text-decoration: none;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  animation: ${float} linear infinite;
-  animation-duration: ${({ $duration }) => $duration}s;
-  animation-delay: ${({ $delay }) => $delay}s;
-  backdrop-filter: blur(10px);
-  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
-  pointer-events: auto;
-  left: ${({ $x }) => $x}%;
-  top: ${({ $y }) => $y}%;
-
-  &:hover {
-    transform: translateY(-8px) scale(1.03);
-    box-shadow: 0 24px 60px rgba(108, 99, 255, 0.28);
-    border-color: rgba(108, 99, 255, 0.32);
-  }
-
-  span {
-    text-align: center;
-  }
-`;
-
 export function FloatingNav({ items }: { items: NavItem[] }) {
 	return (
-		<NavLayer>
+		<Box
+			h="200px"
+			left={0}
+			pointerEvents="none"
+			pos="absolute"
+			right={0}
+			top={0}
+			zIndex={2}
+		>
 			{items.map((item, idx) => (
-				<Bubble
-					key={item.label}
+				<Box
+					_hover={{
+						transform: "translateY(-8px) scale(1.03)",
+						boxShadow: "0 24px 60px rgba(108, 99, 255, 0.28)",
+						borderColor: "rgba(108, 99, 255, 0.32)",
+					}}
+					animation={`${float} ${5.2 + idx * 0.6}s linear infinite`}
+					animationDelay={`${item.delay ?? 0}s`}
+					as={Link}
+					backdropFilter="blur(10px)"
+					bg="white"
+					border="1px solid rgba(108, 99, 255, 0.12)"
+					borderRadius="full"
+					boxShadow="0 18px 55px rgba(47, 46, 65, 0.18)"
+					display="grid"
+					fontWeight="700"
+					h="112px"
 					href={item.href}
-					$x={item.x}
-					$y={item.y}
-					$duration={5.2 + idx * 0.6}
-					$delay={item.delay ?? 0}
+					key={item.label}
+					left={`${item.x}%`}
+					letterSpacing="-0.01em"
+					placeItems="center"
+					pointerEvents="auto"
+					pos="absolute"
+					textDecoration="none"
+					top={`${item.y}%`}
+					transition="transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease"
+					w="112px"
 				>
-					<span>{item.label}</span>
-				</Bubble>
+					<Text color={PALLETE.text} textAlign="center">
+						{item.label}
+					</Text>
+				</Box>
 			))}
-		</NavLayer>
+		</Box>
 	);
 }
-
