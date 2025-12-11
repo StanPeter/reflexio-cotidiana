@@ -1,8 +1,10 @@
+/* eslint-disable react/jsx-sort-props */
 "use client";
 
 import { Box, Text } from "@chakra-ui/react";
 import { keyframes } from "@emotion/react";
 import Link from "next/link";
+import { useMemo } from "react";
 import { PALLETE } from "@/constants";
 
 type NavItem = {
@@ -13,58 +15,85 @@ type NavItem = {
 	delay?: number;
 };
 
-const float = keyframes`
-  0% { transform: translate(0px, 0px); }
-  50% { transform: translate(10px, -14px); }
-  100% { transform: translate(0px, 0px); }
-`;
+const randomBetween = (min: number, max: number) =>
+	Math.random() * (max - min) + min;
 
-export function FloatingNav({ items }: { items: NavItem[] }) {
+const FloatingNav = ({ items }: { items: NavItem[] }) => {
+	const motion = useMemo(
+		() =>
+			items.map((item) => {
+				const dx = randomBetween(20, 40) * (Math.random() > 0.5 ? 1 : -1);
+				const dy = randomBetween(20, 40) * (Math.random() > 0.5 ? 1 : -1);
+				const duration = randomBetween(5, 8);
+				const delay = (item.delay ?? 0) + randomBetween(0, 1.2);
+
+				return {
+					anim: keyframes`
+            0% { transform: translate(0px, 0px); }
+            50% { transform: translate(${dx}px, ${dy}px); }
+            100% { transform: translate(0px, 0px); }
+          `,
+					duration,
+					delay,
+				};
+			}),
+		[items],
+	);
+
 	return (
 		<Box
-			h="200px"
-			left={0}
+			display="flex"
+			flexWrap={{ base: "wrap", lg: "nowrap" }}
+			gap="14px"
+			justifyContent="center"
 			pointerEvents="none"
-			pos="absolute"
-			right={0}
-			top={0}
+			py={4}
+			w="full"
 			zIndex={2}
 		>
 			{items.map((item, idx) => (
-				<Box
-					_hover={{
-						transform: "translateY(-8px) scale(1.03)",
-						boxShadow: "0 24px 60px rgba(108, 99, 255, 0.28)",
-						borderColor: "rgba(108, 99, 255, 0.32)",
-					}}
-					animation={`${float} ${5.2 + idx * 0.6}s linear infinite`}
-					animationDelay={`${item.delay ?? 0}s`}
-					as={Link}
-					backdropFilter="blur(10px)"
-					bg="white"
-					border="1px solid rgba(108, 99, 255, 0.12)"
-					borderRadius="full"
-					boxShadow="0 18px 55px rgba(47, 46, 65, 0.18)"
-					display="grid"
-					fontWeight="700"
-					h="112px"
+				<Link
 					href={item.href}
 					key={item.label}
-					left={`${item.x}%`}
-					letterSpacing="-0.01em"
-					placeItems="center"
-					pointerEvents="auto"
-					pos="absolute"
-					textDecoration="none"
-					top={`${item.y}%`}
-					transition="transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease"
-					w="112px"
+					style={{ textDecoration: "none" }}
 				>
-					<Text color={PALLETE.text} textAlign="center">
-						{item.label}
-					</Text>
-				</Box>
+					<Box
+						_hover={{
+							transform: "translateY(-8px) scale(1.03)",
+							boxShadow: "0 24px 60px rgba(108, 99, 255, 0.28)",
+							borderColor: "rgba(108, 99, 255, 0.32)",
+						}}
+						animation={`${motion[idx]?.anim} ${motion[idx]?.duration ?? 6}s ease-in-out ${
+							motion[idx]?.delay ?? 0
+						}s infinite alternate`}
+						backdropFilter="blur(10px)"
+						bg="white"
+						border="1px solid rgba(108, 99, 255, 0.12)"
+						borderRadius="full"
+						boxShadow="0 18px 55px rgba(47, 46, 65, 0.18)"
+						display="grid"
+						flexBasis={{
+							base: "calc(50% - 14px)",
+							md: "calc(50% - 14px)",
+							lg: "auto",
+						}}
+						fontWeight="700"
+						h="112px"
+						letterSpacing="-0.01em"
+						placeItems="center"
+						pointerEvents="auto"
+						textDecoration="none"
+						transition="transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease"
+						w="112px"
+					>
+						<Text color={PALLETE.text} textAlign="center">
+							{item.label}
+						</Text>
+					</Box>
+				</Link>
 			))}
 		</Box>
 	);
-}
+};
+
+export default FloatingNav;

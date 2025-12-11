@@ -1,7 +1,6 @@
 import { Geist } from "next/font/google";
-
+import Provider from "@/app/provider";
 import { auth } from "@/server/auth";
-import { Provider } from "./provider";
 
 const geist = Geist({
 	subsets: ["latin"],
@@ -26,10 +25,10 @@ export default async function RootLayout({
 	const navItems = [...baseNavItems, authItem];
 
 	return (
-		<html lang="en" suppressHydrationWarning className={geist.className}>
-      <head />
+		<html className={geist.className} lang="en" suppressHydrationWarning>
+			<head />
 			<body>
-				<Provider navItems={navItems} fontClass={geist.className}>
+				<Provider fontClass={geist.className} navItems={navItems}>
 					{children}
 				</Provider>
 			</body>
