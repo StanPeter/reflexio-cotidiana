@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { api } from "~/trpc/react";
+import { api } from "@/trpc/react";
 import styles from "../index.module.css";
 
 export function LatestPost() {

@@ -2,27 +2,7 @@
 
 import Link from "next/link";
 import styled from "styled-components";
-
-import { FloatingNav } from "./_components/floating-nav";
-
-type NavItem = {
-	label: string;
-	href: string;
-	x: number;
-	y: number;
-	delay?: number;
-};
-
-type Props = {
-	navItems: NavItem[];
-};
-
-const palette = {
-	indigo: "#6C63FF",
-	lavender: "#A393FF",
-	bg: "#F2F0FF",
-	text: "#2F2E41",
-};
+import { PALLETE } from "@/constants";
 
 const Main = styled.main`
 	min-height: 100vh;
@@ -30,8 +10,8 @@ const Main = styled.main`
 	overflow: hidden;
 	background: radial-gradient(circle at 18% 20%, rgba(163, 147, 255, 0.2), transparent 30%),
 		radial-gradient(circle at 82% 16%, rgba(108, 99, 255, 0.12), transparent 28%),
-		linear-gradient(180deg, ${palette.bg} 0%, #f8f7ff 60%, #ffffff 100%);
-	color: ${palette.text};
+		linear-gradient(180deg, ${PALLETE.bg} 0%, #f8f7ff 60%, #ffffff 100%);
+	color: ${PALLETE.text};
 	padding: 72px 16px 96px;
 `;
 
@@ -56,7 +36,7 @@ const Kicker = styled.p`
 	letter-spacing: 0.08em;
 	text-transform: uppercase;
 	font-size: 12px;
-	color: ${palette.indigo};
+	color: ${PALLETE.indigo};
 	margin: 0 0 8px;
 `;
 
@@ -65,7 +45,7 @@ const Title = styled.h1`
 	font-size: clamp(34px, 4vw, 48px);
 	font-weight: 800;
 	letter-spacing: -0.01em;
-	color: ${palette.text};
+	color: ${PALLETE.text};
 `;
 
 const Lead = styled.p`
@@ -87,7 +67,7 @@ const PrimaryButton = styled(Link)`
 	font-weight: 700;
 	text-decoration: none;
 	border: 1px solid transparent;
-	background: ${palette.indigo};
+	background: ${PALLETE.indigo};
 	color: #ffffff;
 	box-shadow: 0 14px 40px rgba(108, 99, 255, 0.28);
 	transition: transform 140ms ease, box-shadow 140ms ease, background 140ms ease;
@@ -105,7 +85,7 @@ const GhostButton = styled(Link)`
 	text-decoration: none;
 	border: 1px solid rgba(108, 99, 255, 0.25);
 	background: rgba(108, 99, 255, 0.08);
-	color: ${palette.text};
+	color: ${PALLETE.text};
 	transition: transform 140ms ease, background 140ms ease;
 
 	&:hover {
@@ -114,7 +94,7 @@ const GhostButton = styled(Link)`
 	}
 `;
 
-export function HomeClient({ navItems }: Props) {
+export function HomeClient() {
 	return (
 		<Main>
 			<HeroWrap>
