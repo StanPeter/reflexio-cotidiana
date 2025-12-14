@@ -2,8 +2,8 @@
 
 import { Box, ChakraProvider, defaultSystem, Theme } from "@chakra-ui/react";
 import { ThemeProvider } from "@emotion/react";
-import FloatingNav from "@/app/_components/floating-nav";
-import Footer from "@/app/_components/footer";
+import FloatingNav from "@/app/_components/layout/floating-nav";
+import Footer from "@/app/_components/layout/footer";
 import { PALLETE, theme } from "@/constants";
 import { TRPCReactProvider } from "@/trpc/react";
 
@@ -39,7 +39,14 @@ const Provider = ({ fontClass, navItems, children }: Props) => {
 						px={4}
 					>
 						<FloatingNav items={navItems} />
-						{children}
+						<Box
+							alignItems="center"
+							display="flex"
+							flex={1}
+							justifyContent="center"
+						>
+							{children}
+						</Box>
 						<Footer />
 					</Box>
 				</TRPCReactProvider>

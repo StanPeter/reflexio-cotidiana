@@ -1,6 +1,3 @@
-/* eslint-disable react/jsx-sort-props */
-"use client";
-
 import { Box, Text } from "@chakra-ui/react";
 import { keyframes } from "@emotion/react";
 import Link from "next/link";
@@ -22,9 +19,12 @@ const FloatingNav = ({ items }: { items: NavItem[] }) => {
 	const motion = useMemo(
 		() =>
 			items.map((item) => {
-				const dx = randomBetween(20, 40) * (Math.random() > 0.5 ? 1 : -1);
-				const dy = randomBetween(20, 40) * (Math.random() > 0.5 ? 1 : -1);
-				const duration = randomBetween(5, 8);
+				// Keep drift within safe bounds so bubbles don't collide.
+				const maxDx = 20;
+				const maxDy = 14;
+				const dx = randomBetween(10, maxDx) * (Math.random() > 0.5 ? 1 : -1);
+				const dy = randomBetween(6, maxDy) * (Math.random() > 0.5 ? 1 : -1);
+				const duration = randomBetween(5.5, 8.5);
 				const delay = (item.delay ?? 0) + randomBetween(0, 1.2);
 
 				return {
@@ -42,12 +42,14 @@ const FloatingNav = ({ items }: { items: NavItem[] }) => {
 
 	return (
 		<Box
+			columnGap="48px"
 			display="flex"
 			flexWrap={{ base: "wrap", lg: "nowrap" }}
-			gap="14px"
 			justifyContent="center"
+			marginTop="48px"
 			pointerEvents="none"
 			py={4}
+			rowGap="36px"
 			w="full"
 			zIndex={2}
 		>
@@ -73,8 +75,8 @@ const FloatingNav = ({ items }: { items: NavItem[] }) => {
 						boxShadow="0 18px 55px rgba(47, 46, 65, 0.18)"
 						display="grid"
 						flexBasis={{
-							base: "calc(50% - 14px)",
-							md: "calc(50% - 14px)",
+							base: "calc(50% - 24px)",
+							md: "calc(50% - 24px)",
 							lg: "auto",
 						}}
 						fontWeight="700"
