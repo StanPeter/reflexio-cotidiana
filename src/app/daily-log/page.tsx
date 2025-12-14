@@ -1,8 +1,12 @@
-"use client";
+import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
+import DailyLogQuestion from "./DailyLogQuestion";
 
-import { Box } from "@chakra-ui/react";
+const palette = {
+	indigo: "#6C63FF",
+	bg: "#F2F0FF",
+	text: "#2F2E41",
+};
 
-import { DailyLogClient } from "./DailyLogClient";
 
 export default function DailyLogPage() {
 	return (
@@ -17,7 +21,27 @@ export default function DailyLogPage() {
 			px={4}
 			py={16}
 		>
-			<DailyLogClient />
+			<Box
+				maxW="960px"
+				mx="auto"
+				px={{ base: 4, md: 6 }}
+				py={{ base: 12, md: 16 }}
+				textAlign="center"
+				w="full"
+			>
+				<Heading
+					as="h1"
+					color={palette.text}
+					fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}
+					fontWeight="800"
+					letterSpacing="-0.01em"
+					mb={{ base: 12, md: 20 }}
+				>
+					How did it go yesterday?
+				</Heading>
+				<DailyLogQuestion question="Have you watched any Netflix?" options={["Yes", "1h", "More", "No"]} />
+			</Box>
+			);
 		</Box>
 	);
 }

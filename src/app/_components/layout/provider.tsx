@@ -2,10 +2,10 @@
 
 import { Box, ChakraProvider, defaultSystem, Theme } from "@chakra-ui/react";
 import { ThemeProvider } from "@emotion/react";
-import FloatingNav from "@/app/_components/layout/floating-nav";
-import Footer from "@/app/_components/layout/footer";
 import { PALLETE, theme } from "@/constants";
 import { TRPCReactProvider } from "@/trpc/react";
+import FloatingNav from "./Floating-nav";
+import Footer from "./Footer";
 
 type NavItem = {
 	label: string;

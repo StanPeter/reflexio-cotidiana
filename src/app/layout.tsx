@@ -1,5 +1,5 @@
 import { Geist } from "next/font/google";
-import Provider from "@/app/_components/layout/provider";
+import Provider from "@/app/_components/layout/Provider";
 import { auth } from "@/server/auth";
 
 const geist = Geist({
