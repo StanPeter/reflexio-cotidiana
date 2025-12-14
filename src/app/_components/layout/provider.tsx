@@ -2,6 +2,7 @@
 
 import { Box, ChakraProvider, defaultSystem, Theme } from "@chakra-ui/react";
 import { ThemeProvider } from "@emotion/react";
+import { SessionProvider } from "next-auth/react";
 import { PALLETE, theme } from "@/constants";
 import { TRPCReactProvider } from "@/trpc/react";
 import FloatingNav from "./Floating-nav";
@@ -26,29 +27,31 @@ const Provider = ({ fontClass, navItems, children }: Props) => {
 		<ChakraProvider value={defaultSystem}>
 			<ThemeProvider theme={theme}>
 				<TRPCReactProvider>
-					<Box
-						as="div"
-						bg="white"
-						bgImage={`radial-gradient(circle at 18% 20%, rgba(163, 147, 255, 0.2), transparent 30%), radial-gradient(circle at 82% 16%, rgba(108, 99, 255, 0.12), transparent 28%), linear-gradient(180deg, ${PALLETE.bg} 0%, #f8f7ff 60%, #ffffff 100%)`}
-						className={fontClass}
-						color={PALLETE.text}
-						minH="100vh"
-						overflow="hidden"
-						pb={20}
-						pos="relative"
-						px={4}
-					>
-						<FloatingNav items={navItems} />
+					<SessionProvider>
 						<Box
-							alignItems="center"
-							display="flex"
-							flex={1}
-							justifyContent="center"
+							as="div"
+							bg="white"
+							bgImage={`radial-gradient(circle at 18% 20%, rgba(163, 147, 255, 0.2), transparent 30%), radial-gradient(circle at 82% 16%, rgba(108, 99, 255, 0.12), transparent 28%), linear-gradient(180deg, ${PALLETE.bg} 0%, #f8f7ff 60%, #ffffff 100%)`}
+							className={fontClass}
+							color={PALLETE.text}
+							minH="100vh"
+							overflow="hidden"
+							pb={20}
+							pos="relative"
+							px={4}
 						>
-							{children}
+							<FloatingNav items={navItems} />
+							<Box
+								alignItems="center"
+								display="flex"
+								flex={1}
+								justifyContent="center"
+							>
+								{children}
+							</Box>
+							<Footer />
 						</Box>
-						<Footer />
-					</Box>
+					</SessionProvider>
 				</TRPCReactProvider>
 			</ThemeProvider>
 		</ChakraProvider>

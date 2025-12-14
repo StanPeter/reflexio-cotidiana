@@ -19,8 +19,20 @@ export default async function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
 	const session = await auth();
 	const authItem = session
-		? { label: "Sign out", href: "/api/auth/signout", x: 80, y: 55, delay: 0.9 }
-		: { label: "Sign in", href: "/api/auth/signin", x: 80, y: 55, delay: 0.9 };
+		? {
+				label: "Sign out",
+				href: "/api/auth/signout?callbackUrl=/",
+				x: 80,
+				y: 55,
+				delay: 0.9,
+			}
+		: {
+				label: "Sign in",
+				href: "/signin",
+				x: 80,
+				y: 55,
+				delay: 0.9,
+			};
 
 	const navItems = [...baseNavItems, authItem];
 
