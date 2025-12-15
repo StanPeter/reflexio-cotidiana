@@ -138,7 +138,7 @@ const EditQuestionDialog = ({
 	onClose: () => void;
 }) => {
 	const [answers, setAnswers] = useState<string[]>([]);
-	const trpc = api.useUtils();
+	const createQuestionMutation = api.settings.createQuestion.useMutation();
 
 	const {
 		register,
@@ -151,12 +151,22 @@ const EditQuestionDialog = ({
 		},
 	});
 
-	// const onSubmit = (data: { question: string; answers: string[] }) => {
-	// 	trpc.question.create.mutate({
-	// 		question: data.question,
-	// 	});
-	// 	onClose();
-	// };
+	const onSubmit = (data: { question: string; answers: string[] }) => {
+		createQuestionMutation.mutate(
+			{
+				answers: data.answers,
+				question: data.question,
+			},
+			{
+				onSuccess: () => {
+					onClose();
+				},
+				onError: (error) => {
+					console.error(error);
+				},
+			},
+		);
+	};
 
 	return (
 		<Dialog.Root
