@@ -7,7 +7,6 @@ import {
 	Flex,
 	Input,
 	Stack,
-	Table,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 
@@ -20,70 +19,6 @@ type PasswordFormValues = {
 	newPassword: string;
 	confirmPassword: string;
 };
-
-const items = [
-	{
-		id: 1,
-		question: "Have you watched any Netflix?",
-		answers: ["1h", "More than 1h", "No"],
-	},
-	{
-		id: 2,
-		question: "Have you played any video games?",
-		answers: ["Yes", "No"],
-	},
-	{
-		id: 3,
-		question: "Have you read any books?",
-		answers: [
-			"1 book",
-			"2 books",
-			"3 books",
-			"4 books",
-			"5 books",
-			"6 books",
-			"7 books",
-			"8 books",
-			"9 books",
-			"10 books",
-			"No",
-		],
-	},
-	{
-		id: 4,
-		question: "Have you watched any movies?",
-		answers: [
-			"1 movie",
-			"2 movies",
-			"3 movies",
-			"4 movies",
-			"5 movies",
-			"6 movies",
-			"7 movies",
-			"8 movies",
-			"9 movies",
-			"10 movies",
-			"No",
-		],
-	},
-	{
-		id: 5,
-		question: "Have you watched any TV shows?",
-		answers: [
-			"1 TV show",
-			"2 TV shows",
-			"3 TV shows",
-			"4 TV shows",
-			"5 TV shows",
-			"6 TV shows",
-			"7 TV shows",
-			"8 TV shows",
-			"9 TV shows",
-			"10 TV shows",
-			"No",
-		],
-	},
-];
 
 const AccountSettings = () => {
 	const {
@@ -139,24 +74,54 @@ const AccountSettings = () => {
 			p={6}
 			w="100%"
 		>
-			<Table.Root size="sm">
-				<Table.Header>
-					<Table.Row>
-						<Table.ColumnHeader>Question</Table.ColumnHeader>
-						<Table.ColumnHeader>Answers</Table.ColumnHeader>
-					</Table.Row>
-				</Table.Header>
-				<Table.Body>
-					{items.map((item) => (
-						<Table.Row key={item.id}>
-							<Table.Cell>{item.question}</Table.Cell>
-							<Table.Cell>{item.answers.join(", ")}</Table.Cell>
-						</Table.Row>
-					))}
-				</Table.Body>
-			</Table.Root>
+			<Stack as="form" gap={4} onSubmit={handleSubmit(onSaveSettings)}>
+				<FieldRoot invalid={!!errors.name}>
+					<FieldLabel>Name</FieldLabel>
+					<Input
+						placeholder="Your name"
+						{...register("name", { required: "Name is required" })}
+					/>
+					<FieldErrorText>{errors.name?.message}</FieldErrorText>
+				</FieldRoot>
+
+				<FieldRoot invalid={!!errors.email}>
+					<FieldLabel>Email</FieldLabel>
+					<Input
+						placeholder="you@example.com"
+						type="email"
+						{...register("email", {
+							required: "Email is required",
+							pattern: {
+								value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+								message: "Enter a valid email",
+							},
+						})}
+					/>
+					<FieldErrorText>{errors.email?.message}</FieldErrorText>
+				</FieldRoot>
+
+				<Flex align="center" justify="space-between">
+					<Box>
+						<Box fontWeight="medium">Password</Box>
+						<Box color="gray.500" fontSize="sm">
+							Manage password securely
+						</Box>
+					</Box>
+					<Button onClick={() => {}} variant="outline">
+						Change password
+					</Button>
+				</Flex>
+
+				<Flex gap={3} justify="flex-end" pt={2}>
+					<Button type="button" variant="outline">
+						Cancel
+					</Button>
+					<Button colorScheme="purple" loading={isSubmitting} type="submit">
+						Save changes
+					</Button>
+				</Flex>
+			</Stack>
 		</Box>
 	);
 };
-
 export default AccountSettings;
