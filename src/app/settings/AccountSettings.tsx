@@ -9,6 +9,7 @@ import {
 	Stack,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
+import { api } from "@/trpc/react";
 
 type SettingsFormValues = {
 	name: string;
@@ -21,6 +22,7 @@ type PasswordFormValues = {
 };
 
 const AccountSettings = () => {
+	const { data: user, isLoading: isLoadingUser } = api.auth.getUser.useQuery();
 	const {
 		register,
 		handleSubmit,
@@ -79,6 +81,7 @@ const AccountSettings = () => {
 					<FieldLabel>Name</FieldLabel>
 					<Input
 						placeholder="Your name"
+						value={user?.name ?? ""}
 						{...register("name", { required: "Name is required" })}
 					/>
 					<FieldErrorText>{errors.name?.message}</FieldErrorText>
@@ -89,6 +92,7 @@ const AccountSettings = () => {
 					<Input
 						placeholder="you@example.com"
 						type="email"
+						value={user?.email ?? ""}
 						{...register("email", {
 							required: "Email is required",
 							pattern: {

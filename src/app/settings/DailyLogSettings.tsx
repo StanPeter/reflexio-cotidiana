@@ -7,15 +7,14 @@ import {
 	FieldErrorText,
 	FieldLabel,
 	FieldRoot,
-	Flex,
+	Icon,
 	Input,
 	Portal,
-	Stack,
-	Table,
+	Spinner,
 } from "@chakra-ui/react";
-import { ItemLabel } from "node_modules/@chakra-ui/react/dist/types/components/data-list/namespace";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { LuMessageCircleQuestion } from "react-icons/lu";
 import { api } from "@/trpc/react";
 
 type SettingsFormValues = {
@@ -28,77 +27,33 @@ type PasswordFormValues = {
 	confirmPassword: string;
 };
 
-const items = [
-	{
-		id: 1,
-		question: "Have you watched any Netflix?",
-		answers: ["1h", "More than 1h", "No"],
-	},
-	{
-		id: 2,
-		question: "Have you played any video games?",
-		answers: ["Yes", "No"],
-	},
-	{
-		id: 3,
-		question: "Have you read any books?",
-		answers: [
-			"1 book",
-			"2 books",
-			"3 books",
-			"4 books",
-			"5 books",
-			"6 books",
-			"7 books",
-			"8 books",
-			"9 books",
-			"10 books",
-			"No",
-		],
-	},
-	{
-		id: 4,
-		question: "Have you watched any movies?",
-		answers: [
-			"1 movie",
-			"2 movies",
-			"3 movies",
-			"4 movies",
-			"5 movies",
-			"6 movies",
-			"7 movies",
-			"8 movies",
-			"9 movies",
-			"10 movies",
-			"No",
-		],
-	},
-	{
-		id: 5,
-		question: "Have you watched any TV shows?",
-		answers: [
-			"1 TV show",
-			"2 TV shows",
-			"3 TV shows",
-			"4 TV shows",
-			"5 TV shows",
-			"6 TV shows",
-			"7 TV shows",
-			"8 TV shows",
-			"9 TV shows",
-			"10 TV shows",
-			"No",
-		],
-	},
-];
-
 const DeleteQuestionDialog = ({
 	isOpen,
 	onClose,
+	question,
+	refetchQuestions,
 }: {
 	isOpen: boolean;
 	onClose: () => void;
+	question: { id: string; question: string; points: number };
+	refetchQuestions: () => void;
 }) => {
+	const deleteQuestionMutation = api.settings.deleteQuestion.useMutation();
+
+	const handleDeleteQuestion = () => {
+		deleteQuestionMutation.mutate(
+			{ id: question.id },
+			{
+				onSuccess: () => {
+					onClose();
+					refetchQuestions();
+				},
+				onError: (error) => {
+					console.error(error);
+				},
+			},
+		);
+	};
 	return (
 		<Dialog.Root
 			onOpenChange={onClose}
@@ -111,17 +66,21 @@ const DeleteQuestionDialog = ({
 					<Dialog.Content>
 						<Dialog.Header>
 							<Dialog.Title>
-								Do you really want to delete this question?
+								Do you really want to delete this question: {question?.question}
+								?
 							</Dialog.Title>
 						</Dialog.Header>
 						<Dialog.Body>
-							<p>Do you really want to delete this question?</p>
+							<p>
+								Do you really want to delete this question: {question?.question}
+								?
+							</p>
 						</Dialog.Body>
 						<Dialog.Footer>
 							<Dialog.ActionTrigger asChild>
 								<Button variant="outline">Cancel</Button>
 							</Dialog.ActionTrigger>
-							<Button>Delete</Button>
+							<Button onClick={handleDeleteQuestion}>Delete</Button>
 						</Dialog.Footer>
 					</Dialog.Content>
 				</Dialog.Positioner>
@@ -133,9 +92,13 @@ const DeleteQuestionDialog = ({
 const EditQuestionDialog = ({
 	isOpen,
 	onClose,
+	question,
+	refetchQuestions,
 }: {
 	isOpen: boolean;
 	onClose: () => void;
+	question: { id: string; question: string; points: number };
+	refetchQuestions: () => void;
 }) => {
 	const [answers, setAnswers] = useState<string[]>([]);
 	const createQuestionMutation = api.settings.createQuestion.useMutation();
@@ -144,28 +107,31 @@ const EditQuestionDialog = ({
 		register,
 		handleSubmit,
 		formState: { errors },
-	} = useForm<{ question: string; answers: string[] }>({
+	} = useForm<{ question: string; points: number }>({
 		defaultValues: {
-			question: "",
-			answers: [],
+			question: question?.question ?? "",
+			points: 10,
 		},
 	});
 
-	const onSubmit = (data: { question: string; answers: string[] }) => {
+	const onSubmit = (data: { question: string; points: number }) => {
+		alert("Submit");
 		createQuestionMutation.mutate(
 			{
-				answers: data.answers,
 				question: data.question,
+				points: data.points ?? 10,
 			},
 			{
 				onSuccess: () => {
 					onClose();
+					refetchQuestions();
 				},
 				onError: (error) => {
 					console.error(error);
 				},
 			},
 		);
+		onClose();
 	};
 
 	return (
@@ -192,33 +158,34 @@ const EditQuestionDialog = ({
 								/>
 								<FieldErrorText>Question is required</FieldErrorText>
 							</FieldRoot>
-							{answers.map((answer, index) => (
-								<FieldRoot invalid={!!errors.answers?.[index]} key={answer}>
-									<FieldLabel>Answer {index + 1}</FieldLabel>
+							<FieldRoot>
+								<FieldLabel>Points</FieldLabel>
+								<Box w="100%">
 									<Input
-										key={index + answer}
-										{...register(`answers.${index}`, {
-											required: "Answer is required",
+										placeholder="Points"
+										{...register("points", {
+											required: "Points is required",
 										})}
-										placeholder="Answer"
 									/>
-									<FieldErrorText>Answer is required</FieldErrorText>
-								</FieldRoot>
-							))}
-							<Button onClick={() => setAnswers([...answers, ""])}>
-								Add Answer
-							</Button>
+									<Icon
+										as={LuMessageCircleQuestion}
+										position={"absolute"}
+										right={2}
+										top={10}
+									/>
+								</Box>
+								<FieldErrorText>Points is required</FieldErrorText>
+							</FieldRoot>
 						</Dialog.Body>
 						<Dialog.Footer>
 							<Dialog.ActionTrigger asChild>
 								<Button variant="outline">Cancel</Button>
 							</Dialog.ActionTrigger>
-							<Button>Save</Button>
+							<Button onClick={handleSubmit(onSubmit)}>Save</Button>
 						</Dialog.Footer>
 						<Dialog.CloseTrigger asChild>
 							<Button variant="outline">Cancel</Button>
 						</Dialog.CloseTrigger>
-						<Button>Save</Button>
 					</Dialog.Content>
 				</Dialog.Positioner>
 			</Portal>
@@ -231,6 +198,14 @@ const DailyLogSettings = () => {
 		useState(false);
 	const [isDeleteQuestionDialogOpen, setIsDeleteQuestionDialogOpen] =
 		useState(false);
+	const [selectedQuestionId, setSelectedQuestionId] = useState<
+		string | undefined
+	>(undefined);
+	const {
+		data: questions,
+		isLoading: isLoadingQuestions,
+		refetch: refetchQuestions,
+	} = api.settings.getQuestions.useQuery();
 
 	const {
 		register,
@@ -276,14 +251,16 @@ const DailyLogSettings = () => {
 		// passwordDialog.onClose();
 	};
 
-	const handleEditQuestion = (question: string) => {
-		console.log("Edit question", question);
+	const handleEditQuestion = (questionId: string) => {
+		console.log("Edit question", questionId);
 		setIsEditQuestionDialogOpen(true);
+		setSelectedQuestionId(questionId);
 	};
 
-	const handleDeleteQuestion = (question: string) => {
-		console.log("Delete question", question);
+	const handleDeleteQuestion = (questionId: string) => {
+		console.log("Delete question", questionId);
 		setIsDeleteQuestionDialogOpen(true);
+		setSelectedQuestionId(questionId);
 	};
 
 	return (
@@ -292,43 +269,50 @@ const DailyLogSettings = () => {
 			bg="white"
 			borderRadius="lg"
 			boxShadow="md"
+			minWidth="600px"
 			p={6}
 			w="100%"
 		>
-			<Table.Root size="sm">
-				<Table.Header>
-					<Table.Row>
-						<Table.ColumnHeader>Question</Table.ColumnHeader>
-						<Table.ColumnHeader>Answers</Table.ColumnHeader>
-						<Table.ColumnHeader></Table.ColumnHeader>
-					</Table.Row>
-				</Table.Header>
-				<Table.Body>
-					{items.map((item) => (
-						<Table.Row key={item.id}>
-							<Table.Cell>{item.question}</Table.Cell>
-							<Table.Cell>{item.answers.join(", ")}</Table.Cell>
-							<Table.Cell>
-								<Button onClick={() => handleEditQuestion(item.question)}>
-									Edit
-								</Button>
-							</Table.Cell>
-							<Table.Cell>
-								<Button onClick={() => handleDeleteQuestion(item.question)}>
-									Delete
-								</Button>
-							</Table.Cell>
-						</Table.Row>
-					))}
-				</Table.Body>
-			</Table.Root>
+			{isLoadingQuestions ? (
+				<Spinner size="sm" />
+			) : (
+				questions?.map((item) => (
+					<Box key={item.id}>
+						{item.question}
+						<Button
+							margin={2}
+							onClick={(questionId) => handleEditQuestion(questionId)}
+							size="sm"
+							variant="outline"
+						>
+							Edit
+						</Button>
+						<Button
+							margin={2}
+							onClick={(questionId) => handleDeleteQuestion(questionId)}
+							size="sm"
+							variant="outline"
+						>
+							Delete
+						</Button>
+					</Box>
+				))
+			)}
 			<EditQuestionDialog
 				isOpen={isEditQuestionDialogOpen}
 				onClose={() => setIsEditQuestionDialogOpen(false)}
+				question={questions?.find(
+					(question) => question.id === selectedQuestionId,
+				)}
+				refetchQuestions={refetchQuestions}
 			/>
 			<DeleteQuestionDialog
 				isOpen={isDeleteQuestionDialogOpen}
 				onClose={() => setIsDeleteQuestionDialogOpen(false)}
+				question={questions?.find(
+					(question) => question.id === selectedQuestionId,
+				)}
+				refetchQuestions={refetchQuestions}
 			/>
 			<Button onClick={() => setIsEditQuestionDialogOpen(true)}>
 				Add Question
