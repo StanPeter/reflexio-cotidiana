@@ -11,8 +11,10 @@ import {
 	Input,
 	Portal,
 	Spinner,
+	Switch,
+	SwitchRoot,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { LuMessageCircleQuestion } from "react-icons/lu";
 import { api } from "@/trpc/react";
@@ -35,7 +37,12 @@ const DeleteQuestionDialog = ({
 }: {
 	isOpen: boolean;
 	onClose: () => void;
-	question: { id: string; question: string; points: number };
+	question: {
+		id: string;
+		question: string;
+		points: number;
+		isPositive: boolean;
+	};
 	refetchQuestions: () => void;
 }) => {
 	const deleteQuestionMutation = api.settings.deleteQuestion.useMutation();
@@ -97,40 +104,53 @@ const EditQuestionDialog = ({
 }: {
 	isOpen: boolean;
 	onClose: () => void;
-	question: { id: string; question: string; points: number };
+	question: {
+		id: string;
+		question: string;
+		points: number;
+		isPositive: boolean;
+	};
 	refetchQuestions: () => void;
 }) => {
-	const [answers, setAnswers] = useState<string[]>([]);
 	const createQuestionMutation = api.settings.createQuestion.useMutation();
+	const updateQuestionMutation = api.settings.updateQuestion.useMutation();
 
 	const {
 		register,
 		handleSubmit,
+		getValues,
+		trigger,
+		setValue,
 		formState: { errors },
-	} = useForm<{ question: string; points: number }>({
-		defaultValues: {
-			question: question?.question ?? "",
-			points: 10,
-		},
-	});
+	} = useForm<{ question: string; points: number; isPositive: boolean }>({});
 
-	const onSubmit = (data: { question: string; points: number }) => {
-		alert("Submit");
-		createQuestionMutation.mutate(
-			{
+	useEffect(() => {
+		if (question) {
+			setValue("question", question.question);
+			setValue("points", question.points);
+			setValue("isPositive", question.isPositive);
+		}
+	}, [question, setValue]);
+
+	const onSubmit = (data: {
+		question: string;
+		points: number;
+		isPositive: boolean;
+	}) => {
+		if (question?.id) {
+			updateQuestionMutation.mutate({
+				id: question.id,
 				question: data.question,
-				points: data.points ?? 10,
-			},
-			{
-				onSuccess: () => {
-					onClose();
-					refetchQuestions();
-				},
-				onError: (error) => {
-					console.error(error);
-				},
-			},
-		);
+				points: data.points ? Number(data.points) : 10,
+				isPositive: !!data.isPositive,
+			});
+		} else {
+			createQuestionMutation.mutate({
+				question: data.question,
+				points: data.points ? Number(data.points) : 10,
+				isPositive: data.isPositive,
+			});
+		}
 		onClose();
 	};
 
@@ -176,6 +196,17 @@ const EditQuestionDialog = ({
 								</Box>
 								<FieldErrorText>Points is required</FieldErrorText>
 							</FieldRoot>
+							<SwitchRoot checked={getValues("isPositive")}>
+								<Switch.HiddenInput
+									{...register("isPositive")}
+									onChange={(d) => {
+										register("isPositive").onChange(d);
+										trigger("isPositive");
+									}}
+								/>
+								<Switch.Control />
+								<Switch.Label>Is Positive</Switch.Label>
+							</SwitchRoot>
 						</Dialog.Body>
 						<Dialog.Footer>
 							<Dialog.ActionTrigger asChild>
@@ -198,11 +229,12 @@ const DailyLogSettings = () => {
 		useState(false);
 	const [isDeleteQuestionDialogOpen, setIsDeleteQuestionDialogOpen] =
 		useState(false);
-	const [selectedQuestionId, setSelectedQuestionId] = useState<
-		string | undefined
+	const [selectedQuestion, setSelectedQuestion] = useState<
+		| { id: string; question: string; points: number; isPositive: boolean }
+		| undefined
 	>(undefined);
 	const {
-		data: questions,
+		data: questions = [],
 		isLoading: isLoadingQuestions,
 		refetch: refetchQuestions,
 	} = api.settings.getQuestions.useQuery();
@@ -252,15 +284,17 @@ const DailyLogSettings = () => {
 	};
 
 	const handleEditQuestion = (questionId: string) => {
-		console.log("Edit question", questionId);
+		setSelectedQuestion(
+			questions.find((question) => question.id === questionId),
+		);
 		setIsEditQuestionDialogOpen(true);
-		setSelectedQuestionId(questionId);
 	};
 
 	const handleDeleteQuestion = (questionId: string) => {
-		console.log("Delete question", questionId);
+		setSelectedQuestion(
+			questions.find((question) => question.id === questionId),
+		);
 		setIsDeleteQuestionDialogOpen(true);
-		setSelectedQuestionId(questionId);
 	};
 
 	return (
@@ -276,12 +310,12 @@ const DailyLogSettings = () => {
 			{isLoadingQuestions ? (
 				<Spinner size="sm" />
 			) : (
-				questions?.map((item) => (
-					<Box key={item.id}>
-						{item.question}
+				questions?.map((questionItem) => (
+					<Box key={questionItem.id}>
+						{questionItem.question}
 						<Button
 							margin={2}
-							onClick={(questionId) => handleEditQuestion(questionId)}
+							onClick={() => handleEditQuestion(questionItem.id)}
 							size="sm"
 							variant="outline"
 						>
@@ -289,7 +323,7 @@ const DailyLogSettings = () => {
 						</Button>
 						<Button
 							margin={2}
-							onClick={(questionId) => handleDeleteQuestion(questionId)}
+							onClick={() => handleDeleteQuestion(questionItem.id)}
 							size="sm"
 							variant="outline"
 						>
@@ -301,17 +335,13 @@ const DailyLogSettings = () => {
 			<EditQuestionDialog
 				isOpen={isEditQuestionDialogOpen}
 				onClose={() => setIsEditQuestionDialogOpen(false)}
-				question={questions?.find(
-					(question) => question.id === selectedQuestionId,
-				)}
+				question={selectedQuestion}
 				refetchQuestions={refetchQuestions}
 			/>
 			<DeleteQuestionDialog
 				isOpen={isDeleteQuestionDialogOpen}
 				onClose={() => setIsDeleteQuestionDialogOpen(false)}
-				question={questions?.find(
-					(question) => question.id === selectedQuestionId,
-				)}
+				question={selectedQuestion}
 				refetchQuestions={refetchQuestions}
 			/>
 			<Button onClick={() => setIsEditQuestionDialogOpen(true)}>

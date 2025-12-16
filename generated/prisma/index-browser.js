@@ -171,6 +171,7 @@ exports.Prisma.DailyLogScalarFieldEnum = {
 exports.Prisma.QuestionScalarFieldEnum = {
   id: 'id',
   question: 'question',
+  isPositive: 'isPositive',
   points: 'points',
   userId: 'userId',
   createdAt: 'createdAt',

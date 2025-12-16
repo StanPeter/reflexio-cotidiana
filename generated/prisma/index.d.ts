@@ -6888,6 +6888,7 @@ export namespace Prisma {
   export type QuestionMinAggregateOutputType = {
     id: string | null
     question: string | null
+    isPositive: boolean | null
     points: number | null
     userId: string | null
     createdAt: Date | null
@@ -6897,6 +6898,7 @@ export namespace Prisma {
   export type QuestionMaxAggregateOutputType = {
     id: string | null
     question: string | null
+    isPositive: boolean | null
     points: number | null
     userId: string | null
     createdAt: Date | null
@@ -6906,6 +6908,7 @@ export namespace Prisma {
   export type QuestionCountAggregateOutputType = {
     id: number
     question: number
+    isPositive: number
     points: number
     userId: number
     createdAt: number
@@ -6925,6 +6928,7 @@ export namespace Prisma {
   export type QuestionMinAggregateInputType = {
     id?: true
     question?: true
+    isPositive?: true
     points?: true
     userId?: true
     createdAt?: true
@@ -6934,6 +6938,7 @@ export namespace Prisma {
   export type QuestionMaxAggregateInputType = {
     id?: true
     question?: true
+    isPositive?: true
     points?: true
     userId?: true
     createdAt?: true
@@ -6943,6 +6948,7 @@ export namespace Prisma {
   export type QuestionCountAggregateInputType = {
     id?: true
     question?: true
+    isPositive?: true
     points?: true
     userId?: true
     createdAt?: true
@@ -7039,6 +7045,7 @@ export namespace Prisma {
   export type QuestionGroupByOutputType = {
     id: string
     question: string
+    isPositive: boolean
     points: number
     userId: string
     createdAt: Date
@@ -7067,6 +7074,7 @@ export namespace Prisma {
   export type QuestionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     question?: boolean
+    isPositive?: boolean
     points?: boolean
     userId?: boolean
     createdAt?: boolean
@@ -7079,6 +7087,7 @@ export namespace Prisma {
   export type QuestionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     question?: boolean
+    isPositive?: boolean
     points?: boolean
     userId?: boolean
     createdAt?: boolean
@@ -7089,6 +7098,7 @@ export namespace Prisma {
   export type QuestionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     question?: boolean
+    isPositive?: boolean
     points?: boolean
     userId?: boolean
     createdAt?: boolean
@@ -7099,13 +7109,14 @@ export namespace Prisma {
   export type QuestionSelectScalar = {
     id?: boolean
     question?: boolean
+    isPositive?: boolean
     points?: boolean
     userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type QuestionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "question" | "points" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["question"]>
+  export type QuestionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "question" | "isPositive" | "points" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["question"]>
   export type QuestionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     dailyLogs?: boolean | Question$dailyLogsArgs<ExtArgs>
@@ -7127,6 +7138,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       question: string
+      isPositive: boolean
       points: number
       userId: string
       createdAt: Date
@@ -7558,6 +7570,7 @@ export namespace Prisma {
   interface QuestionFieldRefs {
     readonly id: FieldRef<"Question", 'String'>
     readonly question: FieldRef<"Question", 'String'>
+    readonly isPositive: FieldRef<"Question", 'Boolean'>
     readonly points: FieldRef<"Question", 'Int'>
     readonly userId: FieldRef<"Question", 'String'>
     readonly createdAt: FieldRef<"Question", 'DateTime'>
@@ -8079,6 +8092,7 @@ export namespace Prisma {
   export const QuestionScalarFieldEnum: {
     id: 'id',
     question: 'question',
+    isPositive: 'isPositive',
     points: 'points',
     userId: 'userId',
     createdAt: 'createdAt',
@@ -8513,6 +8527,7 @@ export namespace Prisma {
     NOT?: QuestionWhereInput | QuestionWhereInput[]
     id?: StringFilter<"Question"> | string
     question?: StringFilter<"Question"> | string
+    isPositive?: BoolFilter<"Question"> | boolean
     points?: IntFilter<"Question"> | number
     userId?: StringFilter<"Question"> | string
     createdAt?: DateTimeFilter<"Question"> | Date | string
@@ -8524,6 +8539,7 @@ export namespace Prisma {
   export type QuestionOrderByWithRelationInput = {
     id?: SortOrder
     question?: SortOrder
+    isPositive?: SortOrder
     points?: SortOrder
     userId?: SortOrder
     createdAt?: SortOrder
@@ -8538,6 +8554,7 @@ export namespace Prisma {
     OR?: QuestionWhereInput[]
     NOT?: QuestionWhereInput | QuestionWhereInput[]
     question?: StringFilter<"Question"> | string
+    isPositive?: BoolFilter<"Question"> | boolean
     points?: IntFilter<"Question"> | number
     userId?: StringFilter<"Question"> | string
     createdAt?: DateTimeFilter<"Question"> | Date | string
@@ -8549,6 +8566,7 @@ export namespace Prisma {
   export type QuestionOrderByWithAggregationInput = {
     id?: SortOrder
     question?: SortOrder
+    isPositive?: SortOrder
     points?: SortOrder
     userId?: SortOrder
     createdAt?: SortOrder
@@ -8566,6 +8584,7 @@ export namespace Prisma {
     NOT?: QuestionScalarWhereWithAggregatesInput | QuestionScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Question"> | string
     question?: StringWithAggregatesFilter<"Question"> | string
+    isPositive?: BoolWithAggregatesFilter<"Question"> | boolean
     points?: IntWithAggregatesFilter<"Question"> | number
     userId?: StringWithAggregatesFilter<"Question"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Question"> | Date | string
@@ -8916,6 +8935,7 @@ export namespace Prisma {
   export type QuestionCreateInput = {
     id?: string
     question: string
+    isPositive?: boolean
     points?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -8926,6 +8946,7 @@ export namespace Prisma {
   export type QuestionUncheckedCreateInput = {
     id?: string
     question: string
+    isPositive?: boolean
     points?: number
     userId: string
     createdAt?: Date | string
@@ -8936,6 +8957,7 @@ export namespace Prisma {
   export type QuestionUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     question?: StringFieldUpdateOperationsInput | string
+    isPositive?: BoolFieldUpdateOperationsInput | boolean
     points?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8946,6 +8968,7 @@ export namespace Prisma {
   export type QuestionUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     question?: StringFieldUpdateOperationsInput | string
+    isPositive?: BoolFieldUpdateOperationsInput | boolean
     points?: IntFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8956,6 +8979,7 @@ export namespace Prisma {
   export type QuestionCreateManyInput = {
     id?: string
     question: string
+    isPositive?: boolean
     points?: number
     userId: string
     createdAt?: Date | string
@@ -8965,6 +8989,7 @@ export namespace Prisma {
   export type QuestionUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     question?: StringFieldUpdateOperationsInput | string
+    isPositive?: BoolFieldUpdateOperationsInput | boolean
     points?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8973,6 +8998,7 @@ export namespace Prisma {
   export type QuestionUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     question?: StringFieldUpdateOperationsInput | string
+    isPositive?: BoolFieldUpdateOperationsInput | boolean
     points?: IntFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9357,6 +9383,11 @@ export namespace Prisma {
     _max?: NestedBoolNullableFilter<$PrismaModel>
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -9371,6 +9402,7 @@ export namespace Prisma {
   export type QuestionCountOrderByAggregateInput = {
     id?: SortOrder
     question?: SortOrder
+    isPositive?: SortOrder
     points?: SortOrder
     userId?: SortOrder
     createdAt?: SortOrder
@@ -9384,6 +9416,7 @@ export namespace Prisma {
   export type QuestionMaxOrderByAggregateInput = {
     id?: SortOrder
     question?: SortOrder
+    isPositive?: SortOrder
     points?: SortOrder
     userId?: SortOrder
     createdAt?: SortOrder
@@ -9393,6 +9426,7 @@ export namespace Prisma {
   export type QuestionMinOrderByAggregateInput = {
     id?: SortOrder
     question?: SortOrder
+    isPositive?: SortOrder
     points?: SortOrder
     userId?: SortOrder
     createdAt?: SortOrder
@@ -9401,6 +9435,14 @@ export namespace Prisma {
 
   export type QuestionSumOrderByAggregateInput = {
     points?: SortOrder
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -9691,6 +9733,10 @@ export namespace Prisma {
     connect?: DailyLogWhereUniqueInput | DailyLogWhereUniqueInput[]
   }
 
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -9907,6 +9953,19 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedBoolNullableFilter<$PrismaModel>
     _max?: NestedBoolNullableFilter<$PrismaModel>
+  }
+
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -10149,6 +10208,7 @@ export namespace Prisma {
   export type QuestionCreateWithoutUserInput = {
     id?: string
     question: string
+    isPositive?: boolean
     points?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -10158,6 +10218,7 @@ export namespace Prisma {
   export type QuestionUncheckedCreateWithoutUserInput = {
     id?: string
     question: string
+    isPositive?: boolean
     points?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -10286,6 +10347,7 @@ export namespace Prisma {
     NOT?: QuestionScalarWhereInput | QuestionScalarWhereInput[]
     id?: StringFilter<"Question"> | string
     question?: StringFilter<"Question"> | string
+    isPositive?: BoolFilter<"Question"> | boolean
     points?: IntFilter<"Question"> | number
     userId?: StringFilter<"Question"> | string
     createdAt?: DateTimeFilter<"Question"> | Date | string
@@ -10322,6 +10384,7 @@ export namespace Prisma {
   export type QuestionCreateWithoutDailyLogsInput = {
     id?: string
     question: string
+    isPositive?: boolean
     points?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -10331,6 +10394,7 @@ export namespace Prisma {
   export type QuestionUncheckedCreateWithoutDailyLogsInput = {
     id?: string
     question: string
+    isPositive?: boolean
     points?: number
     userId: string
     createdAt?: Date | string
@@ -10389,6 +10453,7 @@ export namespace Prisma {
   export type QuestionUpdateWithoutDailyLogsInput = {
     id?: StringFieldUpdateOperationsInput | string
     question?: StringFieldUpdateOperationsInput | string
+    isPositive?: BoolFieldUpdateOperationsInput | boolean
     points?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10398,6 +10463,7 @@ export namespace Prisma {
   export type QuestionUncheckedUpdateWithoutDailyLogsInput = {
     id?: StringFieldUpdateOperationsInput | string
     question?: StringFieldUpdateOperationsInput | string
+    isPositive?: BoolFieldUpdateOperationsInput | boolean
     points?: IntFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10541,6 +10607,7 @@ export namespace Prisma {
   export type QuestionCreateManyUserInput = {
     id?: string
     question: string
+    isPositive?: boolean
     points?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -10639,6 +10706,7 @@ export namespace Prisma {
   export type QuestionUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     question?: StringFieldUpdateOperationsInput | string
+    isPositive?: BoolFieldUpdateOperationsInput | boolean
     points?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10648,6 +10716,7 @@ export namespace Prisma {
   export type QuestionUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     question?: StringFieldUpdateOperationsInput | string
+    isPositive?: BoolFieldUpdateOperationsInput | boolean
     points?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10657,6 +10726,7 @@ export namespace Prisma {
   export type QuestionUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     question?: StringFieldUpdateOperationsInput | string
+    isPositive?: BoolFieldUpdateOperationsInput | boolean
     points?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
