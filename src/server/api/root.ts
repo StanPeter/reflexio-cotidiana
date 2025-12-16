@@ -1,5 +1,6 @@
 import { settingsRouter } from "@/server/api/routers/settings";
 import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
+import { authRouter } from "./routers/auth";
 import { dailyLogRouter } from "./routers/daily-log";
 
 /**
@@ -10,6 +11,7 @@ import { dailyLogRouter } from "./routers/daily-log";
 export const appRouter = createTRPCRouter({
   settings: settingsRouter,
   dailyLog: dailyLogRouter,
+  auth: authRouter,
 });
 
 // export type definition of API

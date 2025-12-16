@@ -28,7 +28,7 @@ export default async function RootLayout({
 			}
 		: {
 				label: "Sign in",
-				href: "/signin",
+				href: "/auth",
 				x: 80,
 				y: 55,
 				delay: 0.9,

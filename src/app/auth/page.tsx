@@ -16,7 +16,7 @@ import {
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn, useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 type SignInFormValues = {
@@ -29,6 +29,7 @@ const SignInPage = () => {
 	const searchParams = useSearchParams();
 	const callbackUrl = searchParams.get("callbackUrl") ?? "/daily-log";
 	const { status } = useSession();
+	const [mode, setMode] = useState<"signIn" | "signUp">("signIn");
 
 	const {
 		handleSubmit,
@@ -111,7 +112,7 @@ const SignInPage = () => {
 					</FieldRoot>
 
 					<Button colorScheme="purple" loading={isSubmitting} type="submit">
-						Continue with email
+						{mode === "signIn" ? "Continue with email" : "Sign up with email"}
 					</Button>
 
 					<Text color="gray.500" fontSize="sm">
@@ -127,21 +128,30 @@ const SignInPage = () => {
 							onClick={() => handleProvider("google")}
 							variant="outline"
 						>
-							Continue with Google
+							{mode === "signIn"
+								? "Continue with Google"
+								: "Sign up with Google"}
 						</Button>
 						<Button
 							justifyContent="center"
 							onClick={() => handleProvider("github")}
 							variant="outline"
 						>
-							Continue with GitHub
+							{mode === "signIn"
+								? "Continue with GitHub"
+								: "Sign up with GitHub"}
 						</Button>
 					</Stack>
 				</Stack>
 
 				<Flex justify="center">
 					<Text color="gray.600" fontSize="sm">
-						Need an account? <Link href="/signup">Sign up</Link>
+						Need an account?{" "}
+						<Button
+							onClick={() => setMode(mode === "signIn" ? "signUp" : "signIn")}
+						>
+							{mode === "signIn" ? "Sign up" : "Sign in"}
+						</Button>
 					</Text>
 				</Flex>
 			</Stack>
