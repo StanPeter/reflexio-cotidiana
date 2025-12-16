@@ -161,8 +161,8 @@ exports.Prisma.VerificationTokenScalarFieldEnum = {
 exports.Prisma.DailyLogScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  answerId: 'answerId',
   questionId: 'questionId',
+  answer: 'answer',
   logDate: 'logDate',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -171,14 +171,8 @@ exports.Prisma.DailyLogScalarFieldEnum = {
 exports.Prisma.QuestionScalarFieldEnum = {
   id: 'id',
   question: 'question',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.AnswerScalarFieldEnum = {
-  id: 'id',
-  questionId: 'questionId',
-  answer: 'answer',
+  points: 'points',
+  userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -205,8 +199,7 @@ exports.Prisma.ModelName = {
   User: 'User',
   VerificationToken: 'VerificationToken',
   DailyLog: 'DailyLog',
-  Question: 'Question',
-  Answer: 'Answer'
+  Question: 'Question'
 };
 
 /**

@@ -49,8 +49,8 @@ CREATE TABLE "VerificationToken" (
 CREATE TABLE "DailyLog" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
-    "answerId" TEXT NOT NULL,
-    "questionId" TEXT,
+    "questionId" TEXT NOT NULL,
+    "answer" BOOLEAN,
     "logDate" DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -62,21 +62,12 @@ CREATE TABLE "DailyLog" (
 CREATE TABLE "Question" (
     "id" TEXT NOT NULL,
     "question" TEXT NOT NULL,
+    "points" INTEGER NOT NULL DEFAULT 10,
+    "userId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Question_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "Answer" (
-    "id" TEXT NOT NULL,
-    "questionId" TEXT NOT NULL,
-    "answer" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "Answer_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -98,7 +89,7 @@ CREATE UNIQUE INDEX "VerificationToken_identifier_token_key" ON "VerificationTok
 CREATE INDEX "DailyLog_userId_logDate_idx" ON "DailyLog"("userId", "logDate");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "DailyLog_userId_logDate_answerId_key" ON "DailyLog"("userId", "logDate", "answerId");
+CREATE UNIQUE INDEX "DailyLog_userId_logDate_key" ON "DailyLog"("userId", "logDate");
 
 -- AddForeignKey
 ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -110,10 +101,7 @@ ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId"
 ALTER TABLE "DailyLog" ADD CONSTRAINT "DailyLog_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "DailyLog" ADD CONSTRAINT "DailyLog_answerId_fkey" FOREIGN KEY ("answerId") REFERENCES "Answer"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "DailyLog" ADD CONSTRAINT "DailyLog_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES "Question"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "DailyLog" ADD CONSTRAINT "DailyLog_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES "Question"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Answer" ADD CONSTRAINT "Answer_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES "Question"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Question" ADD CONSTRAINT "Question_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
