@@ -9,20 +9,27 @@ import {
 	FieldRoot,
 	Flex,
 	Heading,
+	Icon,
 	Input,
 	Stack,
 	Text,
 } from "@chakra-ui/react";
-import Link from "next/link";
+import { motion } from "motion/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { signIn, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { FaGithub } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 
 type SignInFormValues = {
 	email: string;
 	password: string;
+	repeatPassword: string;
 };
+
+const MotionButton = motion(Button);
+const MotionIcon = motion(Icon);
 
 const SignInPage = () => {
 	const router = useRouter();
@@ -36,7 +43,7 @@ const SignInPage = () => {
 		register,
 		formState: { errors, isSubmitting },
 	} = useForm<SignInFormValues>({
-		defaultValues: { email: "", password: "" },
+		defaultValues: { email: "", password: "", repeatPassword: "" },
 	});
 
 	// If already signed in, redirect to target.
@@ -51,10 +58,6 @@ const SignInPage = () => {
 		console.log("Email/password submission", values);
 	};
 
-	const handleProvider = async (provider: "google" | "github") => {
-		await signIn(provider, { callbackUrl });
-	};
-
 	if (status === "authenticated") {
 		return (
 			<Container centerContent maxW="md" py={16}>
@@ -66,13 +69,6 @@ const SignInPage = () => {
 	return (
 		<Container maxW="lg" py={16}>
 			<Stack gap={8}>
-				<Box textAlign="center">
-					<Heading size="lg">Welcome back</Heading>
-					<Text color="gray.600" mt={2}>
-						Sign in to continue your daily reflections.
-					</Text>
-				</Box>
-
 				<Stack
 					as="form"
 					bg="white"
@@ -80,80 +76,125 @@ const SignInPage = () => {
 					boxShadow="md"
 					gap={4}
 					onSubmit={handleSubmit(handleEmailPassword)}
-					p={6}
 				>
-					<FieldRoot invalid={!!errors.email}>
-						<FieldLabel>Email</FieldLabel>
-						<Input
-							placeholder="you@example.com"
-							type="email"
-							{...register("email", {
-								required: "Email is required",
-								pattern: {
-									value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-									message: "Enter a valid email",
-								},
-							})}
-						/>
-						<FieldErrorText>{errors.email?.message}</FieldErrorText>
-					</FieldRoot>
+					<Box display="flex">
+						<Button
+							borderBottomLeftRadius={0}
+							borderBottomRightRadius={0}
+							borderTopRightRadius={0}
+							onClick={() => setMode("signIn")}
+							variant="outline"
+							w={"50%"}
+						>
+							Sign In
+						</Button>
+						<Button
+							borderBottomLeftRadius={0}
+							borderBottomRightRadius={0}
+							borderTopLeftRadius={0}
+							onClick={() => setMode("signUp")}
+							variant="outline"
+							w={"50%"}
+						>
+							Sign Up
+						</Button>
+					</Box>
+					<Box>
+						<FieldRoot alignItems="center" invalid={!!errors.email}>
+							<FieldLabel>Email</FieldLabel>
+							<Input
+								borderRadius={0}
+								placeholder="you@example.com"
+								textAlign="center"
+								type="email"
+								{...register("email", {
+									required: "Email is required",
+									pattern: {
+										value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+										message: "Enter a valid email",
+									},
+								})}
+							/>
+							<FieldErrorText>{errors.email?.message}</FieldErrorText>
+						</FieldRoot>
 
-					<FieldRoot invalid={!!errors.password}>
-						<FieldLabel>Password</FieldLabel>
-						<Input
-							placeholder="••••••••"
-							type="password"
-							{...register("password", {
-								required: "Password is required",
-								minLength: { value: 8, message: "At least 8 characters" },
-							})}
-						/>
-						<FieldErrorText>{errors.password?.message}</FieldErrorText>
-					</FieldRoot>
+						<FieldRoot alignItems="center" invalid={!!errors.password} mt={2}>
+							<FieldLabel>Password</FieldLabel>
+							<Input
+								placeholder="••••••••"
+								textAlign="center"
+								type="password"
+								{...register("password", {
+									required: "Password is required",
+									minLength: { value: 8, message: "At least 8 characters" },
+								})}
+							/>
+							<FieldErrorText>{errors.password?.message}</FieldErrorText>
+						</FieldRoot>
 
-					<Button colorScheme="purple" loading={isSubmitting} type="submit">
-						{mode === "signIn" ? "Continue with email" : "Sign up with email"}
+						{mode === "signUp" && (
+							<FieldRoot alignItems="center" invalid={!!errors.password} mt={2}>
+								<FieldLabel>Repeat Password</FieldLabel>
+								<Input
+									placeholder="••••••••"
+									textAlign="center"
+									type="password"
+									{...register("repeatPassword", {
+										required: "Repeat Password is required",
+										minLength: { value: 8, message: "At least 8 characters" },
+									})}
+								/>
+								<FieldErrorText>
+									{errors.repeatPassword?.message}
+								</FieldErrorText>
+							</FieldRoot>
+						)}
+					</Box>
+
+					<Button
+						borderRadius={0}
+						colorScheme="purple"
+						loading={isSubmitting}
+						type="submit"
+					>
+						{mode === "signIn" ? "Sign in" : "Sign up"}
 					</Button>
 
-					<Text color="gray.500" fontSize="sm">
-						Email/password login will be enabled soon. In the meantime, use a
-						provider below.
-					</Text>
-
-					<Box borderColor="gray.100" borderTop="1px solid" />
-
-					<Stack gap={3}>
-						<Button
-							justifyContent="center"
-							onClick={() => handleProvider("google")}
-							variant="outline"
+					<Box alignItems="center" display="flex" justifyContent="center">
+						<MotionButton
+							backgroundColor="white"
+							p={6}
+							transition={{ duration: 0.5, ease: "easeInOut" }}
+							variant="ghost"
+							whileHover="hover"
 						>
-							{mode === "signIn"
-								? "Continue with Google"
-								: "Sign up with Google"}
-						</Button>
-						<Button
-							justifyContent="center"
-							onClick={() => handleProvider("github")}
-							variant="outline"
+							<MotionIcon
+								as={FcGoogle}
+								height={6}
+								transformOrigin="center"
+								transition={{ duration: 0.5, ease: "easeInOut" }}
+								variants={{ hover: { rotate: 360 } }}
+								width={6}
+							/>
+						</MotionButton>
+						<MotionButton
+							backgroundColor="white"
+							p={6}
+							transition={{ duration: 0.5, ease: "easeInOut" }}
+							variant="ghost"
+							whileHover="hover"
 						>
-							{mode === "signIn"
-								? "Continue with GitHub"
-								: "Sign up with GitHub"}
-						</Button>
-					</Stack>
+							<MotionIcon
+								as={FaGithub}
+								height={6}
+								transformOrigin="center"
+								transition={{ duration: 0.5, ease: "easeInOut" }}
+								variants={{ hover: { rotate: 360 } }}
+								width={6}
+							/>
+						</MotionButton>
+					</Box>
 				</Stack>
-
-				<Flex justify="center">
-					<Text color="gray.600" fontSize="sm">
-						Need an account?{" "}
-						<Button
-							onClick={() => setMode(mode === "signIn" ? "signUp" : "signIn")}
-						>
-							{mode === "signIn" ? "Sign up" : "Sign in"}
-						</Button>
-					</Text>
-				</Flex>
 			</Stack>
 		</Container>
 	);
