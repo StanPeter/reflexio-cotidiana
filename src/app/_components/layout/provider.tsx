@@ -1,60 +1,48 @@
 "use client";
 
-import { Box, ChakraProvider, defaultSystem, Theme } from "@chakra-ui/react";
+import {
+	ChakraProvider,
+	createSystem,
+	defaultConfig,
+	defineConfig,
+} from "@chakra-ui/react";
 import { ThemeProvider } from "@emotion/react";
 import { SessionProvider } from "next-auth/react";
 import { PALLETE, theme } from "@/constants";
 import { TRPCReactProvider } from "@/trpc/react";
-import FloatingNav from "./Floating-nav";
-import Footer from "./Footer";
-
-type NavItem = {
-	label: string;
-	href: string;
-	x: number;
-	y: number;
-	delay?: number;
-};
+import MainBody from "./MainBody";
 
 type Props = {
-	navItems: NavItem[];
-	fontClass: string;
 	children: React.ReactNode;
 };
 
-const Provider = ({ fontClass, navItems, children }: Props) => {
+const config = defineConfig({
+	globalCss: {},
+	theme: {
+		tokens: {
+			colors: {
+				primary: { value: PALLETE.primary },
+				secondary: { value: PALLETE.secondary },
+				background: { value: PALLETE.background },
+				text: { value: PALLETE.text },
+			},
+		},
+	},
+});
+
+const system = createSystem(defaultConfig, config);
+
+const Provider = ({ children }: Props) => {
 	return (
-		<ChakraProvider value={defaultSystem}>
-			<ThemeProvider theme={theme}>
-				<TRPCReactProvider>
-					<SessionProvider>
-						<Box
-							as="div"
-							bg="white"
-							bgImage={`radial-gradient(circle at 18% 20%, rgba(163, 147, 255, 0.2), transparent 30%), radial-gradient(circle at 82% 16%, rgba(108, 99, 255, 0.12), transparent 28%), linear-gradient(180deg, ${PALLETE.bg} 0%, #f8f7ff 60%, #ffffff 100%)`}
-							className={fontClass}
-							color={PALLETE.text}
-							minH="100vh"
-							overflow="hidden"
-							pb={20}
-							pos="relative"
-							px={4}
-						>
-							<FloatingNav items={navItems} />
-							<Box
-								alignItems="center"
-								display="flex"
-								flex={1}
-								justifyContent="center"
-							>
-								{children}
-							</Box>
-							<Footer />
-						</Box>
-					</SessionProvider>
-				</TRPCReactProvider>
-			</ThemeProvider>
-		</ChakraProvider>
+		<TRPCReactProvider>
+			<SessionProvider>
+				<ChakraProvider value={system}>
+					<ThemeProvider theme={theme}>
+						<MainBody>{children}</MainBody>
+					</ThemeProvider>
+				</ChakraProvider>
+			</SessionProvider>
+		</TRPCReactProvider>
 	);
 };
 

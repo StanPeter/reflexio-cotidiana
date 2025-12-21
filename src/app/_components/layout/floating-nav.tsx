@@ -1,99 +1,100 @@
-import { Box, Text } from "@chakra-ui/react";
-import { keyframes } from "@emotion/react";
-import Link from "next/link";
-import { useMemo } from "react";
-import { PALLETE } from "@/constants";
+"use client";
 
-type NavItem = {
-	label: string;
-	href: string;
-	x: number;
-	y: number;
-	delay?: number;
+import { Box, List } from "@chakra-ui/react";
+import { useSession } from "next-auth/react";
+import { useCallback, useEffect, useState } from "react";
+import FloatingNavItem from "./FloatingNavItem";
+
+type MotionConfig = {
+	dx: number;
+	dy: number;
+	duration: number;
+	delay: number;
+	seed: number;
 };
+
+const baseNavItems = [
+	{ label: "Daily log", href: "/daily-log", x: 20, y: 30 },
+	{ label: "Motivation", href: "/motivation", x: 68, y: 24 },
+	{ label: "Statistics", href: "/statistics", x: 55, y: 65 },
+	{ label: "Settings", href: "/settings", x: 30, y: 68 },
+	{ label: "Sign in", href: "/auth", x: 80, y: 55 },
+	{
+		label: "Sign out",
+		href: "/api/auth/signout?callbackUrl=/",
+		x: 80,
+		y: 55,
+	},
+];
 
 const randomBetween = (min: number, max: number) =>
 	Math.random() * (max - min) + min;
 
-const FloatingNav = ({ items }: { items: NavItem[] }) => {
-	const motion = useMemo(
-		() =>
-			items.map((item) => {
-				// Keep drift within safe bounds so bubbles don't collide.
-				const maxDx = 20;
-				const maxDy = 14;
-				const dx = randomBetween(10, maxDx) * (Math.random() > 0.5 ? 1 : -1);
-				const dy = randomBetween(6, maxDy) * (Math.random() > 0.5 ? 1 : -1);
-				const duration = randomBetween(5.5, 8.5);
-				const delay = (item.delay ?? 0) + randomBetween(0, 1.2);
+const FloatingNav = () => {
+	const { data: session } = useSession();
+	const [navItems, setNavItems] = useState<typeof baseNavItems>(baseNavItems);
+	const buildMotionConfig = useCallback(() => {
+		const config: Record<string, MotionConfig | null> = {};
 
-				return {
-					anim: keyframes`
-            0% { transform: translate(0px, 0px); }
-            50% { transform: translate(${dx}px, ${dy}px); }
-            100% { transform: translate(0px, 0px); }
-          `,
-					duration,
-					delay,
-				};
-			}),
-		[items],
+		baseNavItems.forEach((item, index) => {
+			if (session?.user && item.label === "Sign in") {
+				config[item.label] = null;
+				return;
+			}
+
+			if (!session?.user && item.label === "Sign out") {
+				config[item.label] = null;
+				return;
+			}
+
+			// Keep drift small so items never overlap.
+			const maxDx = 8;
+			const maxDy = 10;
+			const dx = randomBetween(4, maxDx) * (index % 2 === 0 ? 1 : -1);
+			const dy = randomBetween(3, maxDy) * (index % 2 === 0 ? -1 : 1);
+			const duration = randomBetween(5.5, 8.5);
+			const delay = (item.x + item.y) * 0.001; // stagger slightly per item
+
+			config[item.label] = { dx, dy, duration, delay, seed: Math.random() };
+		});
+
+		return config;
+	}, [session]);
+
+	const [motion, setMotion] = useState<Record<string, MotionConfig | null>>(
+		() => buildMotionConfig(),
 	);
 
+	useEffect(() => {
+		if (session?.user) {
+			setNavItems(baseNavItems.filter((item) => item.label !== "Sign in"));
+		} else {
+			setNavItems(baseNavItems.filter((item) => item.label !== "Sign out"));
+		}
+	}, [session]);
+
+	// Refresh motion config when the session state changes (e.g., sign in/out),
+	// but keep it stable otherwise to avoid visible teleports.
+	useEffect(() => {
+		setMotion(buildMotionConfig());
+	}, [buildMotionConfig]);
+
 	return (
-		<Box
-			columnGap="48px"
-			display="flex"
-			flexWrap={{ base: "wrap", lg: "nowrap" }}
-			justifyContent="center"
-			marginTop="48px"
-			pointerEvents="none"
-			py={4}
-			rowGap="36px"
-			w="full"
-			zIndex={2}
-		>
-			{items.map((item, idx) => (
-				<Link
-					href={item.href}
-					key={item.label}
-					style={{ textDecoration: "none" }}
-				>
-					<Box
-						_hover={{
-							transform: "translateY(-8px) scale(1.03)",
-							boxShadow: "0 24px 60px rgba(108, 99, 255, 0.28)",
-							borderColor: "rgba(108, 99, 255, 0.32)",
-						}}
-						animation={`${motion[idx]?.anim} ${motion[idx]?.duration ?? 6}s ease-in-out ${
-							motion[idx]?.delay ?? 0
-						}s infinite alternate`}
-						backdropFilter="blur(10px)"
-						bg="white"
-						border="1px solid rgba(108, 99, 255, 0.12)"
-						borderRadius="full"
-						boxShadow="0 18px 55px rgba(47, 46, 65, 0.18)"
-						display="grid"
-						flexBasis={{
-							base: "calc(50% - 24px)",
-							md: "calc(50% - 24px)",
-							lg: "auto",
-						}}
-						fontWeight="700"
-						h="112px"
-						letterSpacing="-0.01em"
-						placeItems="center"
-						pointerEvents="auto"
-						textDecoration="none"
-						transition="transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease"
-						w="112px"
-					>
-						<Text color={PALLETE.text} textAlign="center">
-							{item.label}
-						</Text>
-					</Box>
-				</Link>
-			))}
+		<Box as="nav" display="flex" justifyContent="center" marginTop="48px">
+			<List.Root
+				columnGap={{ base: "20px", md: "28px", lg: "36px" }}
+				display="flex"
+				flexDirection="row"
+				flexWrap={{ base: "wrap", lg: "nowrap" }}
+				listStyle="none"
+				rowGap={{ base: "20px", md: "24px" }}
+			>
+				{navItems.map((item) => (
+					<List.Item key={item.label}>
+						<FloatingNavItem item={item} motion={motion} />
+					</List.Item>
+				))}
+			</List.Root>
 		</Box>
 	);
 };
