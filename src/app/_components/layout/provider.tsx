@@ -6,9 +6,8 @@ import {
 	defaultConfig,
 	defineConfig,
 } from "@chakra-ui/react";
-import { ThemeProvider } from "@emotion/react";
 import { SessionProvider } from "next-auth/react";
-import { PALLETE, theme } from "@/constants";
+import { PALLETE } from "@/constants";
 import { TRPCReactProvider } from "@/trpc/react";
 import MainBody from "./MainBody";
 
@@ -37,9 +36,7 @@ const Provider = ({ children }: Props) => {
 		<TRPCReactProvider>
 			<SessionProvider>
 				<ChakraProvider value={system}>
-					<ThemeProvider theme={theme}>
-						<MainBody>{children}</MainBody>
-					</ThemeProvider>
+					<MainBody>{children}</MainBody>
 				</ChakraProvider>
 			</SessionProvider>
 		</TRPCReactProvider>

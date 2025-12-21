@@ -3,11 +3,10 @@ import { motion, useAnimationFrame, useMotionValue } from "motion/react";
 import { useMemo, useRef } from "react";
 import { PALLETE } from "@/constants";
 
+// Motion envelope per item; small bounds keep items close to their base spot.
 type MotionConfig = {
-	dx: number;
-	dy: number;
-	duration: number;
-	delay: number;
+	driftBetweenItemsX: number;
+	driftBetweenItemsY: number;
 	seed: number;
 };
 
@@ -28,8 +27,6 @@ const FloatingNavItem = ({
 	const y = useMotionValue(0);
 
 	const noise = useMemo(() => {
-		const ampX = Math.abs(motionConfig?.dx ?? 6);
-		const ampY = Math.abs(motionConfig?.dy ?? 8);
 		const seed = motionConfig?.seed ?? 0;
 		const rand = (min: number, max: number) =>
 			Math.random() * (max - min) + min;
@@ -38,15 +35,19 @@ const FloatingNavItem = ({
 		const seedPhase = (Math.sin(seed * 9973) + 1) * Math.PI;
 
 		return {
-			ampX,
-			ampY,
+			ampX: Math.abs(motionConfig?.driftBetweenItemsX ?? 6),
+			ampY: Math.abs(motionConfig?.driftBetweenItemsY ?? 8),
 			// Slightly different speeds to avoid obvious loops.
 			freqX: rand(0.08, 0.14),
 			freqY: rand(0.09, 0.15),
 			phaseX: seedPhase + Math.random() * Math.PI,
 			phaseY: seedPhase / 2 + Math.random() * Math.PI,
 		};
-	}, [motionConfig?.dx, motionConfig?.dy, motionConfig?.seed]);
+	}, [
+		motionConfig?.driftBetweenItemsX,
+		motionConfig?.driftBetweenItemsY,
+		motionConfig?.seed,
+	]);
 
 	// Keep a tiny drift variance so the path never visibly repeats.
 	const driftPhase = useRef(Math.random() * Math.PI * 2);
@@ -89,10 +90,9 @@ const FloatingNavItem = ({
 			}}
 			whileHover={{
 				scale: 1.03,
-				y: -8,
 				cursor: "pointer",
-				boxShadow: "0 24px 60px rgba(108, 99, 255, 0.28)",
-				borderColor: "rgba(108, 99, 255, 0.32)",
+				boxShadow: "0 4px 6px -1px var(--chakra-colors-primary)",
+				borderWidth: "2px",
 			}}
 		>
 			<Text color={PALLETE.text} textAlign="center">

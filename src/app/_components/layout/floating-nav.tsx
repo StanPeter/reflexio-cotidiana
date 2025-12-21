@@ -6,10 +6,8 @@ import { useCallback, useEffect, useState } from "react";
 import FloatingNavItem from "./FloatingNavItem";
 
 type MotionConfig = {
-	dx: number;
-	dy: number;
-	duration: number;
-	delay: number;
+	driftBetweenItemsX: number;
+	driftBetweenItemsY: number;
 	seed: number;
 };
 
@@ -48,14 +46,18 @@ const FloatingNav = () => {
 			}
 
 			// Keep drift small so items never overlap.
-			const maxDx = 8;
-			const maxDy = 10;
-			const dx = randomBetween(4, maxDx) * (index % 2 === 0 ? 1 : -1);
-			const dy = randomBetween(3, maxDy) * (index % 2 === 0 ? -1 : 1);
-			const duration = randomBetween(5.5, 8.5);
-			const delay = (item.x + item.y) * 0.001; // stagger slightly per item
+			const maxDriftBetweenItemsX = 8;
+			const maxDriftBetweenItemsY = 10;
+			const driftBetweenItemsX =
+				randomBetween(4, maxDriftBetweenItemsX) * (index % 2 === 0 ? 1 : -1);
+			const driftBetweenItemsY =
+				randomBetween(3, maxDriftBetweenItemsY) * (index % 2 === 0 ? -1 : 1);
 
-			config[item.label] = { dx, dy, duration, delay, seed: Math.random() };
+			config[item.label] = {
+				driftBetweenItemsX,
+				driftBetweenItemsY,
+				seed: Math.random(),
+			};
 		});
 
 		return config;
