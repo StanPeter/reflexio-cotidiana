@@ -1,7 +1,6 @@
-import { Text } from "@chakra-ui/react";
+import { Spinner, Text } from "@chakra-ui/react";
 import { motion, useAnimationFrame, useMotionValue } from "motion/react";
 import { useMemo, useRef } from "react";
-import { PALLETE } from "@/constants";
 
 // Motion envelope per item; small bounds keep items close to their base spot.
 type MotionConfig = {
@@ -53,7 +52,7 @@ const FloatingNavItem = ({
 	const driftPhase = useRef(Math.random() * Math.PI * 2);
 
 	useAnimationFrame((t) => {
-		const seconds = t / 1000;
+		const seconds = t / 2000;
 		const wobble = Math.sin(seconds * 0.12 + driftPhase.current) * 0.6;
 
 		x.set(
@@ -76,7 +75,7 @@ const FloatingNavItem = ({
 				x,
 				y,
 				background: "var(--chakra-colors-background)",
-				border: "1px solid var(--chakra-colors-primary)",
+				border: "1px solid var(--chakra-colors-secondary)",
 				borderRadius: "100%",
 				boxShadow: "0 1px 3px 0px var(--chakra-colors-secondary)",
 				display: "grid",
@@ -89,13 +88,13 @@ const FloatingNavItem = ({
 					"transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease",
 			}}
 			whileHover={{
-				scale: 1.03,
+				scale: 1.05,
 				cursor: "pointer",
 				boxShadow: "0 4px 6px -1px var(--chakra-colors-primary)",
 				borderWidth: "2px",
 			}}
 		>
-			<Text color={PALLETE.text} textAlign="center">
+			<Text color="var(--chakra-colors-text)" textAlign="center">
 				{item.label}
 			</Text>
 		</motion.a>

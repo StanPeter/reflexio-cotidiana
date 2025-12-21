@@ -7,7 +7,7 @@ import {
 	defineConfig,
 } from "@chakra-ui/react";
 import { SessionProvider } from "next-auth/react";
-import { PALLETE } from "@/constants";
+import { PALETTE } from "@/constants";
 import { TRPCReactProvider } from "@/trpc/react";
 import MainBody from "./MainBody";
 
@@ -20,10 +20,11 @@ const config = defineConfig({
 	theme: {
 		tokens: {
 			colors: {
-				primary: { value: PALLETE.primary },
-				secondary: { value: PALLETE.secondary },
-				background: { value: PALLETE.background },
-				text: { value: PALLETE.text },
+				primary: { value: PALETTE.primary },
+				secondary: { value: PALETTE.secondary },
+				background: { value: PALETTE.background },
+				text: { value: PALETTE.text },
+				tertiary: { value: PALETTE.tertiary },
 			},
 		},
 	},

@@ -1,7 +1,7 @@
-export const PALLETE = {
-  primary: "#6C63FF",
-  secondary: "#A393FF",
-  background: "#F2F0FF",
-  text: "#2F2E41",
-  warning: "#FF6B6B",
+export const PALETTE = {
+  primary: "#6C63FF", // main accent / buttons
+  secondary: "#A393FF", // secondary actions
+  tertiary: "#e4dcff", // tertiary actions, for now footer
+  background: "#F5F4FF", // app background
+  text: "#2F2E41", // primary text
 };

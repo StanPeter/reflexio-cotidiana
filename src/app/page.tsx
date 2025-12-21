@@ -8,14 +8,12 @@ import {
 } from "@chakra-ui/react";
 import Link from "next/link";
 
-import { PALLETE } from "@/constants";
-
 export default async function Home() {
 	return (
 		<Container centerContent maxW="5xl" pb={32} pt={28}>
 			<Stack align="center" gap={4} textAlign="center">
 				<Text
-					color={PALLETE.indigo}
+					color="var(--chakra-colors-text)"
 					fontSize="xs"
 					fontWeight={600}
 					letterSpacing="0.08em"

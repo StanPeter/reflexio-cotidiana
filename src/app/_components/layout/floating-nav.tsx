@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, List } from "@chakra-ui/react";
+import { Box, List, Separator, Spinner } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 import FloatingNavItem from "./FloatingNavItem";
@@ -82,13 +82,22 @@ const FloatingNav = () => {
 	}, [buildMotionConfig]);
 
 	return (
-		<Box as="nav" display="flex" justifyContent="center" marginTop="48px">
+		<Box
+			as="nav"
+			backgroundColor={"white"}
+			borderBottom="1px solid var(--chakra-colors-tertiary)"
+			borderWidth={"0.5px"}
+			boxShadow={"0 1px 3px 0px var(--chakra-colors-background)"}
+			display="flex"
+			justifyContent="center"
+		>
 			<List.Root
 				columnGap={{ base: "20px", md: "28px", lg: "36px" }}
 				display="flex"
 				flexDirection="row"
 				flexWrap={{ base: "wrap", lg: "nowrap" }}
 				listStyle="none"
+				marginY="30px"
 				rowGap={{ base: "20px", md: "24px" }}
 			>
 				{navItems.map((item) => (

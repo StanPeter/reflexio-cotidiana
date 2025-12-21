@@ -1,7 +1,6 @@
 "use client";
 
 import { Box } from "@chakra-ui/react";
-import { PALLETE } from "@/constants";
 import FloatingNav from "./Floating-nav";
 import Footer from "./Footer";
 
@@ -14,21 +13,21 @@ const MainBody = ({ children }: IMainBodyProps) => {
 		<Box
 			as="div"
 			bg="white"
-			bgImage={`radial-gradient(circle at 18% 20%, rgba(163, 147, 255, 0.2), transparent 30%), radial-gradient(circle at 82% 16%, rgba(108, 99, 255, 0.12), transparent 28%), linear-gradient(180deg, ${PALLETE.bg} 0%, #f8f7ff 60%, #ffffff 100%)`}
-			color={PALLETE.text}
+			color="var(--chakra-colors-text)"
+			display="flex"
+			flexDirection="column"
 			minH="100vh"
 			overflow="hidden"
-			pb={20}
-			pos="relative"
-			px={4}
 		>
 			<FloatingNav />
 			<Box
 				alignItems="center"
 				as="main"
+				backgroundColor="var(--chakra-colors-background)"
 				display="flex"
 				flex={1}
 				justifyContent="center"
+				px={4}
 			>
 				{children}
 			</Box>
