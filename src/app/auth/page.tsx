@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { motion } from "motion/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaGithub } from "react-icons/fa";
@@ -163,6 +163,7 @@ const SignInPage = () => {
 					<Box alignItems="center" display="flex" justifyContent="center">
 						<MotionButton
 							backgroundColor="white"
+							onClick={() => signIn("google")}
 							p={6}
 							transition={{ duration: 0.5, ease: "easeInOut" }}
 							variant="ghost"
@@ -179,6 +180,7 @@ const SignInPage = () => {
 						</MotionButton>
 						<MotionButton
 							backgroundColor="white"
+							onClick={() => signIn("github")}
 							p={6}
 							transition={{ duration: 0.5, ease: "easeInOut" }}
 							variant="ghost"

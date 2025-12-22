@@ -1,6 +1,8 @@
 "use client";
 
 import { Box } from "@chakra-ui/react";
+import { redirect, usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 import FloatingNav from "./Floating-nav";
 import Footer from "./Footer";
 
@@ -9,6 +11,13 @@ interface IMainBodyProps {
 }
 
 const MainBody = ({ children }: IMainBodyProps) => {
+	const session = useSession();
+	const pathname = usePathname();
+
+	if (session.status === "unauthenticated" && pathname !== "/auth") {
+		return redirect("/auth");
+	}
+
 	return (
 		<Box
 			as="div"
@@ -24,10 +33,10 @@ const MainBody = ({ children }: IMainBodyProps) => {
 				alignItems="center"
 				as="main"
 				backgroundColor="var(--chakra-colors-background)"
-				display="flex"
-				flex={1}
 				justifyContent="center"
-				px={4}
+				minH={"70vh"}
+				px={{ base: 4, md: 6 }}
+				py={{ base: 12, md: 12 }}
 			>
 				{children}
 			</Box>
