@@ -27,6 +27,8 @@ const config = defineConfig({
 				tertiary: { value: PALETTE.tertiary },
 				danger: { value: PALETTE.danger },
 				success: { value: PALETTE.success },
+				hover: { value: PALETTE.hover },
+				"hover-secondary": { value: PALETTE.hoverSecondary },
 			},
 		},
 	},
