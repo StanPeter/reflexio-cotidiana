@@ -40,7 +40,8 @@ const SignInPage = () => {
 	const callbackUrl = searchParams.get("callbackUrl") ?? "/daily-log";
 	const { status } = useSession();
 	const [mode, setMode] = useState<"signIn" | "signUp">("signIn");
-	const { mutate: registerUser } = api.auth.register.useMutation();
+	const { mutateAsync: registerUser } = api.auth.register.useMutation();
+	const { mutateAsync: signInUser } = api.auth.signIn.useMutation();
 
 	const {
 		register,
@@ -66,9 +67,31 @@ const SignInPage = () => {
 		console.log("Email/password submission", email, password, repeatPassword);
 
 		if (mode === "signIn") {
-			await signIn("credentials", { email, password });
+			const { success } = await signInUser({ email, password });
+
+			if (success) {
+				const res = await signIn("credentials", {
+					email,
+					password,
+				});
+				console.log(res);
+				if (!res?.error) router.refresh();
+			}
 		} else {
-			await registerUser({ email, password, repeatPassword });
+			const { success } = await registerUser({
+				email,
+				password,
+				repeatPassword: repeatPassword ?? "",
+			});
+
+			if (success) {
+				const res = await signIn("credentials", {
+					email,
+					password,
+				});
+				console.log(res);
+				if (!res?.error) router.refresh();
+			}
 		}
 	};
 

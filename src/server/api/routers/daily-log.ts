@@ -10,14 +10,15 @@ export const dailyLogRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      return ctx.db.dailyLog.create({
-        data: {
-          userId: ctx.session.user.id,
-          questionId: input.questionId,
-          answer: input.answer,
-          logDate: new Date(),
-        },
-      });
+      console.log("clicked");
+      // return ctx.db.dailyLog.create({
+      //   data: {
+      //     userId: ctx.session.user.id,
+      //     questionId: input.questionId,
+      //     answer: input.answer,
+      //     logDate: new Date(),
+      //   },
+      // });
     }),
   getUsersQuestions: protectedProcedure.query(async ({ ctx }) => {
     // find answered questions for the day

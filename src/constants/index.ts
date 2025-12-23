@@ -1,7 +1,11 @@
 export const PALETTE = {
-  primary: "#6C63FF", // main accent / buttons
+  primary: "#8982ff;", // main accent / buttons
   secondary: "#A393FF", // secondary actions
   tertiary: "#e4dcff", // tertiary actions, for now footer
+
+  hover: "#6c63ff", // hover color
+  hoverSecondary: "#aba7ff", // hover color for secondary actions
+
   background: "#F5F4FF", // app background
   text: "#2F2E41", // primary text
   danger: "#dc2626",

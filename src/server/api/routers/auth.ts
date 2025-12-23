@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { compare, hash } from "bcryptjs";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
@@ -10,20 +11,47 @@ export const authRouter = createTRPCRouter({
       },
     });
   }),
-  updateUser: protectedProcedure
+  register: publicProcedure
     .input(
       z.object({
-        name: z.string().optional(),
-        email: z.string().email().optional(),
+        email: z.string().email(),
+        password: z.string(),
+        repeatPassword: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      return ctx.db.user.update({
-        where: { id: ctx.session.user.id },
-        data: input,
+      const foundUser = await ctx.db.user.findUnique({
+        where: {
+          email: input.email,
+        },
       });
+
+      if (foundUser) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "User already exists",
+        });
+      }
+
+      if (input.password !== input.repeatPassword) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Passwords do not match",
+        });
+      }
+
+      const passwordHash = await hash(input.password, 10);
+
+      const user = await ctx.db.user.create({
+        data: {
+          email: input.email,
+          passwordHash,
+        },
+      });
+
+      return { success: true, user };
     }),
-  register: publicProcedure
+  signIn: publicProcedure
     .input(z.object({ email: z.string().email(), password: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const foundUser = await ctx.db.user.findUnique({
@@ -31,40 +59,30 @@ export const authRouter = createTRPCRouter({
           email: input.email,
         },
       });
-      if (foundUser) {
-        throw new TRPCError({
-          code: "CONFLICT",
-          message: "User already exists",
-        });
-      }
-      const user = await ctx.db.user.create({
-        data: {
-          email: input.email,
-        },
-      });
-      return user;
-    }),
-  signIn: publicProcedure
-    .input(z.object({ email: z.string().email() }))
-    .mutation(async ({ ctx, input }) => {
-      const foundUser = await ctx.db.user.findUnique({
-        where: {
-          email: input.email,
-        },
-      });
+
       if (!foundUser) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "User not found",
         });
       }
-      return foundUser;
+
+      if (!foundUser.passwordHash) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message:
+            "It seems you have used a different sign in method previously. Please use the same method to sign in again.",
+        });
+      }
+
+      const isValid = await compare(input.password, foundUser.passwordHash);
+      if (!isValid) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "The password you entered is incorrect. Please try again.",
+        });
+      }
+
+      return { success: true, user: foundUser };
     }),
-  signOut: protectedProcedure.mutation(async ({ ctx }) => {
-    return ctx.db.user.delete({
-      where: {
-        id: ctx.session.user.id,
-      },
-    });
-  }),
 });
