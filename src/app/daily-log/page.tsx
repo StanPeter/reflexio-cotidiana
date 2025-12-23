@@ -25,6 +25,7 @@ export default function DailyLogPage() {
 			return usersQuestions.map((q, idx) => ({
 				id: q.id ?? idx,
 				text: q.question,
+				isPositive: q.isPositive,
 			}));
 		}
 

@@ -9,8 +9,9 @@ const palette = {
 
 interface IDailyLogQuestionProps {
 	question: {
-		id: number;
+		id: string;
 		text: string;
+		isPositive: boolean;
 	};
 	options: string[];
 	onAnswer: (value: string) => void;
@@ -29,6 +30,30 @@ const DailyLogQuestion = ({
 			answer: value === "Yes",
 		});
 		onAnswer(String(question.id));
+	};
+
+	const buttonColorStyles = (buttonValue: string) => {
+		if (
+			(question.isPositive && buttonValue === "Yes") ||
+			(!question.isPositive && buttonValue === "No")
+		) {
+			return {
+				_hover: {
+					backgroundColor: "var(--chakra-colors-primary)",
+					boxShadow: "0 0 15px 0 rgba(0, 0, 0, 0.1)",
+				},
+				backgroundColor: "var(--chakra-colors-secondary)",
+			};
+		}
+		return {
+			_hover: {
+				backgroundColor: "var(--chakra-colors-danger)",
+				boxShadow: "0 0 15px 0 rgba(0, 0, 0, 0.1)",
+				opacity: 0.7,
+			},
+			backgroundColor: "var(--chakra-colors-danger)",
+			opacity: 0.5,
+		};
 	};
 
 	return (
@@ -52,25 +77,14 @@ const DailyLogQuestion = ({
 					// const active = selected === label;
 					return (
 						<Button
-							_hover={{
-								transform: "translateY(-2px)",
-								boxShadow: "0 10px 30px rgba(108, 99, 255, 0.18)",
-							}}
-							bg="white"
-							borderColor={palette.indigo}
+							{...buttonColorStyles(label)}
 							borderRadius="full"
 							borderWidth="2px"
-							boxShadow="none"
-							color={palette.text}
-							fontWeight="600"
-							h="68px"
 							key={label}
-							minW="88px"
 							onClick={() => handleAnswer(label)}
-							px="20px"
-							size="lg"
+							size="2xl"
 							transition="all 160ms ease"
-							variant="outline"
+							variant={"solid"}
 						>
 							{label}
 						</Button>

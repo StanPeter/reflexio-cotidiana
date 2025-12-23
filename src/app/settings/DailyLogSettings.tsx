@@ -13,6 +13,7 @@ import {
 	Spinner,
 	Switch,
 	SwitchRoot,
+	Table,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -37,7 +38,7 @@ const DeleteQuestionDialog = ({
 }: {
 	isOpen: boolean;
 	onClose: () => void;
-	question: {
+	question?: {
 		id: string;
 		question: string;
 		points: number;
@@ -48,6 +49,8 @@ const DeleteQuestionDialog = ({
 	const deleteQuestionMutation = api.settings.deleteQuestion.useMutation();
 
 	const handleDeleteQuestion = () => {
+		if (!question) return;
+
 		deleteQuestionMutation.mutate(
 			{ id: question.id },
 			{
@@ -104,7 +107,7 @@ const EditQuestionDialog = ({
 }: {
 	isOpen: boolean;
 	onClose: () => void;
-	question: {
+	question?: {
 		id: string;
 		question: string;
 		points: number;
@@ -310,27 +313,51 @@ const DailyLogSettings = () => {
 			{isLoadingQuestions ? (
 				<Spinner size="sm" />
 			) : (
-				questions?.map((questionItem) => (
-					<Box key={questionItem.id}>
-						{questionItem.question}
-						<Button
-							margin={2}
-							onClick={() => handleEditQuestion(questionItem.id)}
-							size="sm"
-							variant="outline"
-						>
-							Edit
-						</Button>
-						<Button
-							margin={2}
-							onClick={() => handleDeleteQuestion(questionItem.id)}
-							size="sm"
-							variant="outline"
-						>
-							Delete
-						</Button>
-					</Box>
-				))
+				<Table.Root size="sm">
+					<Table.Header>
+						<Table.Row>
+							<Table.ColumnHeader>Question</Table.ColumnHeader>
+							<Table.ColumnHeader>Points</Table.ColumnHeader>
+							<Table.ColumnHeader></Table.ColumnHeader>
+						</Table.Row>
+					</Table.Header>
+					<Table.Body>
+						{questions?.map((questionItem) => (
+							<Table.Row key={questionItem.id}>
+								<Table.Cell>{questionItem.question}</Table.Cell>
+								<Table.Cell>{questionItem.points}</Table.Cell>
+								<Table.Cell>
+									<Button
+										_hover={{
+											backgroundColor: "var(--chakra-colors-primary)",
+											boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.1)",
+										}}
+										backgroundColor="var(--chakra-colors-secondary)"
+										marginRight={2}
+										onClick={() => handleEditQuestion(questionItem.id)}
+										size="sm"
+										variant="solid"
+									>
+										Edit
+									</Button>
+									<Button
+										_hover={{
+											opacity: 1,
+											boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.1)",
+										}}
+										backgroundColor="var(--chakra-colors-danger)"
+										onClick={() => handleDeleteQuestion(questionItem.id)}
+										opacity={0.8}
+										size="sm"
+										variant="solid"
+									>
+										Delete
+									</Button>
+								</Table.Cell>
+							</Table.Row>
+						))}
+					</Table.Body>
+				</Table.Root>
 			)}
 			<EditQuestionDialog
 				isOpen={isEditQuestionDialogOpen}

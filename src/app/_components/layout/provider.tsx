@@ -25,6 +25,8 @@ const config = defineConfig({
 				background: { value: PALETTE.background },
 				text: { value: PALETTE.text },
 				tertiary: { value: PALETTE.tertiary },
+				danger: { value: PALETTE.danger },
+				success: { value: PALETTE.success },
 			},
 		},
 	},
