@@ -1,4 +1,5 @@
-import { Box, Button } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
+import Button from "../_components/UI/Button";
 
 interface IFormHeader {
 	activeTab: "daily-log" | "account";
@@ -7,16 +8,18 @@ interface IFormHeader {
 
 const FormHeader = ({ activeTab, setActiveTab }: IFormHeader) => {
 	return (
-		<Box display="flex" gap={4}>
+		<Box display="flex">
 			<Button
+				borderBottomRadius={0}
 				onClick={() => setActiveTab("daily-log")}
-				variant={activeTab === "daily-log" ? "solid" : "outline"}
+				useCase={activeTab === "daily-log" ? "primary" : "secondary"}
 			>
 				Daily Log Settings
 			</Button>
 			<Button
+				borderBottomRadius={0}
 				onClick={() => setActiveTab("account")}
-				variant={activeTab === "account" ? "solid" : "outline"}
+				useCase={activeTab === "account" ? "primary" : "secondary"}
 			>
 				Account Settings
 			</Button>

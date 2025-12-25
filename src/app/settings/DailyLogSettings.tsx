@@ -2,7 +2,6 @@
 
 import {
 	Box,
-	Button,
 	Dialog,
 	FieldErrorText,
 	FieldLabel,
@@ -19,6 +18,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { LuMessageCircleQuestion } from "react-icons/lu";
 import { api } from "@/trpc/react";
+import Button from "../_components/UI/Button";
 
 type SettingsFormValues = {
 	name: string;
@@ -88,9 +88,11 @@ const DeleteQuestionDialog = ({
 						</Dialog.Body>
 						<Dialog.Footer>
 							<Dialog.ActionTrigger asChild>
-								<Button variant="outline">Cancel</Button>
+								<Button useCase="secondary">Cancel</Button>
 							</Dialog.ActionTrigger>
-							<Button onClick={handleDeleteQuestion}>Delete</Button>
+							<Button onClick={handleDeleteQuestion} useCase="danger">
+								Delete
+							</Button>
 						</Dialog.Footer>
 					</Dialog.Content>
 				</Dialog.Positioner>
@@ -138,8 +140,9 @@ const EditQuestionDialog = ({
 	const onSubmit = (data: {
 		question: string;
 		points: number;
-		isPositive: boolean;
+		isPositive: false | "on";
 	}) => {
+		console.log("data", data);
 		if (question?.id) {
 			updateQuestionMutation.mutate({
 				id: question.id,
@@ -151,7 +154,7 @@ const EditQuestionDialog = ({
 			createQuestionMutation.mutate({
 				question: data.question,
 				points: data.points ? Number(data.points) : 10,
-				isPositive: data.isPositive,
+				isPositive: !!data.isPositive,
 			});
 		}
 		onClose();
@@ -213,12 +216,14 @@ const EditQuestionDialog = ({
 						</Dialog.Body>
 						<Dialog.Footer>
 							<Dialog.ActionTrigger asChild>
-								<Button variant="outline">Cancel</Button>
+								<Button useCase="secondary">Cancel</Button>
 							</Dialog.ActionTrigger>
-							<Button onClick={handleSubmit(onSubmit)}>Save</Button>
+							<Button onClick={handleSubmit(onSubmit)} useCase="primary">
+								Save
+							</Button>
 						</Dialog.Footer>
 						<Dialog.CloseTrigger asChild>
-							<Button variant="outline">Cancel</Button>
+							<Button useCase="secondary">Cancel</Button>
 						</Dialog.CloseTrigger>
 					</Dialog.Content>
 				</Dialog.Positioner>
@@ -300,64 +305,82 @@ const DailyLogSettings = () => {
 		setIsDeleteQuestionDialogOpen(true);
 	};
 
+	const tableBorder = "1px solid var(--chakra-colors-tertiary)";
+
 	return (
 		<Box
 			as="section"
 			bg="white"
+			border="1px solid var(--chakra-colors-secondary)"
 			borderRadius="lg"
+			borderTopLeftRadius={0}
 			boxShadow="md"
 			minWidth="600px"
 			p={6}
 			w="100%"
 		>
 			{isLoadingQuestions ? (
-				<Spinner size="sm" />
+				<Spinner
+					alignSelf="center"
+					color="var(--chakra-colors-primary)"
+					display="flex"
+					justifySelf="center"
+					size="md"
+				/>
 			) : (
-				<Table.Root size="sm">
-					<Table.Header>
-						<Table.Row>
-							<Table.ColumnHeader>Question</Table.ColumnHeader>
-							<Table.ColumnHeader>Points</Table.ColumnHeader>
-							<Table.ColumnHeader></Table.ColumnHeader>
-						</Table.Row>
-					</Table.Header>
-					<Table.Body>
-						{questions?.map((questionItem) => (
-							<Table.Row key={questionItem.id}>
-								<Table.Cell>{questionItem.question}</Table.Cell>
-								<Table.Cell>{questionItem.points}</Table.Cell>
-								<Table.Cell>
-									<Button
-										_hover={{
-											backgroundColor: "var(--chakra-colors-primary)",
-											boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.1)",
-										}}
-										backgroundColor="var(--chakra-colors-secondary)"
-										marginRight={2}
-										onClick={() => handleEditQuestion(questionItem.id)}
-										size="sm"
-										variant="solid"
-									>
-										Edit
-									</Button>
-									<Button
-										_hover={{
-											opacity: 1,
-											boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.1)",
-										}}
-										backgroundColor="var(--chakra-colors-danger)"
-										onClick={() => handleDeleteQuestion(questionItem.id)}
-										opacity={0.8}
-										size="sm"
-										variant="solid"
-									>
-										Delete
-									</Button>
-								</Table.Cell>
+				<>
+					<Table.Root size="sm">
+						<Table.Header>
+							<Table.Row>
+								<Table.ColumnHeader borderBottom={tableBorder}>
+									Question
+								</Table.ColumnHeader>
+								<Table.ColumnHeader borderBottom={tableBorder}>
+									Points
+								</Table.ColumnHeader>
+								<Table.ColumnHeader
+									borderBottom={tableBorder}
+								></Table.ColumnHeader>
 							</Table.Row>
-						))}
-					</Table.Body>
-				</Table.Root>
+						</Table.Header>
+						<Table.Body>
+							{questions?.map((questionItem) => (
+								<Table.Row key={questionItem.id}>
+									<Table.Cell borderBottom={tableBorder}>
+										{questionItem.question}
+									</Table.Cell>
+									<Table.Cell borderBottom={tableBorder}>
+										{questionItem.points}
+									</Table.Cell>
+									<Table.Cell borderBottom={tableBorder}>
+										<Button
+											marginRight={2}
+											onClick={() => handleEditQuestion(questionItem.id)}
+											size="sm"
+											useCase="primary"
+										>
+											Edit
+										</Button>
+										<Button
+											onClick={() => handleDeleteQuestion(questionItem.id)}
+											size="sm"
+											useCase="danger"
+										>
+											Delete
+										</Button>
+									</Table.Cell>
+								</Table.Row>
+							))}
+						</Table.Body>
+					</Table.Root>
+					<Button
+						marginTop={4}
+						onClick={() => setIsEditQuestionDialogOpen(true)}
+						useCase="primary"
+					>
+						Add Question
+					</Button>
+				</>
 			)}
 			<EditQuestionDialog
 				isOpen={isEditQuestionDialogOpen}
@@ -371,9 +394,6 @@ const DailyLogSettings = () => {
 				question={selectedQuestion}
 				refetchQuestions={refetchQuestions}
 			/>
-			<Button onClick={() => setIsEditQuestionDialogOpen(true)}>
-				Add Question
-			</Button>
 		</Box>
 	);
 };

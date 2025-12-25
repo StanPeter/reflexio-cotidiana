@@ -72,6 +72,7 @@ const AccountSettings = () => {
 			as="section"
 			bg="white"
 			borderRadius="lg"
+			borderTopLeftRadius={0}
 			boxShadow="md"
 			p={6}
 			w="100%"
