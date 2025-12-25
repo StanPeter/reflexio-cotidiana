@@ -126,7 +126,7 @@ const SignInPage = () => {
 						borderTopRightRadius={0}
 						borderTopWidth={0}
 						onClick={() => setMode("signIn")}
-						variant={mode === "signIn" ? "solid" : "outline"}
+						useCase={mode === "signIn" ? "primary" : "secondary"}
 						w={"50%"}
 					>
 						Sign In
@@ -138,7 +138,7 @@ const SignInPage = () => {
 						borderTopLeftRadius={0}
 						borderTopWidth={0}
 						onClick={() => setMode("signUp")}
-						variant={mode === "signUp" ? "solid" : "outline"}
+						useCase={mode === "signUp" ? "primary" : "secondary"}
 						w={"50%"}
 					>
 						Sign Up
@@ -206,10 +206,9 @@ const SignInPage = () => {
 				{/* <!-- Submit Button --> */}
 				<Button
 					borderRadius={0}
-					colorScheme="purple"
 					loading={isSubmitting}
 					type="submit"
-					variant={"solid"}
+					useCase="primary"
 					width="100%"
 				>
 					{mode === "signIn" ? "Sign in" : "Sign up"}

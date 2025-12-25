@@ -1,8 +1,10 @@
 import { type ButtonProps, Button as ChakraButton } from "@chakra-ui/react";
 
-interface IButtonProps extends ButtonProps {}
+interface IButtonProps extends ButtonProps {
+	useCase: "primary" | "secondary" | "danger";
+}
 
-const Button = ({ children, ...props }: IButtonProps) => {
+const Button = ({ children, useCase, ...props }: IButtonProps) => {
 	const styles: ButtonProps = {
 		fontWeight: "600",
 		_hover: {
@@ -10,19 +12,28 @@ const Button = ({ children, ...props }: IButtonProps) => {
 		},
 	};
 
-	if (props.variant === "solid") {
+	if (useCase === "primary") {
 		styles.backgroundColor = "var(--chakra-colors-primary)";
 		styles._hover = {
 			...styles._hover,
 			backgroundColor: "var(--chakra-colors-hover)",
 		};
-	} else if (props.variant === "outline") {
+	} else if (useCase === "secondary") {
 		styles.border = "1px solid var(--chakra-colors-primary)";
+		styles.backgroundColor = "white";
 		styles.color = "var(--chakra-colors-text)";
 		styles._hover = {
 			...styles._hover,
 			backgroundColor: "var(--chakra-colors-hover-secondary)",
 			color: "white",
+		};
+	} else if (useCase === "danger") {
+		styles.backgroundColor = "var(--chakra-colors-danger)";
+		styles.opacity = 0.8;
+		styles._hover = {
+			...styles._hover,
+			backgroundColor: "var(--chakra-colors-danger)",
+			opacity: 1,
 		};
 	}
 
