@@ -1,4 +1,8 @@
-import { Input as ChakraInput, type InputProps } from "@chakra-ui/react";
+import {
+	Input as ChakraInput,
+	type InputProps,
+	Separator,
+} from "@chakra-ui/react";
 
 const Input = ({ ...props }: InputProps) => {
 	const styles: InputProps = {
@@ -6,6 +10,7 @@ const Input = ({ ...props }: InputProps) => {
 		textAlign: "center",
 		borderColor: "var(--chakra-colors-secondary)",
 		borderXWidth: 0,
+		backgroundColor: "var(--chakra-colors-background)",
 
 		_hover: {
 			boxShadow: "0 0 3px 0 rgba(0, 0, 0, 0.2)",

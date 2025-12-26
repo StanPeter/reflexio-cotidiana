@@ -33,6 +33,7 @@ const MainBody = ({ children }: IMainBodyProps) => {
 				alignItems="center"
 				as="main"
 				backgroundColor="var(--chakra-colors-background)"
+				display="flex"
 				justifyContent="center"
 				minH={"70vh"}
 				px={{ base: 4, md: 6 }}

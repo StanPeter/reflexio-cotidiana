@@ -1,15 +1,16 @@
 import {
 	Box,
-	Button,
 	FieldErrorText,
 	FieldLabel,
 	FieldRoot,
 	Flex,
-	Input,
 	Stack,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { api } from "@/trpc/react";
+import Button from "../_components/UI/Button";
+import Form from "../_components/UI/Form";
+import Input from "../_components/UI/Input";
 
 type SettingsFormValues = {
 	name: string;
@@ -38,6 +39,7 @@ const AccountSettings = () => {
 		register: registerPassword,
 		handleSubmit: handlePasswordSubmit,
 		formState: { errors: passwordErrors, isSubmitting: isPasswordSubmitting },
+		control,
 		watch,
 		reset: resetPasswordForm,
 		setError,
@@ -68,65 +70,52 @@ const AccountSettings = () => {
 	};
 
 	return (
-		<Box
-			as="section"
-			bg="white"
-			borderRadius="lg"
-			borderTopLeftRadius={0}
-			boxShadow="md"
-			p={6}
-			w="100%"
-		>
-			<Stack as="form" gap={4} onSubmit={handleSubmit(onSaveSettings)}>
-				<FieldRoot invalid={!!errors.name}>
-					<FieldLabel>Name</FieldLabel>
-					<Input
-						placeholder="Your name"
-						value={user?.name ?? ""}
-						{...register("name", { required: "Name is required" })}
-					/>
-					<FieldErrorText>{errors.name?.message}</FieldErrorText>
-				</FieldRoot>
+		<Form control={control} onSubmit={handleSubmit(onSaveSettings)} w={"100%"}>
+			<FieldRoot invalid={!!errors.name}>
+				<FieldLabel>Name</FieldLabel>
+				<Input
+					placeholder="Your name"
+					value={user?.name ?? ""}
+					{...register("name", { required: "Name is required" })}
+				/>
+				<FieldErrorText>{errors.name?.message}</FieldErrorText>
+			</FieldRoot>
 
-				<FieldRoot invalid={!!errors.email}>
-					<FieldLabel>Email</FieldLabel>
-					<Input
-						placeholder="you@example.com"
-						type="email"
-						value={user?.email ?? ""}
-						{...register("email", {
-							required: "Email is required",
-							pattern: {
-								value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-								message: "Enter a valid email",
-							},
-						})}
-					/>
-					<FieldErrorText>{errors.email?.message}</FieldErrorText>
-				</FieldRoot>
+			<FieldRoot invalid={!!errors.email}>
+				<FieldLabel>Email</FieldLabel>
+				<Input
+					placeholder="you@example.com"
+					type="email"
+					value={user?.email ?? ""}
+					{...register("email", {
+						required: "Email is required",
+						pattern: {
+							value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+							message: "Enter a valid email",
+						},
+					})}
+				/>
+				<FieldErrorText>{errors.email?.message}</FieldErrorText>
+			</FieldRoot>
 
-				<Flex align="center" justify="space-between">
-					<Box>
-						<Box fontWeight="medium">Password</Box>
-						<Box color="gray.500" fontSize="sm">
-							Manage password securely
-						</Box>
+			<Flex align="center" justify="space-between">
+				<Box>
+					<Box fontWeight="medium">Password</Box>
+					<Box color="gray.500" fontSize="sm">
+						Manage password securely
 					</Box>
-					<Button onClick={() => {}} variant="outline">
-						Change password
-					</Button>
-				</Flex>
+				</Box>
+				<Button onClick={() => {}} variant="outline">
+					Change password
+				</Button>
+			</Flex>
 
-				<Flex gap={3} justify="flex-end" pt={2}>
-					<Button type="button" variant="outline">
-						Cancel
-					</Button>
-					<Button colorScheme="purple" loading={isSubmitting} type="submit">
-						Save changes
-					</Button>
-				</Flex>
-			</Stack>
-		</Box>
+			<Flex gap={3} justify="flex-end" pt={2}>
+				<Button loading={isSubmitting} type="submit" useCase="primary">
+					Save changes
+				</Button>
+			</Flex>
+		</Form>
 	);
 };
 export default AccountSettings;
