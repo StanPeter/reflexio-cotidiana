@@ -1,12 +1,6 @@
-import {
-	Button,
-	Container,
-	Flex,
-	Heading,
-	Stack,
-	Text,
-} from "@chakra-ui/react";
+import { Container, Flex, Heading, Stack, Text } from "@chakra-ui/react";
 import Link from "next/link";
+import Button from "./_components/UI/Button";
 
 export default async function Home() {
 	return (
@@ -30,12 +24,12 @@ export default async function Home() {
 				</Text>
 				<Flex gap={3} justify="center" wrap="wrap">
 					<Link href="/daily-log">
-						<Button colorScheme="indigo" size="md">
+						<Button size="md" useCase="primary">
 							Start daily log
 						</Button>
 					</Link>
 					<Link href="/statistics">
-						<Button colorScheme="indigo" size="md" variant="outline">
+						<Button size="md" useCase="secondary">
 							View stats
 						</Button>
 					</Link>
