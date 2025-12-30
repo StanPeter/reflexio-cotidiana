@@ -7,7 +7,7 @@ import {
 	defineConfig,
 } from "@chakra-ui/react";
 import { SessionProvider } from "next-auth/react";
-import { PALETTE } from "@/constants";
+import { globalCss, theme } from "@/app/constants/chakraUITheme";
 import { TRPCReactProvider } from "@/trpc/react";
 import MainBody from "./MainBody";
 
@@ -16,22 +16,8 @@ type Props = {
 };
 
 const config = defineConfig({
-	globalCss: {},
-	theme: {
-		tokens: {
-			colors: {
-				primary: { value: PALETTE.primary },
-				secondary: { value: PALETTE.secondary },
-				background: { value: PALETTE.background },
-				text: { value: PALETTE.text },
-				tertiary: { value: PALETTE.tertiary },
-				danger: { value: PALETTE.danger },
-				success: { value: PALETTE.success },
-				hover: { value: PALETTE.hover },
-				"hover-secondary": { value: PALETTE.hoverSecondary },
-			},
-		},
-	},
+	globalCss: globalCss,
+	theme: theme,
 });
 
 const system = createSystem(defaultConfig, config);
