@@ -20,6 +20,25 @@ export const dailyLogRouter = createTRPCRouter({
       //   },
       // });
     }),
+  createDailyReflection: protectedProcedure
+    .input(
+      z.object({
+        comment: z.string(),
+        rating: z.number().min(1).max(100),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.dailyReflection.create({
+        data: {
+          userId: ctx.session.user.id,
+          comment: input.comment,
+          rating: input.rating,
+          logDate: new Date(),
+        },
+      });
+
+      return { success: true };
+    }),
   getUsersQuestions: protectedProcedure.query(async ({ ctx }) => {
     // find answered questions for the day
     const answeredQuestions = await ctx.db.dailyLog.findMany({

@@ -44,6 +44,29 @@ export type DailyLog = $Result.DefaultSelection<Prisma.$DailyLogPayload>
  * 
  */
 export type Question = $Result.DefaultSelection<Prisma.$QuestionPayload>
+/**
+ * Model DailyReflection
+ * 
+ */
+export type DailyReflection = $Result.DefaultSelection<Prisma.$DailyReflectionPayload>
+
+/**
+ * Enums
+ */
+export namespace $Enums {
+  export const Severity: {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH'
+};
+
+export type Severity = (typeof Severity)[keyof typeof Severity]
+
+}
+
+export type Severity = $Enums.Severity
+
+export const Severity: typeof $Enums.Severity
 
 /**
  * ##  Prisma Client ʲˢ
@@ -222,6 +245,16 @@ export class PrismaClient<
     * ```
     */
   get question(): Prisma.QuestionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.dailyReflection`: Exposes CRUD operations for the **DailyReflection** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DailyReflections
+    * const dailyReflections = await prisma.dailyReflection.findMany()
+    * ```
+    */
+  get dailyReflection(): Prisma.DailyReflectionDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -668,7 +701,8 @@ export namespace Prisma {
     User: 'User',
     VerificationToken: 'VerificationToken',
     DailyLog: 'DailyLog',
-    Question: 'Question'
+    Question: 'Question',
+    DailyReflection: 'DailyReflection'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -687,7 +721,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "account" | "session" | "user" | "verificationToken" | "dailyLog" | "question"
+      modelProps: "account" | "session" | "user" | "verificationToken" | "dailyLog" | "question" | "dailyReflection"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1135,6 +1169,80 @@ export namespace Prisma {
           }
         }
       }
+      DailyReflection: {
+        payload: Prisma.$DailyReflectionPayload<ExtArgs>
+        fields: Prisma.DailyReflectionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DailyReflectionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DailyReflectionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DailyReflectionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DailyReflectionPayload>
+          }
+          findFirst: {
+            args: Prisma.DailyReflectionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DailyReflectionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DailyReflectionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DailyReflectionPayload>
+          }
+          findMany: {
+            args: Prisma.DailyReflectionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DailyReflectionPayload>[]
+          }
+          create: {
+            args: Prisma.DailyReflectionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DailyReflectionPayload>
+          }
+          createMany: {
+            args: Prisma.DailyReflectionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DailyReflectionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DailyReflectionPayload>[]
+          }
+          delete: {
+            args: Prisma.DailyReflectionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DailyReflectionPayload>
+          }
+          update: {
+            args: Prisma.DailyReflectionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DailyReflectionPayload>
+          }
+          deleteMany: {
+            args: Prisma.DailyReflectionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DailyReflectionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DailyReflectionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DailyReflectionPayload>[]
+          }
+          upsert: {
+            args: Prisma.DailyReflectionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DailyReflectionPayload>
+          }
+          aggregate: {
+            args: Prisma.DailyReflectionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDailyReflection>
+          }
+          groupBy: {
+            args: Prisma.DailyReflectionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DailyReflectionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DailyReflectionCountArgs<ExtArgs>
+            result: $Utils.Optional<DailyReflectionCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1237,6 +1345,7 @@ export namespace Prisma {
     verificationToken?: VerificationTokenOmit
     dailyLog?: DailyLogOmit
     question?: QuestionOmit
+    dailyReflection?: DailyReflectionOmit
   }
 
   /* Types for Logging */
@@ -1321,6 +1430,7 @@ export namespace Prisma {
     sessions: number
     dailyLogs: number
     questions: number
+    dailyReflections: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1328,6 +1438,7 @@ export namespace Prisma {
     sessions?: boolean | UserCountOutputTypeCountSessionsArgs
     dailyLogs?: boolean | UserCountOutputTypeCountDailyLogsArgs
     questions?: boolean | UserCountOutputTypeCountQuestionsArgs
+    dailyReflections?: boolean | UserCountOutputTypeCountDailyReflectionsArgs
   }
 
   // Custom InputTypes
@@ -1367,6 +1478,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountQuestionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: QuestionWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountDailyReflectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DailyReflectionWhereInput
   }
 
 
@@ -3826,6 +3944,7 @@ export namespace Prisma {
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     dailyLogs?: boolean | User$dailyLogsArgs<ExtArgs>
     questions?: boolean | User$questionsArgs<ExtArgs>
+    dailyReflections?: boolean | User$dailyReflectionsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -3862,6 +3981,7 @@ export namespace Prisma {
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     dailyLogs?: boolean | User$dailyLogsArgs<ExtArgs>
     questions?: boolean | User$questionsArgs<ExtArgs>
+    dailyReflections?: boolean | User$dailyReflectionsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -3874,6 +3994,7 @@ export namespace Prisma {
       sessions: Prisma.$SessionPayload<ExtArgs>[]
       dailyLogs: Prisma.$DailyLogPayload<ExtArgs>[]
       questions: Prisma.$QuestionPayload<ExtArgs>[]
+      dailyReflections: Prisma.$DailyReflectionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -4280,6 +4401,7 @@ export namespace Prisma {
     sessions<T extends User$sessionsArgs<ExtArgs> = {}>(args?: Subset<T, User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     dailyLogs<T extends User$dailyLogsArgs<ExtArgs> = {}>(args?: Subset<T, User$dailyLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DailyLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     questions<T extends User$questionsArgs<ExtArgs> = {}>(args?: Subset<T, User$questionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    dailyReflections<T extends User$dailyReflectionsArgs<ExtArgs> = {}>(args?: Subset<T, User$dailyReflectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DailyReflectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4796,6 +4918,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: QuestionScalarFieldEnum | QuestionScalarFieldEnum[]
+  }
+
+  /**
+   * User.dailyReflections
+   */
+  export type User$dailyReflectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyReflection
+     */
+    select?: DailyReflectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyReflection
+     */
+    omit?: DailyReflectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyReflectionInclude<ExtArgs> | null
+    where?: DailyReflectionWhereInput
+    orderBy?: DailyReflectionOrderByWithRelationInput | DailyReflectionOrderByWithRelationInput[]
+    cursor?: DailyReflectionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DailyReflectionScalarFieldEnum | DailyReflectionScalarFieldEnum[]
   }
 
   /**
@@ -6884,25 +7030,15 @@ export namespace Prisma {
 
   export type AggregateQuestion = {
     _count: QuestionCountAggregateOutputType | null
-    _avg: QuestionAvgAggregateOutputType | null
-    _sum: QuestionSumAggregateOutputType | null
     _min: QuestionMinAggregateOutputType | null
     _max: QuestionMaxAggregateOutputType | null
-  }
-
-  export type QuestionAvgAggregateOutputType = {
-    points: number | null
-  }
-
-  export type QuestionSumAggregateOutputType = {
-    points: number | null
   }
 
   export type QuestionMinAggregateOutputType = {
     id: string | null
     question: string | null
     isPositive: boolean | null
-    points: number | null
+    severity: $Enums.Severity | null
     userId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -6912,7 +7048,7 @@ export namespace Prisma {
     id: string | null
     question: string | null
     isPositive: boolean | null
-    points: number | null
+    severity: $Enums.Severity | null
     userId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -6922,7 +7058,7 @@ export namespace Prisma {
     id: number
     question: number
     isPositive: number
-    points: number
+    severity: number
     userId: number
     createdAt: number
     updatedAt: number
@@ -6930,19 +7066,11 @@ export namespace Prisma {
   }
 
 
-  export type QuestionAvgAggregateInputType = {
-    points?: true
-  }
-
-  export type QuestionSumAggregateInputType = {
-    points?: true
-  }
-
   export type QuestionMinAggregateInputType = {
     id?: true
     question?: true
     isPositive?: true
-    points?: true
+    severity?: true
     userId?: true
     createdAt?: true
     updatedAt?: true
@@ -6952,7 +7080,7 @@ export namespace Prisma {
     id?: true
     question?: true
     isPositive?: true
-    points?: true
+    severity?: true
     userId?: true
     createdAt?: true
     updatedAt?: true
@@ -6962,7 +7090,7 @@ export namespace Prisma {
     id?: true
     question?: true
     isPositive?: true
-    points?: true
+    severity?: true
     userId?: true
     createdAt?: true
     updatedAt?: true
@@ -7007,18 +7135,6 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Select which fields to average
-    **/
-    _avg?: QuestionAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: QuestionSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
      * Select which fields to find the minimum value
     **/
     _min?: QuestionMinAggregateInputType
@@ -7049,8 +7165,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: QuestionCountAggregateInputType | true
-    _avg?: QuestionAvgAggregateInputType
-    _sum?: QuestionSumAggregateInputType
     _min?: QuestionMinAggregateInputType
     _max?: QuestionMaxAggregateInputType
   }
@@ -7059,13 +7173,11 @@ export namespace Prisma {
     id: string
     question: string
     isPositive: boolean
-    points: number
+    severity: $Enums.Severity
     userId: string
     createdAt: Date
     updatedAt: Date
     _count: QuestionCountAggregateOutputType | null
-    _avg: QuestionAvgAggregateOutputType | null
-    _sum: QuestionSumAggregateOutputType | null
     _min: QuestionMinAggregateOutputType | null
     _max: QuestionMaxAggregateOutputType | null
   }
@@ -7088,7 +7200,7 @@ export namespace Prisma {
     id?: boolean
     question?: boolean
     isPositive?: boolean
-    points?: boolean
+    severity?: boolean
     userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7101,7 +7213,7 @@ export namespace Prisma {
     id?: boolean
     question?: boolean
     isPositive?: boolean
-    points?: boolean
+    severity?: boolean
     userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7112,7 +7224,7 @@ export namespace Prisma {
     id?: boolean
     question?: boolean
     isPositive?: boolean
-    points?: boolean
+    severity?: boolean
     userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7123,13 +7235,13 @@ export namespace Prisma {
     id?: boolean
     question?: boolean
     isPositive?: boolean
-    points?: boolean
+    severity?: boolean
     userId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type QuestionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "question" | "isPositive" | "points" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["question"]>
+  export type QuestionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "question" | "isPositive" | "severity" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["question"]>
   export type QuestionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     dailyLogs?: boolean | Question$dailyLogsArgs<ExtArgs>
@@ -7152,7 +7264,7 @@ export namespace Prisma {
       id: string
       question: string
       isPositive: boolean
-      points: number
+      severity: $Enums.Severity
       userId: string
       createdAt: Date
       updatedAt: Date
@@ -7584,7 +7696,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Question", 'String'>
     readonly question: FieldRef<"Question", 'String'>
     readonly isPositive: FieldRef<"Question", 'Boolean'>
-    readonly points: FieldRef<"Question", 'Int'>
+    readonly severity: FieldRef<"Question", 'Severity'>
     readonly userId: FieldRef<"Question", 'String'>
     readonly createdAt: FieldRef<"Question", 'DateTime'>
     readonly updatedAt: FieldRef<"Question", 'DateTime'>
@@ -8027,6 +8139,1124 @@ export namespace Prisma {
 
 
   /**
+   * Model DailyReflection
+   */
+
+  export type AggregateDailyReflection = {
+    _count: DailyReflectionCountAggregateOutputType | null
+    _avg: DailyReflectionAvgAggregateOutputType | null
+    _sum: DailyReflectionSumAggregateOutputType | null
+    _min: DailyReflectionMinAggregateOutputType | null
+    _max: DailyReflectionMaxAggregateOutputType | null
+  }
+
+  export type DailyReflectionAvgAggregateOutputType = {
+    rating: number | null
+  }
+
+  export type DailyReflectionSumAggregateOutputType = {
+    rating: number | null
+  }
+
+  export type DailyReflectionMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    comment: string | null
+    logDate: Date | null
+    rating: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DailyReflectionMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    comment: string | null
+    logDate: Date | null
+    rating: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DailyReflectionCountAggregateOutputType = {
+    id: number
+    userId: number
+    comment: number
+    logDate: number
+    rating: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type DailyReflectionAvgAggregateInputType = {
+    rating?: true
+  }
+
+  export type DailyReflectionSumAggregateInputType = {
+    rating?: true
+  }
+
+  export type DailyReflectionMinAggregateInputType = {
+    id?: true
+    userId?: true
+    comment?: true
+    logDate?: true
+    rating?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DailyReflectionMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    comment?: true
+    logDate?: true
+    rating?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DailyReflectionCountAggregateInputType = {
+    id?: true
+    userId?: true
+    comment?: true
+    logDate?: true
+    rating?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type DailyReflectionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DailyReflection to aggregate.
+     */
+    where?: DailyReflectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DailyReflections to fetch.
+     */
+    orderBy?: DailyReflectionOrderByWithRelationInput | DailyReflectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DailyReflectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DailyReflections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DailyReflections.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DailyReflections
+    **/
+    _count?: true | DailyReflectionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: DailyReflectionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: DailyReflectionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DailyReflectionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DailyReflectionMaxAggregateInputType
+  }
+
+  export type GetDailyReflectionAggregateType<T extends DailyReflectionAggregateArgs> = {
+        [P in keyof T & keyof AggregateDailyReflection]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDailyReflection[P]>
+      : GetScalarType<T[P], AggregateDailyReflection[P]>
+  }
+
+
+
+
+  export type DailyReflectionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DailyReflectionWhereInput
+    orderBy?: DailyReflectionOrderByWithAggregationInput | DailyReflectionOrderByWithAggregationInput[]
+    by: DailyReflectionScalarFieldEnum[] | DailyReflectionScalarFieldEnum
+    having?: DailyReflectionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DailyReflectionCountAggregateInputType | true
+    _avg?: DailyReflectionAvgAggregateInputType
+    _sum?: DailyReflectionSumAggregateInputType
+    _min?: DailyReflectionMinAggregateInputType
+    _max?: DailyReflectionMaxAggregateInputType
+  }
+
+  export type DailyReflectionGroupByOutputType = {
+    id: string
+    userId: string
+    comment: string
+    logDate: Date
+    rating: number
+    createdAt: Date
+    updatedAt: Date
+    _count: DailyReflectionCountAggregateOutputType | null
+    _avg: DailyReflectionAvgAggregateOutputType | null
+    _sum: DailyReflectionSumAggregateOutputType | null
+    _min: DailyReflectionMinAggregateOutputType | null
+    _max: DailyReflectionMaxAggregateOutputType | null
+  }
+
+  type GetDailyReflectionGroupByPayload<T extends DailyReflectionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DailyReflectionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DailyReflectionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DailyReflectionGroupByOutputType[P]>
+            : GetScalarType<T[P], DailyReflectionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DailyReflectionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    comment?: boolean
+    logDate?: boolean
+    rating?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["dailyReflection"]>
+
+  export type DailyReflectionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    comment?: boolean
+    logDate?: boolean
+    rating?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["dailyReflection"]>
+
+  export type DailyReflectionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    comment?: boolean
+    logDate?: boolean
+    rating?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["dailyReflection"]>
+
+  export type DailyReflectionSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    comment?: boolean
+    logDate?: boolean
+    rating?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type DailyReflectionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "comment" | "logDate" | "rating" | "createdAt" | "updatedAt", ExtArgs["result"]["dailyReflection"]>
+  export type DailyReflectionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type DailyReflectionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type DailyReflectionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $DailyReflectionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DailyReflection"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      comment: string
+      logDate: Date
+      rating: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["dailyReflection"]>
+    composites: {}
+  }
+
+  type DailyReflectionGetPayload<S extends boolean | null | undefined | DailyReflectionDefaultArgs> = $Result.GetResult<Prisma.$DailyReflectionPayload, S>
+
+  type DailyReflectionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DailyReflectionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DailyReflectionCountAggregateInputType | true
+    }
+
+  export interface DailyReflectionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DailyReflection'], meta: { name: 'DailyReflection' } }
+    /**
+     * Find zero or one DailyReflection that matches the filter.
+     * @param {DailyReflectionFindUniqueArgs} args - Arguments to find a DailyReflection
+     * @example
+     * // Get one DailyReflection
+     * const dailyReflection = await prisma.dailyReflection.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DailyReflectionFindUniqueArgs>(args: SelectSubset<T, DailyReflectionFindUniqueArgs<ExtArgs>>): Prisma__DailyReflectionClient<$Result.GetResult<Prisma.$DailyReflectionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DailyReflection that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DailyReflectionFindUniqueOrThrowArgs} args - Arguments to find a DailyReflection
+     * @example
+     * // Get one DailyReflection
+     * const dailyReflection = await prisma.dailyReflection.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DailyReflectionFindUniqueOrThrowArgs>(args: SelectSubset<T, DailyReflectionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DailyReflectionClient<$Result.GetResult<Prisma.$DailyReflectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DailyReflection that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DailyReflectionFindFirstArgs} args - Arguments to find a DailyReflection
+     * @example
+     * // Get one DailyReflection
+     * const dailyReflection = await prisma.dailyReflection.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DailyReflectionFindFirstArgs>(args?: SelectSubset<T, DailyReflectionFindFirstArgs<ExtArgs>>): Prisma__DailyReflectionClient<$Result.GetResult<Prisma.$DailyReflectionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DailyReflection that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DailyReflectionFindFirstOrThrowArgs} args - Arguments to find a DailyReflection
+     * @example
+     * // Get one DailyReflection
+     * const dailyReflection = await prisma.dailyReflection.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DailyReflectionFindFirstOrThrowArgs>(args?: SelectSubset<T, DailyReflectionFindFirstOrThrowArgs<ExtArgs>>): Prisma__DailyReflectionClient<$Result.GetResult<Prisma.$DailyReflectionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DailyReflections that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DailyReflectionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DailyReflections
+     * const dailyReflections = await prisma.dailyReflection.findMany()
+     * 
+     * // Get first 10 DailyReflections
+     * const dailyReflections = await prisma.dailyReflection.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const dailyReflectionWithIdOnly = await prisma.dailyReflection.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DailyReflectionFindManyArgs>(args?: SelectSubset<T, DailyReflectionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DailyReflectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DailyReflection.
+     * @param {DailyReflectionCreateArgs} args - Arguments to create a DailyReflection.
+     * @example
+     * // Create one DailyReflection
+     * const DailyReflection = await prisma.dailyReflection.create({
+     *   data: {
+     *     // ... data to create a DailyReflection
+     *   }
+     * })
+     * 
+     */
+    create<T extends DailyReflectionCreateArgs>(args: SelectSubset<T, DailyReflectionCreateArgs<ExtArgs>>): Prisma__DailyReflectionClient<$Result.GetResult<Prisma.$DailyReflectionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DailyReflections.
+     * @param {DailyReflectionCreateManyArgs} args - Arguments to create many DailyReflections.
+     * @example
+     * // Create many DailyReflections
+     * const dailyReflection = await prisma.dailyReflection.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DailyReflectionCreateManyArgs>(args?: SelectSubset<T, DailyReflectionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many DailyReflections and returns the data saved in the database.
+     * @param {DailyReflectionCreateManyAndReturnArgs} args - Arguments to create many DailyReflections.
+     * @example
+     * // Create many DailyReflections
+     * const dailyReflection = await prisma.dailyReflection.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many DailyReflections and only return the `id`
+     * const dailyReflectionWithIdOnly = await prisma.dailyReflection.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DailyReflectionCreateManyAndReturnArgs>(args?: SelectSubset<T, DailyReflectionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DailyReflectionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a DailyReflection.
+     * @param {DailyReflectionDeleteArgs} args - Arguments to delete one DailyReflection.
+     * @example
+     * // Delete one DailyReflection
+     * const DailyReflection = await prisma.dailyReflection.delete({
+     *   where: {
+     *     // ... filter to delete one DailyReflection
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DailyReflectionDeleteArgs>(args: SelectSubset<T, DailyReflectionDeleteArgs<ExtArgs>>): Prisma__DailyReflectionClient<$Result.GetResult<Prisma.$DailyReflectionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DailyReflection.
+     * @param {DailyReflectionUpdateArgs} args - Arguments to update one DailyReflection.
+     * @example
+     * // Update one DailyReflection
+     * const dailyReflection = await prisma.dailyReflection.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DailyReflectionUpdateArgs>(args: SelectSubset<T, DailyReflectionUpdateArgs<ExtArgs>>): Prisma__DailyReflectionClient<$Result.GetResult<Prisma.$DailyReflectionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DailyReflections.
+     * @param {DailyReflectionDeleteManyArgs} args - Arguments to filter DailyReflections to delete.
+     * @example
+     * // Delete a few DailyReflections
+     * const { count } = await prisma.dailyReflection.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DailyReflectionDeleteManyArgs>(args?: SelectSubset<T, DailyReflectionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DailyReflections.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DailyReflectionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DailyReflections
+     * const dailyReflection = await prisma.dailyReflection.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DailyReflectionUpdateManyArgs>(args: SelectSubset<T, DailyReflectionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DailyReflections and returns the data updated in the database.
+     * @param {DailyReflectionUpdateManyAndReturnArgs} args - Arguments to update many DailyReflections.
+     * @example
+     * // Update many DailyReflections
+     * const dailyReflection = await prisma.dailyReflection.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more DailyReflections and only return the `id`
+     * const dailyReflectionWithIdOnly = await prisma.dailyReflection.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DailyReflectionUpdateManyAndReturnArgs>(args: SelectSubset<T, DailyReflectionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DailyReflectionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one DailyReflection.
+     * @param {DailyReflectionUpsertArgs} args - Arguments to update or create a DailyReflection.
+     * @example
+     * // Update or create a DailyReflection
+     * const dailyReflection = await prisma.dailyReflection.upsert({
+     *   create: {
+     *     // ... data to create a DailyReflection
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DailyReflection we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DailyReflectionUpsertArgs>(args: SelectSubset<T, DailyReflectionUpsertArgs<ExtArgs>>): Prisma__DailyReflectionClient<$Result.GetResult<Prisma.$DailyReflectionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DailyReflections.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DailyReflectionCountArgs} args - Arguments to filter DailyReflections to count.
+     * @example
+     * // Count the number of DailyReflections
+     * const count = await prisma.dailyReflection.count({
+     *   where: {
+     *     // ... the filter for the DailyReflections we want to count
+     *   }
+     * })
+    **/
+    count<T extends DailyReflectionCountArgs>(
+      args?: Subset<T, DailyReflectionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DailyReflectionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DailyReflection.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DailyReflectionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DailyReflectionAggregateArgs>(args: Subset<T, DailyReflectionAggregateArgs>): Prisma.PrismaPromise<GetDailyReflectionAggregateType<T>>
+
+    /**
+     * Group by DailyReflection.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DailyReflectionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DailyReflectionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DailyReflectionGroupByArgs['orderBy'] }
+        : { orderBy?: DailyReflectionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DailyReflectionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDailyReflectionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DailyReflection model
+   */
+  readonly fields: DailyReflectionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DailyReflection.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DailyReflectionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DailyReflection model
+   */
+  interface DailyReflectionFieldRefs {
+    readonly id: FieldRef<"DailyReflection", 'String'>
+    readonly userId: FieldRef<"DailyReflection", 'String'>
+    readonly comment: FieldRef<"DailyReflection", 'String'>
+    readonly logDate: FieldRef<"DailyReflection", 'DateTime'>
+    readonly rating: FieldRef<"DailyReflection", 'Int'>
+    readonly createdAt: FieldRef<"DailyReflection", 'DateTime'>
+    readonly updatedAt: FieldRef<"DailyReflection", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DailyReflection findUnique
+   */
+  export type DailyReflectionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyReflection
+     */
+    select?: DailyReflectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyReflection
+     */
+    omit?: DailyReflectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyReflectionInclude<ExtArgs> | null
+    /**
+     * Filter, which DailyReflection to fetch.
+     */
+    where: DailyReflectionWhereUniqueInput
+  }
+
+  /**
+   * DailyReflection findUniqueOrThrow
+   */
+  export type DailyReflectionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyReflection
+     */
+    select?: DailyReflectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyReflection
+     */
+    omit?: DailyReflectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyReflectionInclude<ExtArgs> | null
+    /**
+     * Filter, which DailyReflection to fetch.
+     */
+    where: DailyReflectionWhereUniqueInput
+  }
+
+  /**
+   * DailyReflection findFirst
+   */
+  export type DailyReflectionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyReflection
+     */
+    select?: DailyReflectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyReflection
+     */
+    omit?: DailyReflectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyReflectionInclude<ExtArgs> | null
+    /**
+     * Filter, which DailyReflection to fetch.
+     */
+    where?: DailyReflectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DailyReflections to fetch.
+     */
+    orderBy?: DailyReflectionOrderByWithRelationInput | DailyReflectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DailyReflections.
+     */
+    cursor?: DailyReflectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DailyReflections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DailyReflections.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DailyReflections.
+     */
+    distinct?: DailyReflectionScalarFieldEnum | DailyReflectionScalarFieldEnum[]
+  }
+
+  /**
+   * DailyReflection findFirstOrThrow
+   */
+  export type DailyReflectionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyReflection
+     */
+    select?: DailyReflectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyReflection
+     */
+    omit?: DailyReflectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyReflectionInclude<ExtArgs> | null
+    /**
+     * Filter, which DailyReflection to fetch.
+     */
+    where?: DailyReflectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DailyReflections to fetch.
+     */
+    orderBy?: DailyReflectionOrderByWithRelationInput | DailyReflectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DailyReflections.
+     */
+    cursor?: DailyReflectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DailyReflections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DailyReflections.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DailyReflections.
+     */
+    distinct?: DailyReflectionScalarFieldEnum | DailyReflectionScalarFieldEnum[]
+  }
+
+  /**
+   * DailyReflection findMany
+   */
+  export type DailyReflectionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyReflection
+     */
+    select?: DailyReflectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyReflection
+     */
+    omit?: DailyReflectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyReflectionInclude<ExtArgs> | null
+    /**
+     * Filter, which DailyReflections to fetch.
+     */
+    where?: DailyReflectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DailyReflections to fetch.
+     */
+    orderBy?: DailyReflectionOrderByWithRelationInput | DailyReflectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DailyReflections.
+     */
+    cursor?: DailyReflectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DailyReflections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DailyReflections.
+     */
+    skip?: number
+    distinct?: DailyReflectionScalarFieldEnum | DailyReflectionScalarFieldEnum[]
+  }
+
+  /**
+   * DailyReflection create
+   */
+  export type DailyReflectionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyReflection
+     */
+    select?: DailyReflectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyReflection
+     */
+    omit?: DailyReflectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyReflectionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DailyReflection.
+     */
+    data: XOR<DailyReflectionCreateInput, DailyReflectionUncheckedCreateInput>
+  }
+
+  /**
+   * DailyReflection createMany
+   */
+  export type DailyReflectionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DailyReflections.
+     */
+    data: DailyReflectionCreateManyInput | DailyReflectionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DailyReflection createManyAndReturn
+   */
+  export type DailyReflectionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyReflection
+     */
+    select?: DailyReflectionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyReflection
+     */
+    omit?: DailyReflectionOmit<ExtArgs> | null
+    /**
+     * The data used to create many DailyReflections.
+     */
+    data: DailyReflectionCreateManyInput | DailyReflectionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyReflectionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DailyReflection update
+   */
+  export type DailyReflectionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyReflection
+     */
+    select?: DailyReflectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyReflection
+     */
+    omit?: DailyReflectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyReflectionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DailyReflection.
+     */
+    data: XOR<DailyReflectionUpdateInput, DailyReflectionUncheckedUpdateInput>
+    /**
+     * Choose, which DailyReflection to update.
+     */
+    where: DailyReflectionWhereUniqueInput
+  }
+
+  /**
+   * DailyReflection updateMany
+   */
+  export type DailyReflectionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DailyReflections.
+     */
+    data: XOR<DailyReflectionUpdateManyMutationInput, DailyReflectionUncheckedUpdateManyInput>
+    /**
+     * Filter which DailyReflections to update
+     */
+    where?: DailyReflectionWhereInput
+    /**
+     * Limit how many DailyReflections to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DailyReflection updateManyAndReturn
+   */
+  export type DailyReflectionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyReflection
+     */
+    select?: DailyReflectionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyReflection
+     */
+    omit?: DailyReflectionOmit<ExtArgs> | null
+    /**
+     * The data used to update DailyReflections.
+     */
+    data: XOR<DailyReflectionUpdateManyMutationInput, DailyReflectionUncheckedUpdateManyInput>
+    /**
+     * Filter which DailyReflections to update
+     */
+    where?: DailyReflectionWhereInput
+    /**
+     * Limit how many DailyReflections to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyReflectionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DailyReflection upsert
+   */
+  export type DailyReflectionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyReflection
+     */
+    select?: DailyReflectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyReflection
+     */
+    omit?: DailyReflectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyReflectionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DailyReflection to update in case it exists.
+     */
+    where: DailyReflectionWhereUniqueInput
+    /**
+     * In case the DailyReflection found by the `where` argument doesn't exist, create a new DailyReflection with this data.
+     */
+    create: XOR<DailyReflectionCreateInput, DailyReflectionUncheckedCreateInput>
+    /**
+     * In case the DailyReflection was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DailyReflectionUpdateInput, DailyReflectionUncheckedUpdateInput>
+  }
+
+  /**
+   * DailyReflection delete
+   */
+  export type DailyReflectionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyReflection
+     */
+    select?: DailyReflectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyReflection
+     */
+    omit?: DailyReflectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyReflectionInclude<ExtArgs> | null
+    /**
+     * Filter which DailyReflection to delete.
+     */
+    where: DailyReflectionWhereUniqueInput
+  }
+
+  /**
+   * DailyReflection deleteMany
+   */
+  export type DailyReflectionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DailyReflections to delete
+     */
+    where?: DailyReflectionWhereInput
+    /**
+     * Limit how many DailyReflections to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DailyReflection without action
+   */
+  export type DailyReflectionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DailyReflection
+     */
+    select?: DailyReflectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DailyReflection
+     */
+    omit?: DailyReflectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DailyReflectionInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -8107,13 +9337,26 @@ export namespace Prisma {
     id: 'id',
     question: 'question',
     isPositive: 'isPositive',
-    points: 'points',
+    severity: 'severity',
     userId: 'userId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
 
   export type QuestionScalarFieldEnum = (typeof QuestionScalarFieldEnum)[keyof typeof QuestionScalarFieldEnum]
+
+
+  export const DailyReflectionScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    comment: 'comment',
+    logDate: 'logDate',
+    rating: 'rating',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type DailyReflectionScalarFieldEnum = (typeof DailyReflectionScalarFieldEnum)[keyof typeof DailyReflectionScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -8191,6 +9434,20 @@ export namespace Prisma {
    * Reference to a field of type 'Boolean'
    */
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
+   * Reference to a field of type 'Severity'
+   */
+  export type EnumSeverityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Severity'>
+    
+
+
+  /**
+   * Reference to a field of type 'Severity[]'
+   */
+  export type ListEnumSeverityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Severity[]'>
     
 
 
@@ -8373,6 +9630,7 @@ export namespace Prisma {
     sessions?: SessionListRelationFilter
     dailyLogs?: DailyLogListRelationFilter
     questions?: QuestionListRelationFilter
+    dailyReflections?: DailyReflectionListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -8386,6 +9644,7 @@ export namespace Prisma {
     sessions?: SessionOrderByRelationAggregateInput
     dailyLogs?: DailyLogOrderByRelationAggregateInput
     questions?: QuestionOrderByRelationAggregateInput
+    dailyReflections?: DailyReflectionOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -8402,6 +9661,7 @@ export namespace Prisma {
     sessions?: SessionListRelationFilter
     dailyLogs?: DailyLogListRelationFilter
     questions?: QuestionListRelationFilter
+    dailyReflections?: DailyReflectionListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -8547,7 +9807,7 @@ export namespace Prisma {
     id?: StringFilter<"Question"> | string
     question?: StringFilter<"Question"> | string
     isPositive?: BoolFilter<"Question"> | boolean
-    points?: IntFilter<"Question"> | number
+    severity?: EnumSeverityFilter<"Question"> | $Enums.Severity
     userId?: StringFilter<"Question"> | string
     createdAt?: DateTimeFilter<"Question"> | Date | string
     updatedAt?: DateTimeFilter<"Question"> | Date | string
@@ -8559,7 +9819,7 @@ export namespace Prisma {
     id?: SortOrder
     question?: SortOrder
     isPositive?: SortOrder
-    points?: SortOrder
+    severity?: SortOrder
     userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -8574,7 +9834,7 @@ export namespace Prisma {
     NOT?: QuestionWhereInput | QuestionWhereInput[]
     question?: StringFilter<"Question"> | string
     isPositive?: BoolFilter<"Question"> | boolean
-    points?: IntFilter<"Question"> | number
+    severity?: EnumSeverityFilter<"Question"> | $Enums.Severity
     userId?: StringFilter<"Question"> | string
     createdAt?: DateTimeFilter<"Question"> | Date | string
     updatedAt?: DateTimeFilter<"Question"> | Date | string
@@ -8586,15 +9846,13 @@ export namespace Prisma {
     id?: SortOrder
     question?: SortOrder
     isPositive?: SortOrder
-    points?: SortOrder
+    severity?: SortOrder
     userId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: QuestionCountOrderByAggregateInput
-    _avg?: QuestionAvgOrderByAggregateInput
     _max?: QuestionMaxOrderByAggregateInput
     _min?: QuestionMinOrderByAggregateInput
-    _sum?: QuestionSumOrderByAggregateInput
   }
 
   export type QuestionScalarWhereWithAggregatesInput = {
@@ -8604,10 +9862,78 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Question"> | string
     question?: StringWithAggregatesFilter<"Question"> | string
     isPositive?: BoolWithAggregatesFilter<"Question"> | boolean
-    points?: IntWithAggregatesFilter<"Question"> | number
+    severity?: EnumSeverityWithAggregatesFilter<"Question"> | $Enums.Severity
     userId?: StringWithAggregatesFilter<"Question"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Question"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Question"> | Date | string
+  }
+
+  export type DailyReflectionWhereInput = {
+    AND?: DailyReflectionWhereInput | DailyReflectionWhereInput[]
+    OR?: DailyReflectionWhereInput[]
+    NOT?: DailyReflectionWhereInput | DailyReflectionWhereInput[]
+    id?: StringFilter<"DailyReflection"> | string
+    userId?: StringFilter<"DailyReflection"> | string
+    comment?: StringFilter<"DailyReflection"> | string
+    logDate?: DateTimeFilter<"DailyReflection"> | Date | string
+    rating?: IntFilter<"DailyReflection"> | number
+    createdAt?: DateTimeFilter<"DailyReflection"> | Date | string
+    updatedAt?: DateTimeFilter<"DailyReflection"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type DailyReflectionOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    comment?: SortOrder
+    logDate?: SortOrder
+    rating?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type DailyReflectionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId_logDate?: DailyReflectionUserIdLogDateCompoundUniqueInput
+    AND?: DailyReflectionWhereInput | DailyReflectionWhereInput[]
+    OR?: DailyReflectionWhereInput[]
+    NOT?: DailyReflectionWhereInput | DailyReflectionWhereInput[]
+    userId?: StringFilter<"DailyReflection"> | string
+    comment?: StringFilter<"DailyReflection"> | string
+    logDate?: DateTimeFilter<"DailyReflection"> | Date | string
+    rating?: IntFilter<"DailyReflection"> | number
+    createdAt?: DateTimeFilter<"DailyReflection"> | Date | string
+    updatedAt?: DateTimeFilter<"DailyReflection"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "userId_logDate">
+
+  export type DailyReflectionOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    comment?: SortOrder
+    logDate?: SortOrder
+    rating?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: DailyReflectionCountOrderByAggregateInput
+    _avg?: DailyReflectionAvgOrderByAggregateInput
+    _max?: DailyReflectionMaxOrderByAggregateInput
+    _min?: DailyReflectionMinOrderByAggregateInput
+    _sum?: DailyReflectionSumOrderByAggregateInput
+  }
+
+  export type DailyReflectionScalarWhereWithAggregatesInput = {
+    AND?: DailyReflectionScalarWhereWithAggregatesInput | DailyReflectionScalarWhereWithAggregatesInput[]
+    OR?: DailyReflectionScalarWhereWithAggregatesInput[]
+    NOT?: DailyReflectionScalarWhereWithAggregatesInput | DailyReflectionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"DailyReflection"> | string
+    userId?: StringWithAggregatesFilter<"DailyReflection"> | string
+    comment?: StringWithAggregatesFilter<"DailyReflection"> | string
+    logDate?: DateTimeWithAggregatesFilter<"DailyReflection"> | Date | string
+    rating?: IntWithAggregatesFilter<"DailyReflection"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"DailyReflection"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"DailyReflection"> | Date | string
   }
 
   export type AccountCreateInput = {
@@ -8780,6 +10106,7 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     dailyLogs?: DailyLogCreateNestedManyWithoutUserInput
     questions?: QuestionCreateNestedManyWithoutUserInput
+    dailyReflections?: DailyReflectionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -8793,6 +10120,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     dailyLogs?: DailyLogUncheckedCreateNestedManyWithoutUserInput
     questions?: QuestionUncheckedCreateNestedManyWithoutUserInput
+    dailyReflections?: DailyReflectionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -8806,6 +10134,7 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     dailyLogs?: DailyLogUpdateManyWithoutUserNestedInput
     questions?: QuestionUpdateManyWithoutUserNestedInput
+    dailyReflections?: DailyReflectionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -8819,6 +10148,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     dailyLogs?: DailyLogUncheckedUpdateManyWithoutUserNestedInput
     questions?: QuestionUncheckedUpdateManyWithoutUserNestedInput
+    dailyReflections?: DailyReflectionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -8962,7 +10292,7 @@ export namespace Prisma {
     id?: string
     question: string
     isPositive?: boolean
-    points?: number
+    severity?: $Enums.Severity
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutQuestionsInput
@@ -8973,7 +10303,7 @@ export namespace Prisma {
     id?: string
     question: string
     isPositive?: boolean
-    points?: number
+    severity?: $Enums.Severity
     userId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -8984,7 +10314,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     question?: StringFieldUpdateOperationsInput | string
     isPositive?: BoolFieldUpdateOperationsInput | boolean
-    points?: IntFieldUpdateOperationsInput | number
+    severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutQuestionsNestedInput
@@ -8995,7 +10325,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     question?: StringFieldUpdateOperationsInput | string
     isPositive?: BoolFieldUpdateOperationsInput | boolean
-    points?: IntFieldUpdateOperationsInput | number
+    severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
     userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9006,7 +10336,7 @@ export namespace Prisma {
     id?: string
     question: string
     isPositive?: boolean
-    points?: number
+    severity?: $Enums.Severity
     userId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -9016,7 +10346,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     question?: StringFieldUpdateOperationsInput | string
     isPositive?: BoolFieldUpdateOperationsInput | boolean
-    points?: IntFieldUpdateOperationsInput | number
+    severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9025,8 +10355,77 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     question?: StringFieldUpdateOperationsInput | string
     isPositive?: BoolFieldUpdateOperationsInput | boolean
-    points?: IntFieldUpdateOperationsInput | number
+    severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
     userId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DailyReflectionCreateInput = {
+    id?: string
+    comment: string
+    logDate?: Date | string
+    rating?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutDailyReflectionsInput
+  }
+
+  export type DailyReflectionUncheckedCreateInput = {
+    id?: string
+    userId: string
+    comment: string
+    logDate?: Date | string
+    rating?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DailyReflectionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    comment?: StringFieldUpdateOperationsInput | string
+    logDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    rating?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutDailyReflectionsNestedInput
+  }
+
+  export type DailyReflectionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    comment?: StringFieldUpdateOperationsInput | string
+    logDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    rating?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DailyReflectionCreateManyInput = {
+    id?: string
+    userId: string
+    comment: string
+    logDate?: Date | string
+    rating?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DailyReflectionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    comment?: StringFieldUpdateOperationsInput | string
+    logDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    rating?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DailyReflectionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    comment?: StringFieldUpdateOperationsInput | string
+    logDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    rating?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9278,6 +10677,12 @@ export namespace Prisma {
     none?: QuestionWhereInput
   }
 
+  export type DailyReflectionListRelationFilter = {
+    every?: DailyReflectionWhereInput
+    some?: DailyReflectionWhereInput
+    none?: DailyReflectionWhereInput
+  }
+
   export type AccountOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -9291,6 +10696,10 @@ export namespace Prisma {
   }
 
   export type QuestionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DailyReflectionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -9417,6 +10826,61 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
+  export type EnumSeverityFilter<$PrismaModel = never> = {
+    equals?: $Enums.Severity | EnumSeverityFieldRefInput<$PrismaModel>
+    in?: $Enums.Severity[] | ListEnumSeverityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Severity[] | ListEnumSeverityFieldRefInput<$PrismaModel>
+    not?: NestedEnumSeverityFilter<$PrismaModel> | $Enums.Severity
+  }
+
+  export type QuestionCountOrderByAggregateInput = {
+    id?: SortOrder
+    question?: SortOrder
+    isPositive?: SortOrder
+    severity?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type QuestionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    question?: SortOrder
+    isPositive?: SortOrder
+    severity?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type QuestionMinOrderByAggregateInput = {
+    id?: SortOrder
+    question?: SortOrder
+    isPositive?: SortOrder
+    severity?: SortOrder
+    userId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type EnumSeverityWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Severity | EnumSeverityFieldRefInput<$PrismaModel>
+    in?: $Enums.Severity[] | ListEnumSeverityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Severity[] | ListEnumSeverityFieldRefInput<$PrismaModel>
+    not?: NestedEnumSeverityWithAggregatesFilter<$PrismaModel> | $Enums.Severity
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSeverityFilter<$PrismaModel>
+    _max?: NestedEnumSeverityFilter<$PrismaModel>
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -9428,50 +10892,47 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
-  export type QuestionCountOrderByAggregateInput = {
+  export type DailyReflectionUserIdLogDateCompoundUniqueInput = {
+    userId: string
+    logDate: Date | string
+  }
+
+  export type DailyReflectionCountOrderByAggregateInput = {
     id?: SortOrder
-    question?: SortOrder
-    isPositive?: SortOrder
-    points?: SortOrder
     userId?: SortOrder
+    comment?: SortOrder
+    logDate?: SortOrder
+    rating?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
-  export type QuestionAvgOrderByAggregateInput = {
-    points?: SortOrder
+  export type DailyReflectionAvgOrderByAggregateInput = {
+    rating?: SortOrder
   }
 
-  export type QuestionMaxOrderByAggregateInput = {
+  export type DailyReflectionMaxOrderByAggregateInput = {
     id?: SortOrder
-    question?: SortOrder
-    isPositive?: SortOrder
-    points?: SortOrder
     userId?: SortOrder
+    comment?: SortOrder
+    logDate?: SortOrder
+    rating?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
-  export type QuestionMinOrderByAggregateInput = {
+  export type DailyReflectionMinOrderByAggregateInput = {
     id?: SortOrder
-    question?: SortOrder
-    isPositive?: SortOrder
-    points?: SortOrder
     userId?: SortOrder
+    comment?: SortOrder
+    logDate?: SortOrder
+    rating?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
-  export type QuestionSumOrderByAggregateInput = {
-    points?: SortOrder
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
+  export type DailyReflectionSumOrderByAggregateInput = {
+    rating?: SortOrder
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -9566,6 +11027,13 @@ export namespace Prisma {
     connect?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
   }
 
+  export type DailyReflectionCreateNestedManyWithoutUserInput = {
+    create?: XOR<DailyReflectionCreateWithoutUserInput, DailyReflectionUncheckedCreateWithoutUserInput> | DailyReflectionCreateWithoutUserInput[] | DailyReflectionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: DailyReflectionCreateOrConnectWithoutUserInput | DailyReflectionCreateOrConnectWithoutUserInput[]
+    createMany?: DailyReflectionCreateManyUserInputEnvelope
+    connect?: DailyReflectionWhereUniqueInput | DailyReflectionWhereUniqueInput[]
+  }
+
   export type AccountUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -9592,6 +11060,13 @@ export namespace Prisma {
     connectOrCreate?: QuestionCreateOrConnectWithoutUserInput | QuestionCreateOrConnectWithoutUserInput[]
     createMany?: QuestionCreateManyUserInputEnvelope
     connect?: QuestionWhereUniqueInput | QuestionWhereUniqueInput[]
+  }
+
+  export type DailyReflectionUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<DailyReflectionCreateWithoutUserInput, DailyReflectionUncheckedCreateWithoutUserInput> | DailyReflectionCreateWithoutUserInput[] | DailyReflectionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: DailyReflectionCreateOrConnectWithoutUserInput | DailyReflectionCreateOrConnectWithoutUserInput[]
+    createMany?: DailyReflectionCreateManyUserInputEnvelope
+    connect?: DailyReflectionWhereUniqueInput | DailyReflectionWhereUniqueInput[]
   }
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -9654,6 +11129,20 @@ export namespace Prisma {
     deleteMany?: QuestionScalarWhereInput | QuestionScalarWhereInput[]
   }
 
+  export type DailyReflectionUpdateManyWithoutUserNestedInput = {
+    create?: XOR<DailyReflectionCreateWithoutUserInput, DailyReflectionUncheckedCreateWithoutUserInput> | DailyReflectionCreateWithoutUserInput[] | DailyReflectionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: DailyReflectionCreateOrConnectWithoutUserInput | DailyReflectionCreateOrConnectWithoutUserInput[]
+    upsert?: DailyReflectionUpsertWithWhereUniqueWithoutUserInput | DailyReflectionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: DailyReflectionCreateManyUserInputEnvelope
+    set?: DailyReflectionWhereUniqueInput | DailyReflectionWhereUniqueInput[]
+    disconnect?: DailyReflectionWhereUniqueInput | DailyReflectionWhereUniqueInput[]
+    delete?: DailyReflectionWhereUniqueInput | DailyReflectionWhereUniqueInput[]
+    connect?: DailyReflectionWhereUniqueInput | DailyReflectionWhereUniqueInput[]
+    update?: DailyReflectionUpdateWithWhereUniqueWithoutUserInput | DailyReflectionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: DailyReflectionUpdateManyWithWhereWithoutUserInput | DailyReflectionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: DailyReflectionScalarWhereInput | DailyReflectionScalarWhereInput[]
+  }
+
   export type AccountUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<AccountCreateWithoutUserInput, AccountUncheckedCreateWithoutUserInput> | AccountCreateWithoutUserInput[] | AccountUncheckedCreateWithoutUserInput[]
     connectOrCreate?: AccountCreateOrConnectWithoutUserInput | AccountCreateOrConnectWithoutUserInput[]
@@ -9708,6 +11197,20 @@ export namespace Prisma {
     update?: QuestionUpdateWithWhereUniqueWithoutUserInput | QuestionUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: QuestionUpdateManyWithWhereWithoutUserInput | QuestionUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: QuestionScalarWhereInput | QuestionScalarWhereInput[]
+  }
+
+  export type DailyReflectionUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<DailyReflectionCreateWithoutUserInput, DailyReflectionUncheckedCreateWithoutUserInput> | DailyReflectionCreateWithoutUserInput[] | DailyReflectionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: DailyReflectionCreateOrConnectWithoutUserInput | DailyReflectionCreateOrConnectWithoutUserInput[]
+    upsert?: DailyReflectionUpsertWithWhereUniqueWithoutUserInput | DailyReflectionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: DailyReflectionCreateManyUserInputEnvelope
+    set?: DailyReflectionWhereUniqueInput | DailyReflectionWhereUniqueInput[]
+    disconnect?: DailyReflectionWhereUniqueInput | DailyReflectionWhereUniqueInput[]
+    delete?: DailyReflectionWhereUniqueInput | DailyReflectionWhereUniqueInput[]
+    connect?: DailyReflectionWhereUniqueInput | DailyReflectionWhereUniqueInput[]
+    update?: DailyReflectionUpdateWithWhereUniqueWithoutUserInput | DailyReflectionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: DailyReflectionUpdateManyWithWhereWithoutUserInput | DailyReflectionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: DailyReflectionScalarWhereInput | DailyReflectionScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutDailyLogsInput = {
@@ -9766,12 +11269,8 @@ export namespace Prisma {
     set?: boolean
   }
 
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
+  export type EnumSeverityFieldUpdateOperationsInput = {
+    set?: $Enums.Severity
   }
 
   export type UserUpdateOneRequiredWithoutQuestionsNestedInput = {
@@ -9808,6 +11307,28 @@ export namespace Prisma {
     update?: DailyLogUpdateWithWhereUniqueWithoutQuestionInput | DailyLogUpdateWithWhereUniqueWithoutQuestionInput[]
     updateMany?: DailyLogUpdateManyWithWhereWithoutQuestionInput | DailyLogUpdateManyWithWhereWithoutQuestionInput[]
     deleteMany?: DailyLogScalarWhereInput | DailyLogScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutDailyReflectionsInput = {
+    create?: XOR<UserCreateWithoutDailyReflectionsInput, UserUncheckedCreateWithoutDailyReflectionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDailyReflectionsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type UserUpdateOneRequiredWithoutDailyReflectionsNestedInput = {
+    create?: XOR<UserCreateWithoutDailyReflectionsInput, UserUncheckedCreateWithoutDailyReflectionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutDailyReflectionsInput
+    upsert?: UserUpsertWithoutDailyReflectionsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutDailyReflectionsInput, UserUpdateWithoutDailyReflectionsInput>, UserUncheckedUpdateWithoutDailyReflectionsInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -9989,12 +11510,29 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
+  export type NestedEnumSeverityFilter<$PrismaModel = never> = {
+    equals?: $Enums.Severity | EnumSeverityFieldRefInput<$PrismaModel>
+    in?: $Enums.Severity[] | ListEnumSeverityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Severity[] | ListEnumSeverityFieldRefInput<$PrismaModel>
+    not?: NestedEnumSeverityFilter<$PrismaModel> | $Enums.Severity
+  }
+
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type NestedEnumSeverityWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Severity | EnumSeverityFieldRefInput<$PrismaModel>
+    in?: $Enums.Severity[] | ListEnumSeverityFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Severity[] | ListEnumSeverityFieldRefInput<$PrismaModel>
+    not?: NestedEnumSeverityWithAggregatesFilter<$PrismaModel> | $Enums.Severity
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSeverityFilter<$PrismaModel>
+    _max?: NestedEnumSeverityFilter<$PrismaModel>
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -10034,6 +11572,7 @@ export namespace Prisma {
     sessions?: SessionCreateNestedManyWithoutUserInput
     dailyLogs?: DailyLogCreateNestedManyWithoutUserInput
     questions?: QuestionCreateNestedManyWithoutUserInput
+    dailyReflections?: DailyReflectionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAccountsInput = {
@@ -10046,6 +11585,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     dailyLogs?: DailyLogUncheckedCreateNestedManyWithoutUserInput
     questions?: QuestionUncheckedCreateNestedManyWithoutUserInput
+    dailyReflections?: DailyReflectionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAccountsInput = {
@@ -10074,6 +11614,7 @@ export namespace Prisma {
     sessions?: SessionUpdateManyWithoutUserNestedInput
     dailyLogs?: DailyLogUpdateManyWithoutUserNestedInput
     questions?: QuestionUpdateManyWithoutUserNestedInput
+    dailyReflections?: DailyReflectionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -10086,6 +11627,7 @@ export namespace Prisma {
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     dailyLogs?: DailyLogUncheckedUpdateManyWithoutUserNestedInput
     questions?: QuestionUncheckedUpdateManyWithoutUserNestedInput
+    dailyReflections?: DailyReflectionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutSessionsInput = {
@@ -10098,6 +11640,7 @@ export namespace Prisma {
     accounts?: AccountCreateNestedManyWithoutUserInput
     dailyLogs?: DailyLogCreateNestedManyWithoutUserInput
     questions?: QuestionCreateNestedManyWithoutUserInput
+    dailyReflections?: DailyReflectionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSessionsInput = {
@@ -10110,6 +11653,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     dailyLogs?: DailyLogUncheckedCreateNestedManyWithoutUserInput
     questions?: QuestionUncheckedCreateNestedManyWithoutUserInput
+    dailyReflections?: DailyReflectionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSessionsInput = {
@@ -10138,6 +11682,7 @@ export namespace Prisma {
     accounts?: AccountUpdateManyWithoutUserNestedInput
     dailyLogs?: DailyLogUpdateManyWithoutUserNestedInput
     questions?: QuestionUpdateManyWithoutUserNestedInput
+    dailyReflections?: DailyReflectionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -10150,6 +11695,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     dailyLogs?: DailyLogUncheckedUpdateManyWithoutUserNestedInput
     questions?: QuestionUncheckedUpdateManyWithoutUserNestedInput
+    dailyReflections?: DailyReflectionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AccountCreateWithoutUserInput = {
@@ -10246,7 +11792,7 @@ export namespace Prisma {
     id?: string
     question: string
     isPositive?: boolean
-    points?: number
+    severity?: $Enums.Severity
     createdAt?: Date | string
     updatedAt?: Date | string
     dailyLogs?: DailyLogCreateNestedManyWithoutQuestionInput
@@ -10256,7 +11802,7 @@ export namespace Prisma {
     id?: string
     question: string
     isPositive?: boolean
-    points?: number
+    severity?: $Enums.Severity
     createdAt?: Date | string
     updatedAt?: Date | string
     dailyLogs?: DailyLogUncheckedCreateNestedManyWithoutQuestionInput
@@ -10269,6 +11815,34 @@ export namespace Prisma {
 
   export type QuestionCreateManyUserInputEnvelope = {
     data: QuestionCreateManyUserInput | QuestionCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DailyReflectionCreateWithoutUserInput = {
+    id?: string
+    comment: string
+    logDate?: Date | string
+    rating?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DailyReflectionUncheckedCreateWithoutUserInput = {
+    id?: string
+    comment: string
+    logDate?: Date | string
+    rating?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DailyReflectionCreateOrConnectWithoutUserInput = {
+    where: DailyReflectionWhereUniqueInput
+    create: XOR<DailyReflectionCreateWithoutUserInput, DailyReflectionUncheckedCreateWithoutUserInput>
+  }
+
+  export type DailyReflectionCreateManyUserInputEnvelope = {
+    data: DailyReflectionCreateManyUserInput | DailyReflectionCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -10385,10 +11959,39 @@ export namespace Prisma {
     id?: StringFilter<"Question"> | string
     question?: StringFilter<"Question"> | string
     isPositive?: BoolFilter<"Question"> | boolean
-    points?: IntFilter<"Question"> | number
+    severity?: EnumSeverityFilter<"Question"> | $Enums.Severity
     userId?: StringFilter<"Question"> | string
     createdAt?: DateTimeFilter<"Question"> | Date | string
     updatedAt?: DateTimeFilter<"Question"> | Date | string
+  }
+
+  export type DailyReflectionUpsertWithWhereUniqueWithoutUserInput = {
+    where: DailyReflectionWhereUniqueInput
+    update: XOR<DailyReflectionUpdateWithoutUserInput, DailyReflectionUncheckedUpdateWithoutUserInput>
+    create: XOR<DailyReflectionCreateWithoutUserInput, DailyReflectionUncheckedCreateWithoutUserInput>
+  }
+
+  export type DailyReflectionUpdateWithWhereUniqueWithoutUserInput = {
+    where: DailyReflectionWhereUniqueInput
+    data: XOR<DailyReflectionUpdateWithoutUserInput, DailyReflectionUncheckedUpdateWithoutUserInput>
+  }
+
+  export type DailyReflectionUpdateManyWithWhereWithoutUserInput = {
+    where: DailyReflectionScalarWhereInput
+    data: XOR<DailyReflectionUpdateManyMutationInput, DailyReflectionUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type DailyReflectionScalarWhereInput = {
+    AND?: DailyReflectionScalarWhereInput | DailyReflectionScalarWhereInput[]
+    OR?: DailyReflectionScalarWhereInput[]
+    NOT?: DailyReflectionScalarWhereInput | DailyReflectionScalarWhereInput[]
+    id?: StringFilter<"DailyReflection"> | string
+    userId?: StringFilter<"DailyReflection"> | string
+    comment?: StringFilter<"DailyReflection"> | string
+    logDate?: DateTimeFilter<"DailyReflection"> | Date | string
+    rating?: IntFilter<"DailyReflection"> | number
+    createdAt?: DateTimeFilter<"DailyReflection"> | Date | string
+    updatedAt?: DateTimeFilter<"DailyReflection"> | Date | string
   }
 
   export type UserCreateWithoutDailyLogsInput = {
@@ -10401,6 +12004,7 @@ export namespace Prisma {
     accounts?: AccountCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     questions?: QuestionCreateNestedManyWithoutUserInput
+    dailyReflections?: DailyReflectionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutDailyLogsInput = {
@@ -10413,6 +12017,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     questions?: QuestionUncheckedCreateNestedManyWithoutUserInput
+    dailyReflections?: DailyReflectionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutDailyLogsInput = {
@@ -10424,7 +12029,7 @@ export namespace Prisma {
     id?: string
     question: string
     isPositive?: boolean
-    points?: number
+    severity?: $Enums.Severity
     createdAt?: Date | string
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutQuestionsInput
@@ -10434,7 +12039,7 @@ export namespace Prisma {
     id?: string
     question: string
     isPositive?: boolean
-    points?: number
+    severity?: $Enums.Severity
     userId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -10466,6 +12071,7 @@ export namespace Prisma {
     accounts?: AccountUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     questions?: QuestionUpdateManyWithoutUserNestedInput
+    dailyReflections?: DailyReflectionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutDailyLogsInput = {
@@ -10478,6 +12084,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     questions?: QuestionUncheckedUpdateManyWithoutUserNestedInput
+    dailyReflections?: DailyReflectionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type QuestionUpsertWithoutDailyLogsInput = {
@@ -10495,7 +12102,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     question?: StringFieldUpdateOperationsInput | string
     isPositive?: BoolFieldUpdateOperationsInput | boolean
-    points?: IntFieldUpdateOperationsInput | number
+    severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutQuestionsNestedInput
@@ -10505,7 +12112,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     question?: StringFieldUpdateOperationsInput | string
     isPositive?: BoolFieldUpdateOperationsInput | boolean
-    points?: IntFieldUpdateOperationsInput | number
+    severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
     userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10521,6 +12128,7 @@ export namespace Prisma {
     accounts?: AccountCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     dailyLogs?: DailyLogCreateNestedManyWithoutUserInput
+    dailyReflections?: DailyReflectionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutQuestionsInput = {
@@ -10533,6 +12141,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     dailyLogs?: DailyLogUncheckedCreateNestedManyWithoutUserInput
+    dailyReflections?: DailyReflectionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutQuestionsInput = {
@@ -10589,6 +12198,7 @@ export namespace Prisma {
     accounts?: AccountUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     dailyLogs?: DailyLogUpdateManyWithoutUserNestedInput
+    dailyReflections?: DailyReflectionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutQuestionsInput = {
@@ -10601,6 +12211,7 @@ export namespace Prisma {
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     dailyLogs?: DailyLogUncheckedUpdateManyWithoutUserNestedInput
+    dailyReflections?: DailyReflectionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type DailyLogUpsertWithWhereUniqueWithoutQuestionInput = {
@@ -10617,6 +12228,74 @@ export namespace Prisma {
   export type DailyLogUpdateManyWithWhereWithoutQuestionInput = {
     where: DailyLogScalarWhereInput
     data: XOR<DailyLogUpdateManyMutationInput, DailyLogUncheckedUpdateManyWithoutQuestionInput>
+  }
+
+  export type UserCreateWithoutDailyReflectionsInput = {
+    id?: string
+    name?: string | null
+    email?: string | null
+    emailVerified?: Date | string | null
+    image?: string | null
+    passwordHash?: string | null
+    accounts?: AccountCreateNestedManyWithoutUserInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    dailyLogs?: DailyLogCreateNestedManyWithoutUserInput
+    questions?: QuestionCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutDailyReflectionsInput = {
+    id?: string
+    name?: string | null
+    email?: string | null
+    emailVerified?: Date | string | null
+    image?: string | null
+    passwordHash?: string | null
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    dailyLogs?: DailyLogUncheckedCreateNestedManyWithoutUserInput
+    questions?: QuestionUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutDailyReflectionsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutDailyReflectionsInput, UserUncheckedCreateWithoutDailyReflectionsInput>
+  }
+
+  export type UserUpsertWithoutDailyReflectionsInput = {
+    update: XOR<UserUpdateWithoutDailyReflectionsInput, UserUncheckedUpdateWithoutDailyReflectionsInput>
+    create: XOR<UserCreateWithoutDailyReflectionsInput, UserUncheckedCreateWithoutDailyReflectionsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutDailyReflectionsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutDailyReflectionsInput, UserUncheckedUpdateWithoutDailyReflectionsInput>
+  }
+
+  export type UserUpdateWithoutDailyReflectionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    dailyLogs?: DailyLogUpdateManyWithoutUserNestedInput
+    questions?: QuestionUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutDailyReflectionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    dailyLogs?: DailyLogUncheckedUpdateManyWithoutUserNestedInput
+    questions?: QuestionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type AccountCreateManyUserInput = {
@@ -10653,7 +12332,16 @@ export namespace Prisma {
     id?: string
     question: string
     isPositive?: boolean
-    points?: number
+    severity?: $Enums.Severity
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DailyReflectionCreateManyUserInput = {
+    id?: string
+    comment: string
+    logDate?: Date | string
+    rating?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -10752,7 +12440,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     question?: StringFieldUpdateOperationsInput | string
     isPositive?: BoolFieldUpdateOperationsInput | boolean
-    points?: IntFieldUpdateOperationsInput | number
+    severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     dailyLogs?: DailyLogUpdateManyWithoutQuestionNestedInput
@@ -10762,7 +12450,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     question?: StringFieldUpdateOperationsInput | string
     isPositive?: BoolFieldUpdateOperationsInput | boolean
-    points?: IntFieldUpdateOperationsInput | number
+    severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     dailyLogs?: DailyLogUncheckedUpdateManyWithoutQuestionNestedInput
@@ -10772,7 +12460,34 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     question?: StringFieldUpdateOperationsInput | string
     isPositive?: BoolFieldUpdateOperationsInput | boolean
-    points?: IntFieldUpdateOperationsInput | number
+    severity?: EnumSeverityFieldUpdateOperationsInput | $Enums.Severity
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DailyReflectionUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    comment?: StringFieldUpdateOperationsInput | string
+    logDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    rating?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DailyReflectionUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    comment?: StringFieldUpdateOperationsInput | string
+    logDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    rating?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DailyReflectionUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    comment?: StringFieldUpdateOperationsInput | string
+    logDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    rating?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

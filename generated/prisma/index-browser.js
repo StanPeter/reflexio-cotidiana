@@ -173,8 +173,18 @@ exports.Prisma.QuestionScalarFieldEnum = {
   id: 'id',
   question: 'question',
   isPositive: 'isPositive',
-  points: 'points',
+  severity: 'severity',
   userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.DailyReflectionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  comment: 'comment',
+  logDate: 'logDate',
+  rating: 'rating',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -193,7 +203,11 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
-
+exports.Severity = exports.$Enums.Severity = {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH'
+};
 
 exports.Prisma.ModelName = {
   Account: 'Account',
@@ -201,7 +215,8 @@ exports.Prisma.ModelName = {
   User: 'User',
   VerificationToken: 'VerificationToken',
   DailyLog: 'DailyLog',
-  Question: 'Question'
+  Question: 'Question',
+  DailyReflection: 'DailyReflection'
 };
 
 /**
