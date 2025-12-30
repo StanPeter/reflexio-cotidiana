@@ -1,1 +1,1 @@
-export * from "./chakraUI";
+export * from "./chakraUITheme";
