@@ -1,6 +1,5 @@
 
 # Daily log page
-2. Add option to skip a question
 3. Add pop up dialog about missed log day and to fill in that day
 4. Check all current functionality
 5. Clean up components

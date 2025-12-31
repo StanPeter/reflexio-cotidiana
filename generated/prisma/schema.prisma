@@ -71,7 +71,7 @@ model DailyLog {
   id         String   @id @default(cuid())
   userId     String
   questionId String
-  answer     Boolean?
+  answer     Boolean? // if not answered, then the user skipped the question
   logDate    DateTime @default(now()) @db.Date
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
@@ -105,7 +105,7 @@ enum Severity {
 model DailyReflection {
   id      String   @id @default(cuid())
   userId  String
-  comment String
+  comment String? // if not answered, then the user skipped the question
   logDate DateTime @default(now()) @db.Date
   rating  Int      @default(50) // 1-100
 

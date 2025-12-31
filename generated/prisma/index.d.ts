@@ -8318,7 +8318,7 @@ export namespace Prisma {
   export type DailyReflectionGroupByOutputType = {
     id: string
     userId: string
-    comment: string
+    comment: string | null
     logDate: Date
     rating: number
     createdAt: Date
@@ -8406,7 +8406,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       userId: string
-      comment: string
+      comment: string | null
       logDate: Date
       rating: number
       createdAt: Date
@@ -9874,7 +9874,7 @@ export namespace Prisma {
     NOT?: DailyReflectionWhereInput | DailyReflectionWhereInput[]
     id?: StringFilter<"DailyReflection"> | string
     userId?: StringFilter<"DailyReflection"> | string
-    comment?: StringFilter<"DailyReflection"> | string
+    comment?: StringNullableFilter<"DailyReflection"> | string | null
     logDate?: DateTimeFilter<"DailyReflection"> | Date | string
     rating?: IntFilter<"DailyReflection"> | number
     createdAt?: DateTimeFilter<"DailyReflection"> | Date | string
@@ -9885,7 +9885,7 @@ export namespace Prisma {
   export type DailyReflectionOrderByWithRelationInput = {
     id?: SortOrder
     userId?: SortOrder
-    comment?: SortOrder
+    comment?: SortOrderInput | SortOrder
     logDate?: SortOrder
     rating?: SortOrder
     createdAt?: SortOrder
@@ -9900,7 +9900,7 @@ export namespace Prisma {
     OR?: DailyReflectionWhereInput[]
     NOT?: DailyReflectionWhereInput | DailyReflectionWhereInput[]
     userId?: StringFilter<"DailyReflection"> | string
-    comment?: StringFilter<"DailyReflection"> | string
+    comment?: StringNullableFilter<"DailyReflection"> | string | null
     logDate?: DateTimeFilter<"DailyReflection"> | Date | string
     rating?: IntFilter<"DailyReflection"> | number
     createdAt?: DateTimeFilter<"DailyReflection"> | Date | string
@@ -9911,7 +9911,7 @@ export namespace Prisma {
   export type DailyReflectionOrderByWithAggregationInput = {
     id?: SortOrder
     userId?: SortOrder
-    comment?: SortOrder
+    comment?: SortOrderInput | SortOrder
     logDate?: SortOrder
     rating?: SortOrder
     createdAt?: SortOrder
@@ -9929,7 +9929,7 @@ export namespace Prisma {
     NOT?: DailyReflectionScalarWhereWithAggregatesInput | DailyReflectionScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"DailyReflection"> | string
     userId?: StringWithAggregatesFilter<"DailyReflection"> | string
-    comment?: StringWithAggregatesFilter<"DailyReflection"> | string
+    comment?: StringNullableWithAggregatesFilter<"DailyReflection"> | string | null
     logDate?: DateTimeWithAggregatesFilter<"DailyReflection"> | Date | string
     rating?: IntWithAggregatesFilter<"DailyReflection"> | number
     createdAt?: DateTimeWithAggregatesFilter<"DailyReflection"> | Date | string
@@ -10363,7 +10363,7 @@ export namespace Prisma {
 
   export type DailyReflectionCreateInput = {
     id?: string
-    comment: string
+    comment?: string | null
     logDate?: Date | string
     rating?: number
     createdAt?: Date | string
@@ -10374,7 +10374,7 @@ export namespace Prisma {
   export type DailyReflectionUncheckedCreateInput = {
     id?: string
     userId: string
-    comment: string
+    comment?: string | null
     logDate?: Date | string
     rating?: number
     createdAt?: Date | string
@@ -10383,7 +10383,7 @@ export namespace Prisma {
 
   export type DailyReflectionUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    comment?: StringFieldUpdateOperationsInput | string
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
     logDate?: DateTimeFieldUpdateOperationsInput | Date | string
     rating?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10394,7 +10394,7 @@ export namespace Prisma {
   export type DailyReflectionUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    comment?: StringFieldUpdateOperationsInput | string
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
     logDate?: DateTimeFieldUpdateOperationsInput | Date | string
     rating?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10404,7 +10404,7 @@ export namespace Prisma {
   export type DailyReflectionCreateManyInput = {
     id?: string
     userId: string
-    comment: string
+    comment?: string | null
     logDate?: Date | string
     rating?: number
     createdAt?: Date | string
@@ -10413,7 +10413,7 @@ export namespace Prisma {
 
   export type DailyReflectionUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    comment?: StringFieldUpdateOperationsInput | string
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
     logDate?: DateTimeFieldUpdateOperationsInput | Date | string
     rating?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10423,7 +10423,7 @@ export namespace Prisma {
   export type DailyReflectionUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    comment?: StringFieldUpdateOperationsInput | string
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
     logDate?: DateTimeFieldUpdateOperationsInput | Date | string
     rating?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11820,7 +11820,7 @@ export namespace Prisma {
 
   export type DailyReflectionCreateWithoutUserInput = {
     id?: string
-    comment: string
+    comment?: string | null
     logDate?: Date | string
     rating?: number
     createdAt?: Date | string
@@ -11829,7 +11829,7 @@ export namespace Prisma {
 
   export type DailyReflectionUncheckedCreateWithoutUserInput = {
     id?: string
-    comment: string
+    comment?: string | null
     logDate?: Date | string
     rating?: number
     createdAt?: Date | string
@@ -11987,7 +11987,7 @@ export namespace Prisma {
     NOT?: DailyReflectionScalarWhereInput | DailyReflectionScalarWhereInput[]
     id?: StringFilter<"DailyReflection"> | string
     userId?: StringFilter<"DailyReflection"> | string
-    comment?: StringFilter<"DailyReflection"> | string
+    comment?: StringNullableFilter<"DailyReflection"> | string | null
     logDate?: DateTimeFilter<"DailyReflection"> | Date | string
     rating?: IntFilter<"DailyReflection"> | number
     createdAt?: DateTimeFilter<"DailyReflection"> | Date | string
@@ -12339,7 +12339,7 @@ export namespace Prisma {
 
   export type DailyReflectionCreateManyUserInput = {
     id?: string
-    comment: string
+    comment?: string | null
     logDate?: Date | string
     rating?: number
     createdAt?: Date | string
@@ -12467,7 +12467,7 @@ export namespace Prisma {
 
   export type DailyReflectionUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    comment?: StringFieldUpdateOperationsInput | string
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
     logDate?: DateTimeFieldUpdateOperationsInput | Date | string
     rating?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12476,7 +12476,7 @@ export namespace Prisma {
 
   export type DailyReflectionUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    comment?: StringFieldUpdateOperationsInput | string
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
     logDate?: DateTimeFieldUpdateOperationsInput | Date | string
     rating?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12485,7 +12485,7 @@ export namespace Prisma {
 
   export type DailyReflectionUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
-    comment?: StringFieldUpdateOperationsInput | string
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
     logDate?: DateTimeFieldUpdateOperationsInput | Date | string
     rating?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

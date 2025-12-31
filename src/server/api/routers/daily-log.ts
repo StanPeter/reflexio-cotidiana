@@ -23,8 +23,9 @@ export const dailyLogRouter = createTRPCRouter({
   createDailyReflection: protectedProcedure
     .input(
       z.object({
-        comment: z.string(),
+        comment: z.string().nullable(),
         rating: z.number().min(1).max(100),
+        logDate: z.date().default(new Date()),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -34,7 +35,7 @@ export const dailyLogRouter = createTRPCRouter({
             userId: ctx.session.user.id,
             comment: input.comment,
             rating: input.rating,
-            logDate: new Date(),
+            logDate: input.logDate,
           },
         });
 
@@ -43,6 +44,21 @@ export const dailyLogRouter = createTRPCRouter({
         console.error(error);
         return { success: false, error: "Failed to create daily reflection" };
       }
+    }),
+  getDailyReflection: protectedProcedure
+    .input(
+      z.object({
+        logDate: z.date(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const dailyReflection = await ctx.db.dailyReflection.findFirst({
+        where: {
+          userId: ctx.session.user.id,
+          logDate: input.logDate,
+        },
+      });
+      return dailyReflection;
     }),
   getUsersQuestions: protectedProcedure.query(async ({ ctx }) => {
     // find answered questions for the day
