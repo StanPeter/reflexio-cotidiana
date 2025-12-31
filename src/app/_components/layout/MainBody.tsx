@@ -36,6 +36,7 @@ const MainBody = ({ children }: IMainBodyProps) => {
 				display="flex"
 				justifyContent="center"
 				minH={"70vh"}
+				flex={1}
 				px={{ base: 4, md: 6 }}
 				py={{ base: 12, md: 12 }}
 			>

@@ -1,4 +1,4 @@
-import { Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import { api } from "@/trpc/react";
 import Button from "../_components/UI/Button";
 
@@ -26,22 +26,36 @@ const DailyLogQuestion = ({
 	const { mutate: createDailyLog } = api.dailyLog.createDailyLog.useMutation();
 
 	const handleAnswer = (value: string) => {
+		let answer: boolean | null = null;
+
+		if (value === "Skip") {
+			answer = null;
+		} else if (value === "Yes") {
+			answer = true;
+		} else if (value === "No") {
+			answer = false;
+		}
+
 		createDailyLog({
 			questionId: question.id,
-			answer: value === "Yes",
+			answer: answer,
 		});
 		onAnswer(String(question.id));
 	};
+	
 
 	return (
 		<Flex align="center" direction="column" gap={{ base: 6, md: 8 }}>
-			<Text
-				color={palette.text}
-				fontSize={{ base: "md", md: "lg" }}
-				fontWeight="700"
-			>
-				{question.text}
-			</Text>
+			<Box display="flex" gap={2} justifyContent="center" alignItems="center">
+				<Text
+					color={palette.text}
+					fontSize={{ base: "md", md: "lg" }}
+					fontWeight="700"
+				>
+					{question.text}
+				</Text>
+			<Button borderRadius="full" size={'xs'} onClick={() => handleAnswer("Skip")} useCase="secondary">Skip</Button>
+			</Box>
 
 			<Flex
 				align="center"

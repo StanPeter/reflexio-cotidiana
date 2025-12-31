@@ -32,25 +32,11 @@ export default function DailyLogPage() {
 	const [finishedDailyComment, setFinishedDailyComment] = useState(false);
 	const { data: usersQuestions, isLoading } =
 		api.dailyLog.getUsersQuestions.useQuery();
-	const { mutate: createDailyReflection } =
+	const { mutateAsync: createDailyReflectionAsync } =
 		api.dailyLog.createDailyReflection.useMutation();
 	const [dailyComment, setDailyComment] = useState("");
-	const [rating, setRating] = useState<number | null>(null);
-
-	const ratingPositions = useMemo(() => {
-		const startAngle = -Math.PI;
-		const endAngle = 0;
-		const step = (endAngle - startAngle) / (RATING_VALUES.length - 1);
-
-		return RATING_VALUES.map((value, idx) => {
-			const angle = startAngle + step * idx;
-			return {
-				value,
-				x: Math.cos(angle) * RATING_RADIUS,
-				y: Math.sin(angle) * RATING_RADIUS,
-			};
-		});
-	}, []);
+	const [rating, setRating] = useState<number>(40);
+	const [ratingPosition, setRatingPosition] = useState<number>(40);
 
 	const questions = useMemo(() => {
 		if (usersQuestions?.length) {
@@ -119,13 +105,16 @@ export default function DailyLogPage() {
 			return;
 		}
 
-		const response = await createDailyReflection({
+		const response = await createDailyReflectionAsync({
 			comment: dailyComment,
 			rating: rating,
 		});
 
-		console.log(response, " response");
-		setFinishedDailyComment(true);
+		if (response.success) {
+			setFinishedDailyComment(true);
+		} else {
+			console.error(response.error);
+		}
 	};
 
 	const commentContent = (
@@ -155,14 +144,20 @@ export default function DailyLogPage() {
 				defaultValue={[40]}
 				mb={6}
 				mt={2}
+				value={[ratingPosition]}
 				onValueChangeEnd={(value) => {
 					if (value.value[0]) {
 						setRating(value.value[0]);
 					}
 				}}
+				onValueChange={(value) => {
+					if (value.value[0]) {
+						setRatingPosition(value.value[0]);
+					}
+				}}
 				size="lg"
 			>
-				<Slider.Label>Day Rating</Slider.Label>
+				<Slider.Label>Day Rating ({ratingPosition}%)</Slider.Label>
 				<Slider.Control>
 					<Slider.Track
 						bg="var(--chakra-colors-background)"

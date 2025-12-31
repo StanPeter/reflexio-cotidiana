@@ -6,7 +6,7 @@ export const dailyLogRouter = createTRPCRouter({
     .input(
       z.object({
         questionId: z.string(),
-        answer: z.boolean(),
+        answer: z.boolean().nullable(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -28,16 +28,21 @@ export const dailyLogRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.db.dailyReflection.create({
-        data: {
-          userId: ctx.session.user.id,
-          comment: input.comment,
-          rating: input.rating,
-          logDate: new Date(),
-        },
-      });
+      try {
+        const dailyReflection = await ctx.db.dailyReflection.create({
+          data: {
+            userId: ctx.session.user.id,
+            comment: input.comment,
+            rating: input.rating,
+            logDate: new Date(),
+          },
+        });
 
-      return { success: true };
+        return { success: true, dailyReflection };
+      } catch (error) {
+        console.error(error);
+        return { success: false, error: "Failed to create daily reflection" };
+      }
     }),
   getUsersQuestions: protectedProcedure.query(async ({ ctx }) => {
     // find answered questions for the day
