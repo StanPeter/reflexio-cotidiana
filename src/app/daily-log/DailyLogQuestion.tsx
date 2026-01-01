@@ -42,11 +42,10 @@ const DailyLogQuestion = ({
 		});
 		onAnswer(String(question.id));
 	};
-	
 
 	return (
 		<Flex align="center" direction="column" gap={{ base: 6, md: 8 }}>
-			<Box display="flex" gap={2} justifyContent="center" alignItems="center">
+			<Box alignItems="center" display="flex" gap={2} justifyContent="center">
 				<Text
 					color={palette.text}
 					fontSize={{ base: "md", md: "lg" }}
@@ -54,7 +53,14 @@ const DailyLogQuestion = ({
 				>
 					{question.text}
 				</Text>
-			<Button borderRadius="full" size={'xs'} onClick={() => handleAnswer("Skip")} useCase="secondary">Skip</Button>
+				<Button
+					borderRadius="full"
+					onClick={() => handleAnswer("Skip")}
+					size={"xs"}
+					useCase="secondary"
+				>
+					Skip
+				</Button>
 			</Box>
 
 			<Flex
