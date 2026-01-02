@@ -1,4 +1,5 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
+import type { Question } from "generated/prisma";
 import { api } from "@/trpc/react";
 import Button from "../_components/UI/Button";
 
@@ -9,19 +10,17 @@ const palette = {
 };
 
 interface IDailyLogQuestionProps {
-	question: {
-		id: string;
-		text: string;
-		isPositive: boolean;
-	};
+	question: Question;
 	options: string[];
 	onAnswer: (value: string) => void;
+	logDate: Date | undefined;
 }
 
 const DailyLogQuestion = ({
 	question,
 	options,
 	onAnswer,
+	logDate,
 }: IDailyLogQuestionProps) => {
 	const { mutate: createDailyLog } = api.dailyLog.createDailyLog.useMutation();
 
@@ -39,6 +38,7 @@ const DailyLogQuestion = ({
 		createDailyLog({
 			questionId: question.id,
 			answer: answer,
+			logDate: logDate,
 		});
 		onAnswer(String(question.id));
 	};
@@ -51,7 +51,7 @@ const DailyLogQuestion = ({
 					fontSize={{ base: "md", md: "lg" }}
 					fontWeight="700"
 				>
-					{question.text}
+					{question.question}
 				</Text>
 				<Button
 					borderRadius="full"

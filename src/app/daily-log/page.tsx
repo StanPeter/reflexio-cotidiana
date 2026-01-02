@@ -1,6 +1,7 @@
 "use client";
 
 import { Box, Heading, Spinner } from "@chakra-ui/react";
+import type { DailyReflection } from "generated/prisma";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useMemo, useState } from "react";
 import { api } from "@/trpc/react";
@@ -8,6 +9,7 @@ import AllFinishedContent from "./AllFinishedContent";
 import CommentContent from "./CommentContent";
 import DailyLogQuestion from "./DailyLogQuestion";
 import MissedContent from "./MissedDailyContent";
+import { useLogDateString } from "./useLogDateString";
 
 const palette = {
 	indigo: "#6C63FF",
@@ -17,104 +19,111 @@ const palette = {
 
 const MotionBox = motion(Box);
 const DEFAULT_OPTIONS = ["Yes", "No"];
+const INITIAL_DAILY_REFLECTIONS_STATE: IDailyReflectionsState = {
+	fourDaysAgo: { checkedIn: false, skipped: false, logDate: new Date() },
+	threeDaysAgo: { checkedIn: false, skipped: false, logDate: new Date() },
+	twoDaysAgo: { checkedIn: false, skipped: false, logDate: new Date() },
+};
+
+export type TCurrentContent = "question" | "comment" | "allFinished" | "missed";
+interface IDailyReflection {
+	checkedIn: boolean;
+	skipped: boolean;
+	logDate: Date;
+}
+
+export interface IDailyReflectionsState {
+	fourDaysAgo: IDailyReflection;
+	threeDaysAgo: IDailyReflection;
+	twoDaysAgo: IDailyReflection;
+}
 
 export default function DailyLogPage() {
-	const [finishedDailyComment, setFinishedDailyComment] = useState(false);
-	const { data: usersQuestions, isLoading: isLoadingQuestions } =
-		api.dailyLog.getUsersQuestions.useQuery();
-	const [logDate, setLogDate] = useState<Date | null>(null);
+	const [logDate, setLogDate] = useState<Date>();
 	const [isLoading, setIsLoading] = useState(false);
-	const [dailyLogThreeDaysHistory, setDailyLogThreeDaysHistory] = useState<{
-		threeDaysAgo: { checkedIn: boolean; changed: boolean };
-		twoDaysAgo: { checkedIn: boolean; changed: boolean };
-		fourDaysAgo: { checkedIn: boolean; changed: boolean };
-	}>({
-		threeDaysAgo: { checkedIn: false, changed: false },
-		twoDaysAgo: { checkedIn: false, changed: false },
-		fourDaysAgo: { checkedIn: false, changed: false },
-	});
-
-	const utils = api.useUtils();
-
-	// discover the daily log history for the last 3 days
-	useEffect(() => {
-		if (logDate) {
-			console.log("logDate is already set");
-			return;
-		}
-
-		const dates = [
-			new Date(Date.now() - 2 * 86400000),
-			new Date(Date.now() - 3 * 86400000),
-			new Date(Date.now() - 4 * 86400000),
-		];
-
-		(async () => {
-			const results = await Promise.all(
-				dates.map((date) =>
-					utils.dailyLog.getDailyReflection.fetch({ logDate: date }),
-				),
-			);
-
-			setDailyLogThreeDaysHistory({
-				twoDaysAgo: { checkedIn: !!results[0]?.id, changed: false },
-				threeDaysAgo: { checkedIn: !!results[1]?.id, changed: false },
-				fourDaysAgo: { checkedIn: !!results[2]?.id, changed: false },
-			});
-		})();
-	}, [utils]);
-
-	console.log(dailyLogThreeDaysHistory, "dailyLogThreeDaysHistory");
-
-	const isMissedDailyLogDialogOpen = useMemo(() => {
-		return (
-			!dailyLogThreeDaysHistory.threeDaysAgo.checkedIn ||
-			!dailyLogThreeDaysHistory.twoDaysAgo.checkedIn ||
-			!dailyLogThreeDaysHistory.fourDaysAgo.checkedIn
-		);
-	}, [dailyLogThreeDaysHistory]);
-
-	const questions = useMemo(() => {
-		if (usersQuestions?.length) {
-			return usersQuestions.map((q, idx) => ({
-				id: q.id ?? idx,
-				text: q.question,
-				isPositive: q.isPositive,
-			}));
-		}
-
-		return [];
-	}, [usersQuestions]);
-
 	const [currentIndex, setCurrentIndex] = useState(0);
+	const [currentContentSection, setCurrentContentSection] =
+		useState<TCurrentContent>("question");
+	const [dailyReflectionsState, setDailyReflectionsState] =
+		useState<IDailyReflectionsState>(INITIAL_DAILY_REFLECTIONS_STATE);
 
-	const current = questions[currentIndex];
-	const answeredAllQuestions = !current;
+	const dailyLogDateString = useLogDateString(logDate);
+
+	const { data: usersQuestions, isLoading: isLoadingQuestions } =
+		api.dailyLog.getUsersQuestions.useQuery(logDate);
+	const { data: dailyReflections, refetch: refetchDailyReflections } =
+		api.dailyLog.getDailyReflections.useQuery();
+
+	const currentQuestion = usersQuestions?.[currentIndex];
+	const showMissedContentSection = useMemo(() => {
+		if (!dailyReflections?.threeDaysAgo) return true;
+		if (!dailyReflections?.twoDaysAgo) return true;
+		if (!dailyReflections?.fourDaysAgo) return true;
+
+		return false;
+	}, [dailyReflections]);
+
+	// convert the daily reflections to the state
+	useEffect(() => {
+		if (dailyReflections) {
+			setDailyReflectionsState({
+				fourDaysAgo: {
+					checkedIn: !!dailyReflections.fourDaysAgo?.id,
+					skipped: false,
+					logDate:
+						dailyReflections.fourDaysAgo?.logDate ||
+						new Date(new Date().setDate(new Date().getDate() - 4)),
+				},
+				threeDaysAgo: {
+					checkedIn: !!dailyReflections.threeDaysAgo?.id,
+					skipped: false,
+					logDate:
+						dailyReflections.threeDaysAgo?.logDate ||
+						new Date(new Date().setDate(new Date().getDate() - 3)),
+				},
+				twoDaysAgo: {
+					checkedIn: !!dailyReflections.twoDaysAgo?.id,
+					skipped: false,
+					logDate:
+						dailyReflections.twoDaysAgo?.logDate ||
+						new Date(new Date().setDate(new Date().getDate() - 2)),
+				},
+			});
+		}
+	}, [dailyReflections]);
+
+	// determine the content section to show
+	// add isLoadingQuestions to deps and guard before switching sections
+	useEffect(() => {
+		if (isLoadingQuestions) return;
+
+		if (showMissedContentSection && !logDate) {
+			setCurrentContentSection("missed");
+		} else if (currentQuestion) {
+			setCurrentContentSection("question");
+		} else if (
+			!currentQuestion &&
+			!showMissedContentSection &&
+			dailyReflections?.yesterday &&
+			!logDate
+		) {
+			setCurrentContentSection("allFinished");
+		} else {
+			setCurrentContentSection("comment");
+		}
+	}, [
+		showMissedContentSection,
+		logDate,
+		currentQuestion,
+		dailyReflections,
+		isLoadingQuestions,
+	]);
 
 	const handleAnswer = () => {
-		if (!current) return;
+		if (!currentQuestion) return;
 
 		setCurrentIndex((prev) => prev + 1);
 	};
-
-	const getDailyLogDateString = useMemo(() => {
-		if (!logDate) return "";
-
-		const normalize = (d: Date) =>
-			new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
-
-		const dayDiff = Math.round(
-			(normalize(new Date()) - normalize(logDate)) / 86400000,
-		);
-
-		if (dayDiff === 1) return " (Yesterday)";
-		const formatter = new Intl.DateTimeFormat("en", {
-			weekday: "long",
-			day: "2-digit",
-			month: "short",
-		});
-		return ` (${formatter.format(logDate)})`;
-	}, [logDate]);
 
 	if (isLoading || isLoadingQuestions) {
 		return (
@@ -153,39 +162,41 @@ export default function DailyLogPage() {
 					letterSpacing="-0.01em"
 					mb={{ base: 12, md: 20 }}
 				>
-					Your favorite daily log {getDailyLogDateString}
+					Your favorite daily log {dailyLogDateString}
 				</Heading>
 				<AnimatePresence mode="wait">
-					{logDate ||
-					(!isMissedDailyLogDialogOpen && !answeredAllQuestions && current) ? (
+					{currentContentSection === "question" && currentQuestion && (
 						<MotionBox
 							animate={{ opacity: 1, y: 0 }}
 							exit={{ opacity: 0, y: -12 }}
 							initial={{ opacity: 0, y: 16 }}
-							key={current?.id}
+							key={currentQuestion?.id}
 							transition={{ duration: 0.4, ease: "easeOut" }}
 						>
 							<DailyLogQuestion
+								logDate={logDate}
 								onAnswer={handleAnswer}
 								options={DEFAULT_OPTIONS}
-								question={current}
+								question={currentQuestion}
 							/>
 						</MotionBox>
-					) : null}
-					{answeredAllQuestions && !finishedDailyComment && (
+					)}
+					{currentContentSection === "comment" && (
 						<CommentContent
-							dailyLogThreeDaysHistory={dailyLogThreeDaysHistory}
-							setDailyLogThreeDaysHistory={setDailyLogThreeDaysHistory}
-							setFinishedDailyComment={setFinishedDailyComment}
+							dailyReflections={dailyReflectionsState}
+							logDate={logDate}
+							refetchDailyReflections={refetchDailyReflections}
 							setIsLoading={setIsLoading}
+							setLogDate={setLogDate}
 						/>
 					)}
-					{finishedDailyComment && <AllFinishedContent />}
-					{isMissedDailyLogDialogOpen && !logDate && (
+					{currentContentSection === "allFinished" && <AllFinishedContent />}
+					{currentContentSection === "missed" && (
 						<MissedContent
-							dailyLogThreeDaysHistory={dailyLogThreeDaysHistory}
-							key={`${dailyLogThreeDaysHistory.threeDaysAgo.checkedIn}-${dailyLogThreeDaysHistory.twoDaysAgo.checkedIn}-${dailyLogThreeDaysHistory.fourDaysAgo.checkedIn}`}
-							setDailyLogThreeDaysHistory={setDailyLogThreeDaysHistory}
+							dailyReflections={dailyReflectionsState}
+							key={`${dailyReflectionsState.threeDaysAgo.checkedIn}-${dailyReflectionsState.twoDaysAgo.checkedIn}-${dailyReflectionsState.fourDaysAgo.checkedIn}`}
+							setCurrentContentSection={setCurrentContentSection}
+							setDailyReflectionsState={setDailyReflectionsState}
 							setLogDate={setLogDate}
 						/>
 					)}

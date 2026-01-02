@@ -1,73 +1,79 @@
 import { Box, Text } from "@chakra-ui/react";
 import { motion } from "motion/react";
-import { useMemo } from "react";
+import {
+	type Dispatch,
+	type SetStateAction,
+	useEffect,
+	useMemo,
+	useState,
+} from "react";
 import Button from "../_components/UI/Button";
+import type { IDailyReflectionsState, TCurrentContent } from "./page";
 
 const MotionBox = motion(Box);
 
 const MissedDailyContent = ({
+	setCurrentContentSection,
 	setLogDate,
-	setDailyLogThreeDaysHistory,
-	dailyLogThreeDaysHistory,
+	setDailyReflectionsState,
+	dailyReflections,
 }: {
-	setLogDate: (date: Date | null) => void;
-	dailyLogThreeDaysHistory: {
-		threeDaysAgo: { checkedIn: boolean; changed: boolean };
-		twoDaysAgo: { checkedIn: boolean; changed: boolean };
-		fourDaysAgo: { checkedIn: boolean; changed: boolean };
-	};
-	setDailyLogThreeDaysHistory: (history: {
-		threeDaysAgo: { checkedIn: boolean; changed: boolean };
-		twoDaysAgo: { checkedIn: boolean; changed: boolean };
-		fourDaysAgo: { checkedIn: boolean; changed: boolean };
-	}) => void;
+	setCurrentContentSection: (section: TCurrentContent) => void;
+	setLogDate: Dispatch<SetStateAction<Date | undefined>>;
+	dailyReflections: IDailyReflectionsState;
+	setDailyReflectionsState: (state: IDailyReflectionsState) => void;
 }) => {
-	let latestLogDate: Date | null = null;
-	let currentLogCategory: "threeDaysAgo" | "twoDaysAgo" | "fourDaysAgo" | null =
-		null;
+	const [latestLogDate, setLatestLogDate] = useState<Date | null>(null);
+	const [currentLogCategory, setCurrentLogCategory] = useState<
+		"threeDaysAgo" | "twoDaysAgo" | "fourDaysAgo" | null
+	>(null);
 
-	if (!dailyLogThreeDaysHistory.fourDaysAgo.checkedIn) {
-		latestLogDate = new Date(Date.now() - 4 * 86400000);
-		currentLogCategory = "fourDaysAgo";
-	} else if (!dailyLogThreeDaysHistory.threeDaysAgo.checkedIn) {
-		latestLogDate = new Date(Date.now() - 3 * 86400000);
-		currentLogCategory = "threeDaysAgo";
-	} else if (!dailyLogThreeDaysHistory.twoDaysAgo.checkedIn) {
-		latestLogDate = new Date(Date.now() - 2 * 86400000);
-		currentLogCategory = "twoDaysAgo";
-	}
+	useEffect(() => {
+		if (!dailyReflections.fourDaysAgo.checkedIn) {
+			setLatestLogDate(dailyReflections.fourDaysAgo.logDate);
+			setCurrentLogCategory("fourDaysAgo");
+		} else if (!dailyReflections.threeDaysAgo.checkedIn) {
+			setLatestLogDate(dailyReflections.threeDaysAgo.logDate);
+			setCurrentLogCategory("threeDaysAgo");
+		} else if (!dailyReflections.twoDaysAgo.checkedIn) {
+			setLatestLogDate(dailyReflections.twoDaysAgo.logDate);
+			setCurrentLogCategory("twoDaysAgo");
+		}
+	}, [dailyReflections]);
 
 	const daysDifference = useMemo(() => {
 		if (!latestLogDate) return 0;
-		return Math.ceil(
-			(new Date().getTime() - latestLogDate.getTime()) / (1000 * 60 * 60 * 24),
+		const diffDays = Math.floor(
+			(Date.now() - latestLogDate.getTime()) / (1000 * 60 * 60 * 24),
 		);
+		return Math.min(4, Math.max(0, diffDays));
 	}, [latestLogDate]);
 
-	const onNoHandler = async () => {
-		setDailyLogThreeDaysHistory({
+	const onSkipHandler = async () => {
+		setDailyReflectionsState({
 			fourDaysAgo:
 				currentLogCategory === "fourDaysAgo"
-					? { checkedIn: true, changed: true }
-					: dailyLogThreeDaysHistory.fourDaysAgo,
+					? { ...dailyReflections.fourDaysAgo, checkedIn: true, skipped: true }
+					: dailyReflections.fourDaysAgo,
 			twoDaysAgo:
 				currentLogCategory === "twoDaysAgo"
-					? { checkedIn: true, changed: true }
-					: dailyLogThreeDaysHistory.twoDaysAgo,
+					? { ...dailyReflections.twoDaysAgo, checkedIn: true, skipped: true }
+					: dailyReflections.twoDaysAgo,
 			threeDaysAgo:
 				currentLogCategory === "threeDaysAgo"
-					? { checkedIn: true, changed: true }
-					: dailyLogThreeDaysHistory.threeDaysAgo,
+					? { ...dailyReflections.threeDaysAgo, checkedIn: true, skipped: true }
+					: dailyReflections.threeDaysAgo,
 		});
 	};
 
-	const onYesHandler = async () => {
+	const onFillInHandler = async () => {
 		if (!latestLogDate) {
 			console.error("latestLogDate is null");
 			return;
 		}
 
 		setLogDate(latestLogDate);
+		setCurrentContentSection("question");
 	};
 
 	const currentDialogKey = currentLogCategory ?? "none";
@@ -92,11 +98,11 @@ const MissedDailyContent = ({
 				Would you like to fill it in now?
 			</Text>
 			<Box>
-				<Button m={2} onClick={onNoHandler} useCase="secondary">
-					No, thanks
+				<Button m={2} onClick={onSkipHandler} useCase="secondary">
+					Skip
 				</Button>
-				<Button m={2} onClick={onYesHandler} useCase="primary">
-					Yes, fill it in now
+				<Button m={2} onClick={onFillInHandler} useCase="primary">
+					Fill in now
 				</Button>
 			</Box>
 		</MotionBox>

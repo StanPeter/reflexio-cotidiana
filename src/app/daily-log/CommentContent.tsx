@@ -3,30 +3,25 @@ import { motion } from "motion/react";
 import { useState } from "react";
 import { api } from "@/trpc/react";
 import Button from "../_components/UI/Button";
+import type { IDailyReflectionsState } from "./page";
 
 const MotionBox = motion(Box);
 
-interface DailyLogThreeDaysHistory {
-	threeDaysAgo: { checkedIn: boolean; changed: boolean };
-	twoDaysAgo: { checkedIn: boolean; changed: boolean };
-	fourDaysAgo: { checkedIn: boolean; changed: boolean };
-}
-
-interface CommentContentProps {
+interface ICommentContentProps {
+	logDate: Date | undefined;
+	setLogDate: (logDate: Date | undefined) => void;
 	setIsLoading: (isLoading: boolean) => void;
-	dailyLogThreeDaysHistory: DailyLogThreeDaysHistory;
-	setDailyLogThreeDaysHistory: (
-		dailyLogThreeDaysHistory: DailyLogThreeDaysHistory,
-	) => void;
-	setFinishedDailyComment: (finishedDailyComment: boolean) => void;
+	dailyReflections: IDailyReflectionsState;
+	refetchDailyReflections: () => void;
 }
 
 const CommentContent = ({
+	logDate,
+	setLogDate,
 	setIsLoading,
-	dailyLogThreeDaysHistory,
-	setDailyLogThreeDaysHistory,
-	setFinishedDailyComment,
-}: CommentContentProps) => {
+	dailyReflections,
+	refetchDailyReflections,
+}: ICommentContentProps) => {
 	const [dailyComment, setDailyComment] = useState("");
 	const [rating, setRating] = useState<number>(40);
 	const [ratingPosition, setRatingPosition] = useState<number>(40);
@@ -43,36 +38,32 @@ const CommentContent = ({
 
 		// create daily reflections for the last 3 days if they are checked in and changed
 		try {
-			for (const [key, dailyLog] of Object.entries(dailyLogThreeDaysHistory)) {
-				if (dailyLog.checkedIn && dailyLog.changed) {
+			// fill out skipped daily reflections if any
+			for (const dailyReflection of [
+				dailyReflections.threeDaysAgo,
+				dailyReflections.twoDaysAgo,
+				dailyReflections.fourDaysAgo,
+			]) {
+				if (dailyReflection.skipped) {
 					await createDailyReflectionAsync({
 						comment: null,
-						rating: rating,
-						logDate: new Date(
-							Date.now() -
-								(Object.keys(dailyLogThreeDaysHistory).indexOf(key) + 1) *
-									86400000,
-						),
+						logDate: dailyReflection.logDate,
+						rating: 1, // just a placeholder
 					});
 				}
 			}
 
-			setDailyLogThreeDaysHistory({
-				threeDaysAgo: { checkedIn: true, changed: false },
-				twoDaysAgo: { checkedIn: true, changed: false },
-				fourDaysAgo: { checkedIn: true, changed: false },
-			});
-
-			const response = await createDailyReflectionAsync({
+			// fill out currently provided daily reflection
+			await createDailyReflectionAsync({
 				comment: isSkip ? null : dailyComment,
 				rating: rating,
+				logDate: // default to yesterday if no log date is provided
+					logDate || new Date(new Date().setDate(new Date().getDate() - 1)),
 			});
 
-			if (response.success) {
-				setFinishedDailyComment(true);
-			} else {
-				console.error(response.error);
-			}
+			// reset the log date
+			refetchDailyReflections();
+			setLogDate(undefined);
 		} catch (error) {
 			console.error(error);
 		} finally {
