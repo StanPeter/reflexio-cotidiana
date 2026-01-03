@@ -1,8 +1,12 @@
 import { useMemo } from "react";
+import type { TCurrentContent } from "./page";
 
-export const useLogDateString = (logDate: Date | undefined) => {
+export const useLogDateString = (
+  logDate: Date | undefined,
+  currentContentSection: TCurrentContent
+) => {
   const dailyLogDateString = useMemo(() => {
-    if (!logDate) return "";
+    if (!logDate || currentContentSection === "allFinished") return "";
 
     const normalize = (d: Date) =>
       new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
@@ -18,7 +22,7 @@ export const useLogDateString = (logDate: Date | undefined) => {
       month: "short",
     });
     return ` (${formatter.format(logDate)})`;
-  }, [logDate]);
+  }, [logDate, currentContentSection]);
 
   return dailyLogDateString;
 };

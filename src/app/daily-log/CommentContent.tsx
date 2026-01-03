@@ -56,7 +56,7 @@ const CommentContent = ({
 			// fill out currently provided daily reflection
 			await createDailyReflectionAsync({
 				comment: isSkip ? null : dailyComment,
-				rating: rating,
+				rating: isSkip ? 1 : rating,
 				logDate: // default to yesterday if no log date is provided
 					logDate || new Date(new Date().setDate(new Date().getDate() - 1)),
 			});

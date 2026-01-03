@@ -1,12 +1,6 @@
 import { Box, Text } from "@chakra-ui/react";
 import { motion } from "motion/react";
-import {
-	type Dispatch,
-	type SetStateAction,
-	useEffect,
-	useMemo,
-	useState,
-} from "react";
+import { useEffect, useMemo, useState } from "react";
 import Button from "../_components/UI/Button";
 import type { IDailyReflectionsState, TCurrentContent } from "./page";
 
@@ -17,40 +11,42 @@ const MissedDailyContent = ({
 	setLogDate,
 	setDailyReflectionsState,
 	dailyReflections,
+	setCurrentIndex,
 }: {
 	setCurrentContentSection: (section: TCurrentContent) => void;
-	setLogDate: Dispatch<SetStateAction<Date | undefined>>;
+	setLogDate: (date?: Date) => void;
 	dailyReflections: IDailyReflectionsState;
 	setDailyReflectionsState: (state: IDailyReflectionsState) => void;
+	setCurrentIndex: (index: number) => void;
 }) => {
-	const [latestLogDate, setLatestLogDate] = useState<Date | null>(null);
+	const [selectedLogDate, setSelectedLogDate] = useState<Date | null>(null);
 	const [currentLogCategory, setCurrentLogCategory] = useState<
 		"threeDaysAgo" | "twoDaysAgo" | "fourDaysAgo" | null
 	>(null);
 
 	useEffect(() => {
 		if (!dailyReflections.fourDaysAgo.checkedIn) {
-			setLatestLogDate(dailyReflections.fourDaysAgo.logDate);
+			setSelectedLogDate(dailyReflections.fourDaysAgo.logDate);
 			setCurrentLogCategory("fourDaysAgo");
 		} else if (!dailyReflections.threeDaysAgo.checkedIn) {
-			setLatestLogDate(dailyReflections.threeDaysAgo.logDate);
+			setSelectedLogDate(dailyReflections.threeDaysAgo.logDate);
 			setCurrentLogCategory("threeDaysAgo");
 		} else if (!dailyReflections.twoDaysAgo.checkedIn) {
-			setLatestLogDate(dailyReflections.twoDaysAgo.logDate);
+			setSelectedLogDate(dailyReflections.twoDaysAgo.logDate);
 			setCurrentLogCategory("twoDaysAgo");
 		}
 	}, [dailyReflections]);
 
 	const daysDifference = useMemo(() => {
-		if (!latestLogDate) return 0;
+		if (!selectedLogDate) return 0;
 		const diffDays = Math.floor(
-			(Date.now() - latestLogDate.getTime()) / (1000 * 60 * 60 * 24),
+			(Date.now() - selectedLogDate.getTime()) / (1000 * 60 * 60 * 24),
 		);
 		return Math.min(4, Math.max(0, diffDays));
-	}, [latestLogDate]);
+	}, [selectedLogDate]);
 
 	const onSkipHandler = async () => {
-		setDailyReflectionsState({
+		const nextState: IDailyReflectionsState = {
 			fourDaysAgo:
 				currentLogCategory === "fourDaysAgo"
 					? { ...dailyReflections.fourDaysAgo, checkedIn: true, skipped: true }
@@ -63,16 +59,30 @@ const MissedDailyContent = ({
 				currentLogCategory === "threeDaysAgo"
 					? { ...dailyReflections.threeDaysAgo, checkedIn: true, skipped: true }
 					: dailyReflections.threeDaysAgo,
-		});
+		};
+
+		setDailyReflectionsState(nextState);
+
+		const allChecked =
+			nextState.fourDaysAgo.checkedIn &&
+			nextState.threeDaysAgo.checkedIn &&
+			nextState.twoDaysAgo.checkedIn;
+
+		if (allChecked) {
+			setCurrentIndex(0);
+			setLogDate(new Date(Date.now() - 1 * 86400000));
+			setCurrentContentSection("question");
+		}
 	};
 
 	const onFillInHandler = async () => {
-		if (!latestLogDate) {
-			console.error("latestLogDate is null");
+		if (!selectedLogDate) {
+			console.error("selectedLogDate is null");
 			return;
 		}
 
-		setLogDate(latestLogDate);
+		setLogDate(selectedLogDate);
+		setCurrentIndex(0);
 		setCurrentContentSection("question");
 	};
 

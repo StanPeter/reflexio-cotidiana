@@ -1,9 +1,9 @@
 "use client";
 
 import { Box, Heading, Spinner } from "@chakra-ui/react";
-import type { DailyReflection } from "generated/prisma";
+import type { Question } from "generated/prisma";
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { api } from "@/trpc/react";
 import AllFinishedContent from "./AllFinishedContent";
 import CommentContent from "./CommentContent";
@@ -42,17 +42,20 @@ export default function DailyLogPage() {
 	const [logDate, setLogDate] = useState<Date>();
 	const [isLoading, setIsLoading] = useState(false);
 	const [currentIndex, setCurrentIndex] = useState(0);
+	const [usersQuestions, setUsersQuestions] = useState<Question[]>([]);
 	const [currentContentSection, setCurrentContentSection] =
 		useState<TCurrentContent>("question");
 	const [dailyReflectionsState, setDailyReflectionsState] =
 		useState<IDailyReflectionsState>(INITIAL_DAILY_REFLECTIONS_STATE);
 
-	const dailyLogDateString = useLogDateString(logDate);
+	const dailyLogDateString = useLogDateString(logDate, currentContentSection);
 
-	const { data: usersQuestions, isLoading: isLoadingQuestions } =
-		api.dailyLog.getUsersQuestions.useQuery(logDate);
-	const { data: dailyReflections, refetch: refetchDailyReflections } =
-		api.dailyLog.getDailyReflections.useQuery();
+	const utils = api.useUtils();
+	const {
+		data: dailyReflections,
+		refetch: refetchDailyReflections,
+		isLoading: isLoadingDailyReflections,
+	} = api.dailyLog.getDailyReflections.useQuery();
 
 	const currentQuestion = usersQuestions?.[currentIndex];
 	const showMissedContentSection = useMemo(() => {
@@ -62,6 +65,47 @@ export default function DailyLogPage() {
 
 		return false;
 	}, [dailyReflections]);
+
+	const updateLogDate = useCallback((date?: Date) => {
+		if (date) {
+			setIsLoading(true);
+			setCurrentIndex(0);
+			setUsersQuestions([]);
+		}
+		setLogDate(date);
+	}, []);
+
+	// If there is nothing missed, automatically move to yesterday's log
+	useEffect(() => {
+		if (showMissedContentSection) return;
+		if (logDate) return;
+		if (isLoadingDailyReflections) return;
+
+		updateLogDate(new Date(Date.now() - 1 * 86400000));
+	}, [
+		showMissedContentSection,
+		logDate,
+		isLoadingDailyReflections,
+		updateLogDate,
+	]);
+
+	useEffect(() => {
+		const fetchUsersQuestions = async () => {
+			if (logDate) {
+				try {
+					setIsLoading(true);
+					const usersQuestions =
+						await utils.dailyLog.getUsersQuestions.fetch(logDate);
+					setUsersQuestions(usersQuestions);
+				} catch (error) {
+					console.error(error);
+				} finally {
+					setIsLoading(false);
+				}
+			}
+		};
+		fetchUsersQuestions();
+	}, [logDate, utils]);
 
 	// convert the daily reflections to the state
 	useEffect(() => {
@@ -95,7 +139,7 @@ export default function DailyLogPage() {
 	// determine the content section to show
 	// add isLoadingQuestions to deps and guard before switching sections
 	useEffect(() => {
-		if (isLoadingQuestions) return;
+		if (isLoading || isLoadingDailyReflections) return;
 
 		if (showMissedContentSection && !logDate) {
 			setCurrentContentSection("missed");
@@ -104,8 +148,7 @@ export default function DailyLogPage() {
 		} else if (
 			!currentQuestion &&
 			!showMissedContentSection &&
-			dailyReflections?.yesterday &&
-			!logDate
+			dailyReflections?.yesterday?.id
 		) {
 			setCurrentContentSection("allFinished");
 		} else {
@@ -116,7 +159,8 @@ export default function DailyLogPage() {
 		logDate,
 		currentQuestion,
 		dailyReflections,
-		isLoadingQuestions,
+		isLoading,
+		isLoadingDailyReflections,
 	]);
 
 	const handleAnswer = () => {
@@ -125,7 +169,7 @@ export default function DailyLogPage() {
 		setCurrentIndex((prev) => prev + 1);
 	};
 
-	if (isLoading || isLoadingQuestions) {
+	if (isLoading || isLoadingDailyReflections) {
 		return (
 			<Box
 				alignItems="center"
@@ -187,7 +231,7 @@ export default function DailyLogPage() {
 							logDate={logDate}
 							refetchDailyReflections={refetchDailyReflections}
 							setIsLoading={setIsLoading}
-							setLogDate={setLogDate}
+							setLogDate={updateLogDate}
 						/>
 					)}
 					{currentContentSection === "allFinished" && <AllFinishedContent />}
@@ -196,8 +240,9 @@ export default function DailyLogPage() {
 							dailyReflections={dailyReflectionsState}
 							key={`${dailyReflectionsState.threeDaysAgo.checkedIn}-${dailyReflectionsState.twoDaysAgo.checkedIn}-${dailyReflectionsState.fourDaysAgo.checkedIn}`}
 							setCurrentContentSection={setCurrentContentSection}
+							setCurrentIndex={setCurrentIndex}
 							setDailyReflectionsState={setDailyReflectionsState}
-							setLogDate={setLogDate}
+							setLogDate={updateLogDate}
 						/>
 					)}
 				</AnimatePresence>
