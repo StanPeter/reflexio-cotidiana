@@ -14,12 +14,14 @@ interface FormProps<T extends FieldValues> extends Omit<BoxProps, "onSubmit"> {
 const Form = <T extends FieldValues>({
 	children,
 	control,
+	id,
 	onSubmit,
 	...props
 }: FormProps<T>) => {
 	return (
 		<ReactHookForm
 			control={control}
+			id={id}
 			onSubmit={onSubmit}
 			style={{ width: "100%" }}
 		>

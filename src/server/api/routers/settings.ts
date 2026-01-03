@@ -1,5 +1,5 @@
+import { Severity } from "generated/prisma";
 import { z } from "zod";
-
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 
 export const settingsRouter = createTRPCRouter({
@@ -7,7 +7,7 @@ export const settingsRouter = createTRPCRouter({
     .input(
       z.object({
         question: z.string().min(1).max(255),
-        points: z.number().min(1).max(100),
+        severity: z.nativeEnum(Severity),
         isPositive: z.boolean(),
       })
     )
@@ -15,7 +15,7 @@ export const settingsRouter = createTRPCRouter({
       return ctx.db.question.create({
         data: {
           question: input.question,
-          points: input.points ?? 10,
+          severity: input.severity,
           userId: ctx.session.user.id,
           isPositive: input.isPositive,
         },
@@ -26,7 +26,7 @@ export const settingsRouter = createTRPCRouter({
       z.object({
         id: z.string(),
         question: z.string().min(1).max(255),
-        points: z.number().min(1).max(100),
+        severity: z.nativeEnum(Severity),
         isPositive: z.boolean(),
       })
     )
@@ -35,7 +35,7 @@ export const settingsRouter = createTRPCRouter({
         where: { id: input.id, userId: ctx.session.user.id },
         data: {
           question: input.question,
-          points: input.points ?? 10,
+          severity: input.severity,
           isPositive: input.isPositive,
         },
       });

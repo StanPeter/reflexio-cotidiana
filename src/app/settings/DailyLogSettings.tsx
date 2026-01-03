@@ -2,20 +2,20 @@
 
 import {
 	Box,
-	Checkbox,
 	Dialog,
 	FieldErrorText,
 	FieldLabel,
 	FieldRoot,
 	Heading,
 	Icon,
+	NativeSelect,
 	Portal,
 	Spinner,
 	Switch,
-	SwitchLabel,
 	SwitchRoot,
 	Table,
 } from "@chakra-ui/react";
+import type { Question, Severity } from "generated/prisma";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { IoClose } from "react-icons/io5";
@@ -43,12 +43,7 @@ const DeleteQuestionDialog = ({
 }: {
 	isOpen: boolean;
 	onClose: () => void;
-	question?: {
-		id: string;
-		question: string;
-		points: number;
-		isPositive: boolean;
-	};
+	question?: Question;
 	refetchQuestions: () => void;
 }) => {
 	const deleteQuestionMutation = api.settings.deleteQuestion.useMutation();
@@ -82,7 +77,8 @@ const DeleteQuestionDialog = ({
 					<Dialog.Content>
 						<Dialog.Header>
 							<Dialog.Title>
-								Do you really want to delete this question?
+								Do you really want to delete this question? This action will
+								delete all answers to this question.
 							</Dialog.Title>
 						</Dialog.Header>
 						<Dialog.Body>
@@ -113,19 +109,17 @@ const DeleteQuestionDialog = ({
 const EditQuestionDialog = ({
 	isOpen,
 	onClose,
+	action,
 	question,
 	refetchQuestions,
 }: {
 	isOpen: boolean;
 	onClose: () => void;
-	question?: {
-		id: string;
-		question: string;
-		points: number;
-		isPositive: boolean;
-	};
+	action: "edit" | "create";
+	question?: Question;
 	refetchQuestions: () => void;
 }) => {
+	const [isLoading, setIsLoading] = useState(false);
 	const switchRef = useRef<HTMLLabelElement>(null);
 	const createQuestionMutation = api.settings.createQuestion.useMutation();
 	const updateQuestionMutation = api.settings.updateQuestion.useMutation();
@@ -136,40 +130,55 @@ const EditQuestionDialog = ({
 		getValues,
 		trigger,
 		setValue,
+		reset,
 		formState: { errors },
 		control,
-	} = useForm<{ question: string; points: number; isPositive: boolean }>({});
+	} = useForm<{ question: string; severity: Severity; isPositive: boolean }>(
+		{},
+	);
 
 	useEffect(() => {
 		if (question) {
 			setValue("question", question.question);
-			setValue("points", question.points);
+			setValue("severity", question.severity);
 			setValue("isPositive", question.isPositive);
 		}
 	}, [question, setValue]);
 
-	const onSubmit = (data: {
+	const onSubmit = async (data: {
 		question: string;
-		points: number;
-		isPositive: false | "on";
+		severity: Severity;
+		isPositive: boolean;
 	}) => {
-		console.log("data", data);
-		if (question?.id) {
-			updateQuestionMutation.mutate({
-				id: question.id,
-				question: data.question,
-				points: data.points ? Number(data.points) : 10,
-				isPositive: !!data.isPositive,
-			});
-		} else {
-			createQuestionMutation.mutate({
-				question: data.question,
-				points: data.points ? Number(data.points) : 10,
-				isPositive: !!data.isPositive,
-			});
+		setIsLoading(true);
+
+		try {
+			if (question?.id && action === "edit") {
+				await updateQuestionMutation.mutateAsync({
+					id: question.id,
+					question: data.question,
+					severity: data.severity,
+					isPositive: !!data.isPositive,
+				});
+			} else if (action === "create") {
+				await createQuestionMutation.mutateAsync({
+					question: data.question,
+					severity: data.severity,
+					isPositive: !!data.isPositive,
+				});
+			}
+		} catch (error) {
+			console.error(error);
+		} finally {
+			setIsLoading(false);
+			reset();
+			onClose();
 		}
-		onClose();
 	};
+
+	if (isLoading) {
+		return <Spinner />;
+	}
 
 	return (
 		<Dialog.Root
@@ -194,7 +203,8 @@ const EditQuestionDialog = ({
 							>
 								<Form
 									control={control}
-									onSubmit={handleSubmit(onSubmit)}
+									id="edit-question-form"
+									onSubmit={(data) => onSubmit(data.data)}
 									w={"100%"}
 								>
 									<FieldRoot alignItems="center" invalid={false} mt={2}>
@@ -208,23 +218,52 @@ const EditQuestionDialog = ({
 										<FieldErrorText>Question is required</FieldErrorText>
 									</FieldRoot>
 									<FieldRoot alignItems="center" invalid={false} mt={2}>
-										<FieldLabel>Points</FieldLabel>
+										<FieldLabel>Severity</FieldLabel>
 										<Box w="100%">
-											<Input
-												placeholder="How important is this question?"
-												{...register("points", {
-													required: "Points is required",
-												})}
-											/>
-											<Icon
+											<NativeSelect.Root
+												alignItems="center"
+												invalid={false}
+												justifyContent="center"
+												mt={2}
+												textAlign="center"
+											>
+												<NativeSelect.Field
+													_active={{
+														borderColor: "var(--chakra-colors-primary)",
+														borderWidth: "2px",
+													}}
+													_focus={{
+														borderColor: "var(--chakra-colors-primary)",
+														borderWidth: "2px",
+													}}
+													backgroundColor="var(--chakra-colors-background)"
+													border="1px solid var(--chakra-colors-secondary)"
+													borderRadius={"none"}
+													borderX={"none"}
+													pl={"32px"}
+													textAlign="center"
+													{...register("severity", {
+														required: "Severity is required",
+													})}
+												>
+													{["LOW", "MEDIUM", "HIGH"].map((severity) => (
+														<option key={severity} value={severity}>
+															{severity}
+														</option>
+													))}
+												</NativeSelect.Field>
+												<NativeSelect.Indicator />
+											</NativeSelect.Root>
+											{/* <Icon
 												as={LuMessageCircleQuestion}
 												position={"absolute"}
 												right={2}
 												top={8}
-											/>
+											/> */}
 										</Box>
-										<FieldErrorText>Points is required</FieldErrorText>
+										<FieldErrorText>{errors.severity?.message}</FieldErrorText>
 									</FieldRoot>
+
 									<Box
 										alignItems="center"
 										as="label"
@@ -285,7 +324,7 @@ const EditQuestionDialog = ({
 							<Dialog.ActionTrigger asChild>
 								<Button useCase="secondary">Cancel</Button>
 							</Dialog.ActionTrigger>
-							<Button type="submit" useCase="primary">
+							<Button form="edit-question-form" type="submit" useCase="primary">
 								Save
 							</Button>
 						</Dialog.Footer>
@@ -305,12 +344,7 @@ const DailyLogSettings = ({
 	questions,
 	refetchQuestions,
 }: {
-	questions: {
-		id: string;
-		question: string;
-		points: number;
-		isPositive: boolean;
-	}[];
+	questions: Question[];
 	refetchQuestions: () => void;
 }) => {
 	const [isEditQuestionDialogOpen, setIsEditQuestionDialogOpen] =
@@ -318,9 +352,9 @@ const DailyLogSettings = ({
 	const [isDeleteQuestionDialogOpen, setIsDeleteQuestionDialogOpen] =
 		useState(false);
 	const [selectedQuestion, setSelectedQuestion] = useState<
-		| { id: string; question: string; points: number; isPositive: boolean }
-		| undefined
+		Question | undefined
 	>(undefined);
+	const [action, setAction] = useState<"edit" | "create">("create");
 
 	const {
 		register,
@@ -366,10 +400,19 @@ const DailyLogSettings = ({
 		// passwordDialog.onClose();
 	};
 
-	const handleEditQuestion = (questionId: string) => {
-		setSelectedQuestion(
-			questions.find((question) => question.id === questionId),
-		);
+	const handleEditQuestion = (
+		questionId: string,
+		action: "edit" | "create",
+	) => {
+		setAction(action);
+
+		if (action === "edit") {
+			setSelectedQuestion(
+				questions.find((question) => question.id === questionId),
+			);
+		} else {
+			setSelectedQuestion(undefined);
+		}
 		setIsEditQuestionDialogOpen(true);
 	};
 
@@ -391,7 +434,7 @@ const DailyLogSettings = ({
 							Question
 						</Table.ColumnHeader>
 						<Table.ColumnHeader borderBottom={tableBorder}>
-							Points
+							Severity
 						</Table.ColumnHeader>
 						<Table.ColumnHeader borderBottom={tableBorder}></Table.ColumnHeader>
 					</Table.Row>
@@ -403,12 +446,12 @@ const DailyLogSettings = ({
 								{questionItem.question}
 							</Table.Cell>
 							<Table.Cell borderBottom={tableBorder}>
-								{questionItem.points}
+								{questionItem.severity}
 							</Table.Cell>
 							<Table.Cell borderBottom={tableBorder}>
 								<Button
 									marginRight={2}
-									onClick={() => handleEditQuestion(questionItem.id)}
+									onClick={() => handleEditQuestion(questionItem.id, "edit")}
 									size="sm"
 									useCase="primary"
 								>
@@ -428,20 +471,27 @@ const DailyLogSettings = ({
 			</Table.Root>
 			<Button
 				marginTop={4}
-				onClick={() => setIsEditQuestionDialogOpen(true)}
+				onClick={() => handleEditQuestion("", "create")}
 				useCase="primary"
 			>
 				Add Question
 			</Button>
 			<EditQuestionDialog
+				action={action}
 				isOpen={isEditQuestionDialogOpen}
-				onClose={() => setIsEditQuestionDialogOpen(false)}
+				onClose={() => {
+					setIsEditQuestionDialogOpen(false);
+					refetchQuestions();
+				}}
 				question={selectedQuestion}
 				refetchQuestions={refetchQuestions}
 			/>
 			<DeleteQuestionDialog
 				isOpen={isDeleteQuestionDialogOpen}
-				onClose={() => setIsDeleteQuestionDialogOpen(false)}
+				onClose={() => {
+					setIsDeleteQuestionDialogOpen(false);
+					refetchQuestions();
+				}}
 				question={selectedQuestion}
 				refetchQuestions={refetchQuestions}
 			/>
