@@ -4,6 +4,7 @@ import {
 	Box,
 	Button,
 	ButtonGroup,
+	Checkbox,
 	Container,
 	Flex,
 	Heading,
@@ -12,26 +13,14 @@ import {
 	Text,
 } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
+import { api } from "@/trpc/react";
 
 type Question = { id: string; label: string };
 
-// Mock daily averages between 0 and 1. Replace with real data later.
-const mockDailyScores: Record<string, number> = {
-	"2025-01-01": 0.82,
-	"2025-01-02": 0.55,
-	"2025-01-03": 0.34,
-	"2025-01-04": 0.93,
-	"2025-01-05": 0.12,
-	"2025-01-06": 0.67,
-	"2025-01-07": 0.44,
-};
-
-const questions: Question[] = Array.from({ length: 10 }).map((_, idx) => ({
+const questions: Question[] = Array.from({ length: 20 }).map((_, idx) => ({
 	id: `q${idx + 1}`,
 	label: `Question ${idx + 1}`,
 }));
-
-const graphTypes = ["Trend", "Distribution", "Streaks"] as const;
 
 const getScoreColor = (score?: number) => {
 	if (score === undefined) return "gray.100";
@@ -56,11 +45,19 @@ const buildMonthDays = (year: number, month: number) => {
 };
 
 const StatisticsPage = () => {
-	const [activeGraph, setActiveGraph] =
-		useState<(typeof graphTypes)[number]>("Trend");
-	const [selectedQuestions, setSelectedQuestions] = useState<string[]>([
-		questions[0]?.id ?? "",
-	]);
+	const [selectedMonth] = useState(() => new Date());
+	const { data: statistics } = api.statistics.getStatistics.useQuery(
+		{
+			month: selectedMonth,
+		},
+		{
+			refetchOnWindowFocus: false,
+			refetchOnReconnect: false,
+		},
+	);
+	const [selectedQuestions, setSelectedQuestions] = useState<string[]>(
+		questions.map((q) => q.id),
+	);
 
 	const today = new Date();
 	const monthDays = useMemo(
@@ -68,78 +65,32 @@ const StatisticsPage = () => {
 		[today],
 	);
 
-	const toggleQuestion = (id: string) => {
-		setSelectedQuestions((prev) =>
-			prev.includes(id) ? prev.filter((q) => q !== id) : [...prev, id],
-		);
-	};
+	const dayPercents = useMemo(() => {
+		if (!statistics) return {};
+
+		const result: Record<string, { percent?: number }> = {};
+
+		monthDays.forEach(({ date, iso }) => {
+			const dayKey = `day${date.getDate()}` as keyof typeof statistics;
+			const dayStats = statistics[dayKey] as
+				| { actualScore: number; maximumScore: number }
+				| undefined;
+
+			if (!dayStats || dayStats.maximumScore === 0) {
+				result[iso] = { percent: undefined };
+				return;
+			}
+
+			const percent = (dayStats.actualScore / dayStats.maximumScore) * 100;
+			result[iso] = { percent };
+		});
+
+		return result;
+	}, [monthDays, statistics]);
 
 	return (
 		<Container maxW="6xl" py={10}>
 			<Stack gap={8}>
-				<Box>
-					<Heading size="lg">Statistics</Heading>
-					<Text color="gray.600" mt={2}>
-						Track your daily reflections and see how your answers trend over
-						time.
-					</Text>
-				</Box>
-
-				<Box bg="white" borderRadius="lg" boxShadow="md" p={6}>
-					<Flex align="center" gap={3} justify="space-between" wrap="wrap">
-						<Text fontWeight="semibold">Graphs</Text>
-						<ButtonGroup size="sm" variant="outline">
-							{graphTypes.map((type) => (
-								<Button
-									colorScheme="purple"
-									key={type}
-									onClick={() => setActiveGraph(type)}
-									variant={activeGraph === type ? "solid" : "outline"}
-								>
-									{type}
-								</Button>
-							))}
-						</ButtonGroup>
-					</Flex>
-
-					<Box
-						bg="gray.50"
-						border="1px solid"
-						borderColor="gray.100"
-						borderRadius="md"
-						h={{ base: "240px", md: "320px" }}
-						mt={4}
-						p={4}
-					>
-						<Text color="gray.500">Graph placeholder: {activeGraph}</Text>
-					</Box>
-				</Box>
-
-				<Box bg="white" borderRadius="lg" boxShadow="md" p={6}>
-					<Flex align="center" gap={3} justify="space-between" wrap="wrap">
-						<Text fontWeight="semibold">Filters</Text>
-						<Text color="gray.500" fontSize="sm">
-							Select questions to include in averages
-						</Text>
-					</Flex>
-					<Flex flexWrap="wrap" gap={2} mt={3}>
-						{questions.map((q) => {
-							const active = selectedQuestions.includes(q.id);
-							return (
-								<Button
-									colorScheme={active ? "purple" : "gray"}
-									key={q.id}
-									onClick={() => toggleQuestion(q.id)}
-									size="sm"
-									variant={active ? "solid" : "outline"}
-								>
-									{q.label}
-								</Button>
-							);
-						})}
-					</Flex>
-				</Box>
-
 				<Box bg="white" borderRadius="lg" boxShadow="md" p={6}>
 					<Flex align="center" justify="space-between" mb={4}>
 						<Text fontWeight="semibold">Monthly heatmap</Text>
@@ -149,13 +100,18 @@ const StatisticsPage = () => {
 					</Flex>
 					<SimpleGrid columns={7} gap={2}>
 						{monthDays.map((day) => {
-							const score = mockDailyScores[day.iso];
+							const stats = dayPercents[day.iso];
+							const scorePercent = stats?.percent;
 							return (
 								<Box
-									aria-label={`Score ${Math.round(
-										(score ?? 0) * 100,
-									)}% on ${day.iso}`}
-									bg={getScoreColor(score)}
+									aria-label={
+										scorePercent !== undefined
+											? `Score ${Math.round(scorePercent)}% on ${day.iso}`
+											: `No data on ${day.iso}`
+									}
+									bg={getScoreColor(
+										scorePercent !== undefined ? scorePercent / 100 : undefined,
+									)}
 									border="1px solid"
 									borderColor="gray.100"
 									borderRadius="md"
@@ -167,9 +123,9 @@ const StatisticsPage = () => {
 									<Text color="gray.700" fontSize="xs">
 										{day.date.getDate()}
 									</Text>
-									{score !== undefined && (
+									{scorePercent !== undefined && (
 										<Text color="gray.600" fontSize="xs">
-											{Math.round(score * 100)}%
+											{Math.round(scorePercent)}%
 										</Text>
 									)}
 								</Box>
