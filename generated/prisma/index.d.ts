@@ -3785,6 +3785,8 @@ export namespace Prisma {
     emailVerified: Date | null
     image: string | null
     passwordHash: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -3794,6 +3796,8 @@ export namespace Prisma {
     emailVerified: Date | null
     image: string | null
     passwordHash: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -3803,6 +3807,8 @@ export namespace Prisma {
     emailVerified: number
     image: number
     passwordHash: number
+    createdAt: number
+    updatedAt: number
     _all: number
   }
 
@@ -3814,6 +3820,8 @@ export namespace Prisma {
     emailVerified?: true
     image?: true
     passwordHash?: true
+    createdAt?: true
+    updatedAt?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -3823,6 +3831,8 @@ export namespace Prisma {
     emailVerified?: true
     image?: true
     passwordHash?: true
+    createdAt?: true
+    updatedAt?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -3832,6 +3842,8 @@ export namespace Prisma {
     emailVerified?: true
     image?: true
     passwordHash?: true
+    createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -3914,6 +3926,8 @@ export namespace Prisma {
     emailVerified: Date | null
     image: string | null
     passwordHash: string | null
+    createdAt: Date
+    updatedAt: Date
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -3940,6 +3954,8 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: boolean
     passwordHash?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
     accounts?: boolean | User$accountsArgs<ExtArgs>
     sessions?: boolean | User$sessionsArgs<ExtArgs>
     dailyLogs?: boolean | User$dailyLogsArgs<ExtArgs>
@@ -3955,6 +3971,8 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: boolean
     passwordHash?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -3964,6 +3982,8 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: boolean
     passwordHash?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -3973,9 +3993,11 @@ export namespace Prisma {
     emailVerified?: boolean
     image?: boolean
     passwordHash?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "passwordHash", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "passwordHash" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     accounts?: boolean | User$accountsArgs<ExtArgs>
     sessions?: boolean | User$sessionsArgs<ExtArgs>
@@ -4003,6 +4025,8 @@ export namespace Prisma {
       emailVerified: Date | null
       image: string | null
       passwordHash: string | null
+      createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -4437,6 +4461,8 @@ export namespace Prisma {
     readonly emailVerified: FieldRef<"User", 'DateTime'>
     readonly image: FieldRef<"User", 'String'>
     readonly passwordHash: FieldRef<"User", 'String'>
+    readonly createdAt: FieldRef<"User", 'DateTime'>
+    readonly updatedAt: FieldRef<"User", 'DateTime'>
   }
     
 
@@ -9305,7 +9331,9 @@ export namespace Prisma {
     email: 'email',
     emailVerified: 'emailVerified',
     image: 'image',
-    passwordHash: 'passwordHash'
+    passwordHash: 'passwordHash',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -9626,6 +9654,8 @@ export namespace Prisma {
     emailVerified?: DateTimeNullableFilter<"User"> | Date | string | null
     image?: StringNullableFilter<"User"> | string | null
     passwordHash?: StringNullableFilter<"User"> | string | null
+    createdAt?: DateTimeFilter<"User"> | Date | string
+    updatedAt?: DateTimeFilter<"User"> | Date | string
     accounts?: AccountListRelationFilter
     sessions?: SessionListRelationFilter
     dailyLogs?: DailyLogListRelationFilter
@@ -9640,6 +9670,8 @@ export namespace Prisma {
     emailVerified?: SortOrderInput | SortOrder
     image?: SortOrderInput | SortOrder
     passwordHash?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     accounts?: AccountOrderByRelationAggregateInput
     sessions?: SessionOrderByRelationAggregateInput
     dailyLogs?: DailyLogOrderByRelationAggregateInput
@@ -9657,6 +9689,8 @@ export namespace Prisma {
     emailVerified?: DateTimeNullableFilter<"User"> | Date | string | null
     image?: StringNullableFilter<"User"> | string | null
     passwordHash?: StringNullableFilter<"User"> | string | null
+    createdAt?: DateTimeFilter<"User"> | Date | string
+    updatedAt?: DateTimeFilter<"User"> | Date | string
     accounts?: AccountListRelationFilter
     sessions?: SessionListRelationFilter
     dailyLogs?: DailyLogListRelationFilter
@@ -9671,6 +9705,8 @@ export namespace Prisma {
     emailVerified?: SortOrderInput | SortOrder
     image?: SortOrderInput | SortOrder
     passwordHash?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -9686,6 +9722,8 @@ export namespace Prisma {
     emailVerified?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     image?: StringNullableWithAggregatesFilter<"User"> | string | null
     passwordHash?: StringNullableWithAggregatesFilter<"User"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
 
   export type VerificationTokenWhereInput = {
@@ -10102,6 +10140,8 @@ export namespace Prisma {
     emailVerified?: Date | string | null
     image?: string | null
     passwordHash?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     accounts?: AccountCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     dailyLogs?: DailyLogCreateNestedManyWithoutUserInput
@@ -10116,6 +10156,8 @@ export namespace Prisma {
     emailVerified?: Date | string | null
     image?: string | null
     passwordHash?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     dailyLogs?: DailyLogUncheckedCreateNestedManyWithoutUserInput
@@ -10130,6 +10172,8 @@ export namespace Prisma {
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     accounts?: AccountUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     dailyLogs?: DailyLogUpdateManyWithoutUserNestedInput
@@ -10144,6 +10188,8 @@ export namespace Prisma {
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     dailyLogs?: DailyLogUncheckedUpdateManyWithoutUserNestedInput
@@ -10158,6 +10204,8 @@ export namespace Prisma {
     emailVerified?: Date | string | null
     image?: string | null
     passwordHash?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type UserUpdateManyMutationInput = {
@@ -10167,6 +10215,8 @@ export namespace Prisma {
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -10176,6 +10226,8 @@ export namespace Prisma {
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type VerificationTokenCreateInput = {
@@ -10710,6 +10762,8 @@ export namespace Prisma {
     emailVerified?: SortOrder
     image?: SortOrder
     passwordHash?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -10719,6 +10773,8 @@ export namespace Prisma {
     emailVerified?: SortOrder
     image?: SortOrder
     passwordHash?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -10728,6 +10784,8 @@ export namespace Prisma {
     emailVerified?: SortOrder
     image?: SortOrder
     passwordHash?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -11569,6 +11627,8 @@ export namespace Prisma {
     emailVerified?: Date | string | null
     image?: string | null
     passwordHash?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     sessions?: SessionCreateNestedManyWithoutUserInput
     dailyLogs?: DailyLogCreateNestedManyWithoutUserInput
     questions?: QuestionCreateNestedManyWithoutUserInput
@@ -11582,6 +11642,8 @@ export namespace Prisma {
     emailVerified?: Date | string | null
     image?: string | null
     passwordHash?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     dailyLogs?: DailyLogUncheckedCreateNestedManyWithoutUserInput
     questions?: QuestionUncheckedCreateNestedManyWithoutUserInput
@@ -11611,6 +11673,8 @@ export namespace Prisma {
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sessions?: SessionUpdateManyWithoutUserNestedInput
     dailyLogs?: DailyLogUpdateManyWithoutUserNestedInput
     questions?: QuestionUpdateManyWithoutUserNestedInput
@@ -11624,6 +11688,8 @@ export namespace Prisma {
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     dailyLogs?: DailyLogUncheckedUpdateManyWithoutUserNestedInput
     questions?: QuestionUncheckedUpdateManyWithoutUserNestedInput
@@ -11637,6 +11703,8 @@ export namespace Prisma {
     emailVerified?: Date | string | null
     image?: string | null
     passwordHash?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     accounts?: AccountCreateNestedManyWithoutUserInput
     dailyLogs?: DailyLogCreateNestedManyWithoutUserInput
     questions?: QuestionCreateNestedManyWithoutUserInput
@@ -11650,6 +11718,8 @@ export namespace Prisma {
     emailVerified?: Date | string | null
     image?: string | null
     passwordHash?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     dailyLogs?: DailyLogUncheckedCreateNestedManyWithoutUserInput
     questions?: QuestionUncheckedCreateNestedManyWithoutUserInput
@@ -11679,6 +11749,8 @@ export namespace Prisma {
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     accounts?: AccountUpdateManyWithoutUserNestedInput
     dailyLogs?: DailyLogUpdateManyWithoutUserNestedInput
     questions?: QuestionUpdateManyWithoutUserNestedInput
@@ -11692,6 +11764,8 @@ export namespace Prisma {
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     dailyLogs?: DailyLogUncheckedUpdateManyWithoutUserNestedInput
     questions?: QuestionUncheckedUpdateManyWithoutUserNestedInput
@@ -12001,6 +12075,8 @@ export namespace Prisma {
     emailVerified?: Date | string | null
     image?: string | null
     passwordHash?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     accounts?: AccountCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     questions?: QuestionCreateNestedManyWithoutUserInput
@@ -12014,6 +12090,8 @@ export namespace Prisma {
     emailVerified?: Date | string | null
     image?: string | null
     passwordHash?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     questions?: QuestionUncheckedCreateNestedManyWithoutUserInput
@@ -12068,6 +12146,8 @@ export namespace Prisma {
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     accounts?: AccountUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     questions?: QuestionUpdateManyWithoutUserNestedInput
@@ -12081,6 +12161,8 @@ export namespace Prisma {
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     questions?: QuestionUncheckedUpdateManyWithoutUserNestedInput
@@ -12125,6 +12207,8 @@ export namespace Prisma {
     emailVerified?: Date | string | null
     image?: string | null
     passwordHash?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     accounts?: AccountCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     dailyLogs?: DailyLogCreateNestedManyWithoutUserInput
@@ -12138,6 +12222,8 @@ export namespace Prisma {
     emailVerified?: Date | string | null
     image?: string | null
     passwordHash?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     dailyLogs?: DailyLogUncheckedCreateNestedManyWithoutUserInput
@@ -12195,6 +12281,8 @@ export namespace Prisma {
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     accounts?: AccountUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     dailyLogs?: DailyLogUpdateManyWithoutUserNestedInput
@@ -12208,6 +12296,8 @@ export namespace Prisma {
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     dailyLogs?: DailyLogUncheckedUpdateManyWithoutUserNestedInput
@@ -12237,6 +12327,8 @@ export namespace Prisma {
     emailVerified?: Date | string | null
     image?: string | null
     passwordHash?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     accounts?: AccountCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     dailyLogs?: DailyLogCreateNestedManyWithoutUserInput
@@ -12250,6 +12342,8 @@ export namespace Prisma {
     emailVerified?: Date | string | null
     image?: string | null
     passwordHash?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     dailyLogs?: DailyLogUncheckedCreateNestedManyWithoutUserInput
@@ -12279,6 +12373,8 @@ export namespace Prisma {
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     accounts?: AccountUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     dailyLogs?: DailyLogUpdateManyWithoutUserNestedInput
@@ -12292,6 +12388,8 @@ export namespace Prisma {
     emailVerified?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     image?: NullableStringFieldUpdateOperationsInput | string | null
     passwordHash?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     dailyLogs?: DailyLogUncheckedUpdateManyWithoutUserNestedInput

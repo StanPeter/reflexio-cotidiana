@@ -55,10 +55,9 @@ export const dailyLogRouter = createTRPCRouter({
     };
 
     // get the dates for yesterday to four days ago (inclusive)
-    const dates = [1, 2, 3, 4].map((n) =>
-      startOfDayUTC(new Date(Date.now() - n * 86400000))
-    );
-    const [yesterday, twoDaysAgo, threeDaysAgo, fourDaysAgo] = dates;
+    const [yesterday, twoDaysAgo, threeDaysAgo, fourDaysAgo] = [1, 2, 3, 4].map(
+      (n) => startOfDayUTC(new Date(Date.now() - n * 86400000))
+    ) as [Date, Date, Date, Date];
 
     const dailyReflections = await ctx.db.dailyReflection.findMany({
       where: {
@@ -70,22 +69,52 @@ export const dailyLogRouter = createTRPCRouter({
       },
     });
 
+    // check if user has been registered prior to 4 days ago
+    const user = await ctx.db.user.findFirst({
+      where: {
+        id: ctx.session.user.id,
+      },
+    });
+
     // check if two dates are the same day
     const isSameDay = (a: Date, b: Date) =>
       a.toISOString().slice(0, 10) === b.toISOString().slice(0, 10);
 
-    const fourDaysAgoReflection = dailyReflections.find((r) =>
-      isSameDay(r.logDate, fourDaysAgo)
-    );
-    const threeDaysAgoReflection = dailyReflections.find((r) =>
-      isSameDay(r.logDate, threeDaysAgo)
-    );
-    const twoDaysAgoReflection = dailyReflections.find((r) =>
-      isSameDay(r.logDate, twoDaysAgo)
-    );
-    const yesterdayReflection = dailyReflections.find((r) =>
-      isSameDay(r.logDate, yesterday)
-    );
+    // find the reflection for the given date
+    const reflectionForDate = (date: Date) => {
+      return dailyReflections.find((r) => isSameDay(r.logDate, date));
+    };
+
+    // check if the user has been registered prior to the reflection date
+    const isRegisteredPriorToDate = (date: Date) => {
+      return user?.createdAt && user.createdAt < date;
+    };
+
+    // if registered return the reflection for the date
+
+    // if not registered return a placeholder reflection with an id of 0
+    // const placeholderReflection = {
+    //   id: 1,
+    //   logDate: new Date(0),
+    // };
+
+    // const fourDaysAgoReflection = isRegisteredPriorToDate(fourDaysAgo)
+    //   ? reflectionForDate(fourDaysAgo)
+    //   : placeholderReflection;
+    // const threeDaysAgoReflection = isRegisteredPriorToDate(threeDaysAgo)
+    //   ? reflectionForDate(threeDaysAgo)
+    //   : placeholderReflection;
+    // const twoDaysAgoReflection = isRegisteredPriorToDate(twoDaysAgo)
+    //   ? reflectionForDate(twoDaysAgo)
+    //   : placeholderReflection;
+    // const yesterdayReflection = isRegisteredPriorToDate(yesterday)
+    //   ? reflectionForDate(yesterday)
+    //   : placeholderReflection;
+
+    const fourDaysAgoReflection = reflectionForDate(fourDaysAgo);
+    const threeDaysAgoReflection = reflectionForDate(threeDaysAgo);
+    const twoDaysAgoReflection = reflectionForDate(twoDaysAgo);
+    const yesterdayReflection = reflectionForDate(yesterday);
 
     return {
       fourDaysAgo: fourDaysAgoReflection,

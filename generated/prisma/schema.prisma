@@ -53,6 +53,8 @@ model User {
   dailyLogs        DailyLog[]
   questions        Question[]
   dailyReflections DailyReflection[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @default(now()) @updatedAt
 }
 
 model VerificationToken {
