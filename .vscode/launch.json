@@ -1,0 +1,85 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Next.js: Debug (Full Stack)",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [],
+      "program": "${workspaceFolder}/node_modules/next/dist/bin/next",
+      "args": ["dev"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "env": {
+        // Propagate inspect + source maps to child worker (router) so attach works.
+        // Use a non-default inspect port to avoid clashes with lingering 9229 sessions.
+        "NODE_OPTIONS": "--inspect=9239 --enable-source-maps"
+      },
+      "skipFiles": ["<node_internals>/**"],
+      "outFiles": ["${workspaceFolder}/.next/**/*.js"],
+      "sourceMaps": true,
+      "smartStep": true,
+      "resolveSourceMapLocations": [
+        "${workspaceFolder}/**",
+        "!**/node_modules/**"
+      ],
+      "trace": true,
+      "autoAttachChildProcesses": true,
+      "serverReadyAction": {
+        "action": "debugWithChrome",
+        "pattern": "^-\\s*Local:.+(https?://.+)$",
+        "uriFormat": "%s",
+        "killOnServerStop": true
+      }
+    },
+    {
+      "name": "Next.js: Attach Router (9240)",
+      "type": "node",
+      "request": "attach",
+      // Router uses inspect port + 1 when main dev server is launched with --inspect=9239.
+      "port": 9240,
+      "restart": true,
+      "skipFiles": ["<node_internals>/**"],
+      "outFiles": ["${workspaceFolder}/.next/server/**/*.js"],
+      "sourceMaps": true,
+      "smartStep": true,
+      "resolveSourceMapLocations": [
+        "${workspaceFolder}/**",
+        "!**/node_modules/**"
+      ]
+    },
+    // TODO: This is not working, might fix it later, for now server debug is enough
+    {
+      "name": "Next.js: Client (pwa-chrome)",
+      "type": "pwa-chrome",
+      "request": "launch",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}",
+      "resolveSourceMapLocations": [
+        "${workspaceFolder}/**",
+        "!**/node_modules/**"
+      ],
+      "sourceMapPathOverrides": {
+        "webpack:///./src/*": "${webRoot}/src/*",
+        "webpack:///src/*": "${webRoot}/src/*",
+        "webpack-internal:///./src/*": "${webRoot}/src/*",
+        "webpack:///./*": "${webRoot}/*",
+        "webpack:///./~/*": "${webRoot}/node_modules/*",
+        "webpack://_N_E/*": "${webRoot}/*",
+        "webpack:///*": "${webRoot}/*"
+      },
+      "trace": true
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Next.js: Compound Full Stack",
+      "configurations": [
+        "Next.js: Debug (Full Stack)",
+        "Next.js: Attach Router (9230)",
+        "Next.js: Client (pwa-chrome)"
+      ]
+    }
+  ]
+}
