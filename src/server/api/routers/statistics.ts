@@ -1,3 +1,4 @@
+import type { Severity } from "generated/prisma";
 import z from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
@@ -31,15 +32,15 @@ export const statisticsRouter = createTRPCRouter({
         },
         include: {
           question: {
-            select: { severity: true },
+            select: { severity: true, isPositive: true },
           },
         },
       });
 
       // Prepare all days for the month with zeroed scores.
-      const daysInMonth = endOfMonth.getDate();
-      const scoresByDay: Record<string, DayScores> = {};
-      for (let day = 1; day <= daysInMonth; day += 1) {
+      const numberOfDaysInMonth = endOfMonth.getDate();
+      const scoresByDay: Record<string, DayScores> = {}; // e.g. { day1: { actualScore: 0, maximumScore: 0 },... }
+      for (let day = 1; day <= numberOfDaysInMonth; day += 1) {
         scoresByDay[`day${day}`] = { actualScore: 0, maximumScore: 0 };
       }
 
@@ -50,23 +51,58 @@ export const statisticsRouter = createTRPCRouter({
         HIGH: 20,
       };
 
+      const extractPointsForAnswer = (
+        answer: boolean | null,
+        isPositive: boolean,
+        severity: Severity
+      ) => {
+        // Correct answer
+        if (
+          (answer === true && isPositive) ||
+          (answer === false && !isPositive)
+        ) {
+          return {
+            maximumScore: severityWeight[severity],
+            actualScore: severityWeight[severity],
+          };
+        }
+
+        // Incorrect answer
+        return {
+          maximumScore: severityWeight[severity],
+          actualScore: 0,
+        };
+      };
+
       for (const log of dailyLogs) {
         const dayNumber = log.logDate.getDate();
-        const dayKey = `day${dayNumber}` as keyof typeof scoresByDay;
+        const dayKey = `day${dayNumber}` as keyof typeof scoresByDay; // e.g. "day1"
 
-        const isAnswered = log.answer !== null && log.answer !== undefined;
-        if (isAnswered) {
-          const weight =
-            severityWeight[log.question?.severity ?? "MEDIUM"] ?? 0;
-
-          scoresByDay[dayKey]!.maximumScore += weight;
-          if (log.answer === true) {
-            scoresByDay[dayKey]!.actualScore += weight;
-          }
+        if (
+          log.question.isPositive === null ||
+          log.question.severity === null
+        ) {
+          console.error(
+            "Question is missing isPositive or severity",
+            log.question
+          );
+          continue;
         }
-      }
 
-      console.log(scoresByDay, "SCORES BY DAY", dailyLogs, "DAILY LOGS");
+        // Skipped question
+        if (log.answer === null) {
+          continue;
+        }
+
+        const extractedPoints = extractPointsForAnswer(
+          log.answer,
+          log.question.isPositive,
+          log.question.severity
+        );
+
+        scoresByDay[dayKey]!.maximumScore += extractedPoints.maximumScore;
+        scoresByDay[dayKey]!.actualScore += extractedPoints.actualScore;
+      }
 
       return scoresByDay;
     }),
