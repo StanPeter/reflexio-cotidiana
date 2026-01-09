@@ -3,6 +3,7 @@
 import { Box } from "@chakra-ui/react";
 import { redirect, usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { Suspense } from "react";
 import FloatingNav from "./Floating-nav";
 import Footer from "./Footer";
 
@@ -40,7 +41,7 @@ const MainBody = ({ children }: IMainBodyProps) => {
 				px={{ base: 4, md: 6 }}
 				py={{ base: 12, md: 12 }}
 			>
-				{children}
+				<Suspense fallback={null}>{children}</Suspense>
 			</Box>
 			<Footer />
 		</Box>

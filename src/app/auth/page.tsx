@@ -7,7 +7,6 @@ import {
 	FieldLabel,
 	FieldRoot,
 	Icon,
-	Separator,
 	Text,
 } from "@chakra-ui/react";
 import { motion } from "motion/react";
