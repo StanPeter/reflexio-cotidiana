@@ -2,12 +2,8 @@
 
 import {
 	Box,
-	Button,
-	ButtonGroup,
-	Checkbox,
 	Container,
 	Flex,
-	Heading,
 	SimpleGrid,
 	Stack,
 	Text,

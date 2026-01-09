@@ -426,118 +426,128 @@ const DailyLogSettings = ({
 
 	const tableBorder = "1px solid var(--chakra-colors-tertiary)";
 
-	if (questions.length === 0) {
-		return <Text>No questions found</Text>;
-	}
-
 	return (
 		<>
-			<Heading size="md">Negative Questions</Heading>
-			<Table.Root mb={6} size="sm">
-				<Table.Header>
-					<Table.Row>
-						<Table.ColumnHeader borderBottom={tableBorder}>
-							Question
-						</Table.ColumnHeader>
-						<Table.ColumnHeader borderBottom={tableBorder}>
-							Severity
-						</Table.ColumnHeader>
-						<Table.ColumnHeader borderBottom={tableBorder}></Table.ColumnHeader>
-					</Table.Row>
-				</Table.Header>
-				<Table.Body>
-					{questions
-						?.filter((questionItem) => !questionItem.isPositive)
-						.sort(
-							(
-								a,
-								b, // sort by created at date descending
-							) =>
-								new Date(b.createdAt).getTime() -
-								new Date(a.createdAt).getTime(),
-						)
-						.map((questionItem) => (
-							<Table.Row key={questionItem.id}>
-								<Table.Cell borderBottom={tableBorder}>
-									{questionItem.question}
-								</Table.Cell>
-								<Table.Cell borderBottom={tableBorder}>
-									{questionItem.severity}
-								</Table.Cell>
-								<Table.Cell borderBottom={tableBorder}>
-									<Button
-										marginRight={2}
-										onClick={() => handleEditQuestion(questionItem.id, "edit")}
-										size="sm"
-										useCase="primary"
-									>
-										Edit
-									</Button>
-									<Button
-										onClick={() => handleDeleteQuestion(questionItem.id)}
-										size="sm"
-										useCase="danger"
-									>
-										Delete
-									</Button>
-								</Table.Cell>
+			{questions.length > 0 ? (
+				<>
+					<Heading size="md">Negative Questions</Heading>
+					<Table.Root mb={6} size="sm">
+						<Table.Header>
+							<Table.Row>
+								<Table.ColumnHeader borderBottom={tableBorder}>
+									Question
+								</Table.ColumnHeader>
+								<Table.ColumnHeader borderBottom={tableBorder}>
+									Severity
+								</Table.ColumnHeader>
+								<Table.ColumnHeader
+									borderBottom={tableBorder}
+								></Table.ColumnHeader>
 							</Table.Row>
-						))}
-				</Table.Body>
-			</Table.Root>
-			<Heading size="md">Positive Questions</Heading>
-			<Table.Root size="sm">
-				<Table.Header>
-					<Table.Row>
-						<Table.ColumnHeader borderBottom={tableBorder}>
-							Question
-						</Table.ColumnHeader>
-						<Table.ColumnHeader borderBottom={tableBorder}>
-							Severity
-						</Table.ColumnHeader>
-						<Table.ColumnHeader borderBottom={tableBorder}></Table.ColumnHeader>
-					</Table.Row>
-				</Table.Header>
-				<Table.Body>
-					{questions
-						?.filter((questionItem) => questionItem.isPositive)
-						.sort(
-							(
-								a,
-								b, // sort by created at date descending
-							) =>
-								new Date(b.createdAt).getTime() -
-								new Date(a.createdAt).getTime(),
-						)
-						.map((questionItem) => (
-							<Table.Row key={questionItem.id}>
-								<Table.Cell borderBottom={tableBorder}>
-									{questionItem.question}
-								</Table.Cell>
-								<Table.Cell borderBottom={tableBorder}>
-									{questionItem.severity}
-								</Table.Cell>
-								<Table.Cell borderBottom={tableBorder}>
-									<Button
-										marginRight={2}
-										onClick={() => handleEditQuestion(questionItem.id, "edit")}
-										size="sm"
-										useCase="primary"
-									>
-										Edit
-									</Button>
-									<Button
-										onClick={() => handleDeleteQuestion(questionItem.id)}
-										size="sm"
-										useCase="danger"
-									>
-										Delete
-									</Button>
-								</Table.Cell>
+						</Table.Header>
+						<Table.Body>
+							{questions
+								?.filter((questionItem) => !questionItem.isPositive)
+								.sort(
+									(
+										a,
+										b, // sort by created at date descending
+									) =>
+										new Date(b.createdAt).getTime() -
+										new Date(a.createdAt).getTime(),
+								)
+								.map((questionItem) => (
+									<Table.Row key={questionItem.id}>
+										<Table.Cell borderBottom={tableBorder}>
+											{questionItem.question}
+										</Table.Cell>
+										<Table.Cell borderBottom={tableBorder}>
+											{questionItem.severity}
+										</Table.Cell>
+										<Table.Cell borderBottom={tableBorder}>
+											<Button
+												marginRight={2}
+												onClick={() =>
+													handleEditQuestion(questionItem.id, "edit")
+												}
+												size="sm"
+												useCase="primary"
+											>
+												Edit
+											</Button>
+											<Button
+												onClick={() => handleDeleteQuestion(questionItem.id)}
+												size="sm"
+												useCase="danger"
+											>
+												Delete
+											</Button>
+										</Table.Cell>
+									</Table.Row>
+								))}
+						</Table.Body>
+					</Table.Root>
+					<Heading size="md">Positive Questions</Heading>
+					<Table.Root size="sm">
+						<Table.Header>
+							<Table.Row>
+								<Table.ColumnHeader borderBottom={tableBorder}>
+									Question
+								</Table.ColumnHeader>
+								<Table.ColumnHeader borderBottom={tableBorder}>
+									Severity
+								</Table.ColumnHeader>
+								<Table.ColumnHeader
+									borderBottom={tableBorder}
+								></Table.ColumnHeader>
 							</Table.Row>
-						))}
-				</Table.Body>
-			</Table.Root>
+						</Table.Header>
+						<Table.Body>
+							{questions
+								?.filter((questionItem) => questionItem.isPositive)
+								.sort(
+									(
+										a,
+										b, // sort by created at date descending
+									) =>
+										new Date(b.createdAt).getTime() -
+										new Date(a.createdAt).getTime(),
+								)
+								.map((questionItem) => (
+									<Table.Row key={questionItem.id}>
+										<Table.Cell borderBottom={tableBorder}>
+											{questionItem.question}
+										</Table.Cell>
+										<Table.Cell borderBottom={tableBorder}>
+											{questionItem.severity}
+										</Table.Cell>
+										<Table.Cell borderBottom={tableBorder}>
+											<Button
+												marginRight={2}
+												onClick={() =>
+													handleEditQuestion(questionItem.id, "edit")
+												}
+												size="sm"
+												useCase="primary"
+											>
+												Edit
+											</Button>
+											<Button
+												onClick={() => handleDeleteQuestion(questionItem.id)}
+												size="sm"
+												useCase="danger"
+											>
+												Delete
+											</Button>
+										</Table.Cell>
+									</Table.Row>
+								))}
+						</Table.Body>
+					</Table.Root>{" "}
+				</>
+			) : (
+				<Heading size="md">No questions found</Heading>
+			)}
 			<Button
 				marginTop={4}
 				onClick={() => handleEditQuestion("", "create")}

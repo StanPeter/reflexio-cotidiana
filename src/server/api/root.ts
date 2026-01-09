@@ -10,10 +10,10 @@ import { statisticsRouter } from "./routers/statistics";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  settings: settingsRouter,
-  dailyLog: dailyLogRouter,
-  auth: authRouter,
-  statistics: statisticsRouter,
+	settings: settingsRouter,
+	dailyLog: dailyLogRouter,
+	auth: authRouter,
+	statistics: statisticsRouter,
 });
 
 // export type definition of API

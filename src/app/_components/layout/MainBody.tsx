@@ -34,9 +34,9 @@ const MainBody = ({ children }: IMainBodyProps) => {
 				as="main"
 				backgroundColor="var(--chakra-colors-background)"
 				display="flex"
+				flex={1}
 				justifyContent="center"
 				minH={"70vh"}
-				flex={1}
 				px={{ base: 4, md: 6 }}
 				py={{ base: 12, md: 12 }}
 			>

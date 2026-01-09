@@ -35,6 +35,11 @@ const DailyLogQuestion = ({
 			answer = false;
 		}
 
+		if (!logDate) {
+			console.error("logDate is null");
+			return;
+		}
+
 		createDailyLog({
 			questionId: question.id,
 			answer: answer,

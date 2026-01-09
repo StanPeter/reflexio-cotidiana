@@ -100,6 +100,11 @@ export const statisticsRouter = createTRPCRouter({
           log.question.severity
         );
 
+        if (!extractedPoints.maximumScore || !extractedPoints.actualScore) {
+          console.error("extractedPoints is null", extractedPoints);
+          continue;
+        }
+
         scoresByDay[dayKey]!.maximumScore += extractedPoints.maximumScore;
         scoresByDay[dayKey]!.actualScore += extractedPoints.actualScore;
       }

@@ -1,6 +1,10 @@
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Span, Text } from "@chakra-ui/react";
 
 const Footer = () => {
+	// const environment = process.env.DATABASE_URL?.includes("silence")
+	// 	? "production"
+	// 	: "development";
+
 	return (
 		<Box
 			as="footer"
@@ -12,7 +16,10 @@ const Footer = () => {
 			width="100%"
 		>
 			<Text color="var(--chakra-colors-text)" textAlign="center">
-				Copyright © 2025 Reflexio Cotidiana. All rights reserved.
+				Copyright © 2025 Reflexio Cotidiana. All rights reserved.{" "}
+				<Span color="var(--chakra-colors-text)" fontWeight={600}>
+					NOT DONE YET
+				</Span>
 			</Text>
 		</Box>
 	);

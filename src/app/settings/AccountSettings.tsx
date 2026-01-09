@@ -70,7 +70,11 @@ const AccountSettings = () => {
 	};
 
 	return (
-		<Form control={control} onSubmit={handleSubmit(onSaveSettings)} w={"100%"}>
+		<Form
+			control={control}
+			onSubmit={(e: any) => handleSubmit(onSaveSettings)(e)}
+			w={"100%"}
+		>
 			<FieldRoot invalid={!!errors.name}>
 				<FieldLabel>Name</FieldLabel>
 				<Input
@@ -105,7 +109,7 @@ const AccountSettings = () => {
 						Manage password securely
 					</Box>
 				</Box>
-				<Button onClick={() => {}} variant="outline">
+				<Button onClick={() => {}} useCase="secondary">
 					Change password
 				</Button>
 			</Flex>
