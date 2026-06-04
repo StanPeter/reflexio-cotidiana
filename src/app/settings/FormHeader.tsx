@@ -1,36 +1,27 @@
 import { Box } from "@chakra-ui/react";
 import Button from "../_components/UI/Button";
 
-export type SettingsTab = "daily-log" | "account" | "goals";
-
 interface IFormHeader {
-	activeTab: SettingsTab;
-	setActiveTab: (tab: SettingsTab) => void;
+	activeTab: "daily-log" | "account";
+	setActiveTab: (tab: "daily-log" | "account") => void;
 }
 
 const FormHeader = ({ activeTab, setActiveTab }: IFormHeader) => {
 	return (
-		<Box display="flex" flexWrap="wrap">
+		<Box display="flex">
 			<Button
 				borderBottomRadius={0}
 				onClick={() => setActiveTab("daily-log")}
 				useCase={activeTab === "daily-log" ? "primary" : "secondary"}
 			>
-				Daily Log
+				Daily Log Settings
 			</Button>
 			<Button
 				borderBottomRadius={0}
 				onClick={() => setActiveTab("account")}
 				useCase={activeTab === "account" ? "primary" : "secondary"}
 			>
-				Account
-			</Button>
-			<Button
-				borderBottomRadius={0}
-				onClick={() => setActiveTab("goals")}
-				useCase={activeTab === "goals" ? "primary" : "secondary"}
-			>
-				Goals
+				Account Settings
 			</Button>
 		</Box>
 	);

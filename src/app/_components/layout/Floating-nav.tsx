@@ -13,6 +13,7 @@ type MotionConfig = {
 
 const baseNavItems = [
 	{ label: "Daily log", href: "/daily-log", x: 20, y: 30 },
+	{ label: "Motivation", href: "/motivation", x: 68, y: 24 },
 	{ label: "Goals", href: "/goals", x: 44, y: 42 },
 	{ label: "Statistics", href: "/statistics", x: 55, y: 65 },
 	{ label: "Settings", href: "/settings", x: 30, y: 68 },

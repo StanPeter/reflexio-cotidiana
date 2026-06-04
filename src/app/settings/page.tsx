@@ -1,15 +1,30 @@
 "use client";
 
-import { Box, Spinner } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Spinner, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import { api } from "@/trpc/react";
 import AccountSettings from "./AccountSettings";
 import DailyLogSettings from "./DailyLogSettings";
-import FormHeader, { type SettingsTab } from "./FormHeader";
-import GoalsSettings from "./GoalsSettings";
+import FormHeader from "./FormHeader";
+
+const palette = {
+	indigo: "#6C63FF",
+	bg: "#F2F0FF",
+	text: "#2F2E41",
+};
 
 export default function SettingsPage() {
-	const [activeTab, setActiveTab] = useState<SettingsTab>("daily-log");
+	const [isEditQuestionDialogOpen, setIsEditQuestionDialogOpen] =
+		useState(false);
+	const [isDeleteQuestionDialogOpen, setIsDeleteQuestionDialogOpen] =
+		useState(false);
+	const [selectedQuestion, setSelectedQuestion] = useState<
+		| { id: string; question: string; points: number; isPositive: boolean }
+		| undefined
+	>(undefined);
+	const [activeTab, setActiveTab] = useState<"daily-log" | "account">(
+		"daily-log",
+	);
 	const {
 		data: questions = [],
 		isLoading: isLoadingQuestions,
@@ -18,11 +33,11 @@ export default function SettingsPage() {
 
 	return (
 		<Box
-			maxW="860px"
+			maxW="960px"
 			mx="auto"
 			px={{ base: 4, md: 6 }}
 			py={{ base: 12, md: 16 }}
-			w={{ base: "100%", md: "80%", xl: "60%" }}
+			w="60%"
 		>
 			<FormHeader activeTab={activeTab} setActiveTab={setActiveTab} />
 			<Box
@@ -32,27 +47,29 @@ export default function SettingsPage() {
 				borderRadius="lg"
 				borderTopLeftRadius={0}
 				boxShadow="md"
+				minWidth="600px"
 				p={6}
 				w="100%"
 			>
-				{activeTab === "daily-log" && (
-					isLoadingQuestions ? (
-						<Spinner
-							alignSelf="center"
-							color="var(--chakra-colors-primary)"
-							display="flex"
-							justifySelf="center"
-							size="md"
-						/>
-					) : (
-						<DailyLogSettings
-							questions={questions}
-							refetchQuestions={refetchQuestions}
-						/>
-					)
+				{isLoadingQuestions ? (
+					<Spinner
+						alignSelf="center"
+						color="var(--chakra-colors-primary)"
+						display="flex"
+						justifySelf="center"
+						size="md"
+					/>
+				) : (
+					<>
+						{activeTab === "daily-log" && (
+							<DailyLogSettings
+								questions={questions}
+								refetchQuestions={refetchQuestions}
+							/>
+						)}
+						{activeTab === "account" && <AccountSettings />}
+					</>
 				)}
-				{activeTab === "account" && <AccountSettings />}
-				{activeTab === "goals" && <GoalsSettings />}
 			</Box>
 		</Box>
 	);

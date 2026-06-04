@@ -4,7 +4,6 @@ import { Box } from "@chakra-ui/react";
 import { redirect, usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Suspense } from "react";
-import StoicBot from "../StoicBot";
 import FloatingNav from "./Floating-nav";
 import Footer from "./Footer";
 
@@ -45,7 +44,6 @@ const MainBody = ({ children }: IMainBodyProps) => {
 				<Suspense fallback={null}>{children}</Suspense>
 			</Box>
 			<Footer />
-			<StoicBot />
 		</Box>
 	);
 };

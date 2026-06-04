@@ -1,41 +1,20 @@
 "use client";
 
-import { Box, Flex, Heading, Spinner, Text } from "@chakra-ui/react";
+import { Box, Heading, Spinner } from "@chakra-ui/react";
 import type { Question } from "generated/prisma";
 import { AnimatePresence, motion } from "motion/react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { api } from "@/trpc/react";
-import Button from "../_components/UI/Button";
 import AllFinishedContent from "./AllFinishedContent";
 import CommentContent from "./CommentContent";
 import DailyLogQuestion from "./DailyLogQuestion";
-import LogAreaTabs, { AREA_LABELS, type LogArea } from "./LogAreaTabs";
 import MissedContent from "./MissedDailyContent";
-import QuestionProgress from "./QuestionProgress";
 import { useLogDateString } from "./useLogDateString";
 
 const palette = {
 	indigo: "#6C63FF",
 	bg: "#F2F0FF",
 	text: "#2F2E41",
-};
-
-type MockQuestion = { id: string; text: string };
-
-const MOCK_QUESTIONS: Record<Exclude<LogArea, "daily">, MockQuestion[]> = {
-	work: [
-		{ id: "w1", text: "Did you stay focused on your most important task today?" },
-		{ id: "w2", text: "Did you take at least one proper break?" },
-		{ id: "w3", text: "Did you avoid context-switching for the first 2 hours?" },
-		{ id: "w4", text: "Did you finish your planned tasks for today?" },
-		{ id: "w5", text: "Did you end the workday at a reasonable time?" },
-	],
-	eyes: [
-		{ id: "e1", text: "Did you follow the 20-20-20 rule today?" },
-		{ id: "e2", text: "Did you keep screen brightness at a comfortable level?" },
-		{ id: "e3", text: "Did you spend at least 20 minutes outdoors in natural light?" },
-		{ id: "e4", text: "Did you remember to blink frequently while using screens?" },
-	],
 };
 
 const MotionBox = motion(Box);
@@ -68,9 +47,6 @@ export default function DailyLogPage() {
 		useState<TCurrentContent>("question");
 	const [dailyReflectionsState, setDailyReflectionsState] =
 		useState<IDailyReflectionsState>(INITIAL_DAILY_REFLECTIONS_STATE);
-	const [activeArea, setActiveArea] = useState<LogArea>("daily");
-	const [mockIndex, setMockIndex] = useState(0);
-	const totalDailyRef = useRef(0);
 
 	const dailyLogDateString = useLogDateString(logDate, currentContentSection);
 
@@ -118,9 +94,9 @@ export default function DailyLogPage() {
 			if (logDate) {
 				try {
 					setIsLoading(true);
-					const fetched = await utils.dailyLog.getUsersQuestions.fetch(logDate);
-					setUsersQuestions(fetched);
-					totalDailyRef.current = fetched.length;
+					const usersQuestions =
+						await utils.dailyLog.getUsersQuestions.fetch(logDate);
+					setUsersQuestions(usersQuestions);
 				} catch (error) {
 					console.error(error);
 				} finally {
@@ -130,11 +106,6 @@ export default function DailyLogPage() {
 		};
 		fetchUsersQuestions();
 	}, [logDate, utils]);
-
-	const handleAreaChange = (area: LogArea) => {
-		setActiveArea(area);
-		setMockIndex(0);
-	};
 
 	// convert the daily reflections to the state
 	useEffect(() => {
@@ -211,17 +182,6 @@ export default function DailyLogPage() {
 		);
 	}
 
-	const mockQuestions = activeArea !== "daily" ? MOCK_QUESTIONS[activeArea] : [];
-	const mockTotal = mockQuestions.length;
-	const mockDone = Math.min(mockIndex, mockTotal);
-	const mockQuestion = mockQuestions[mockIndex];
-
-	const dailyTotal = totalDailyRef.current;
-	const dailyDone = Math.min(currentIndex, dailyTotal);
-
-	const progressTotal = activeArea === "daily" ? dailyTotal : mockTotal;
-	const progressDone = activeArea === "daily" ? dailyDone : mockDone;
-
 	return (
 		<Box
 			alignItems="flex-start"
@@ -244,123 +204,48 @@ export default function DailyLogPage() {
 					fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}
 					fontWeight="800"
 					letterSpacing="-0.01em"
-					mb={6}
+					mb={{ base: 12, md: 20 }}
 				>
 					Your favorite daily log {dailyLogDateString}
 				</Heading>
-
-				<LogAreaTabs activeArea={activeArea} onAreaChange={handleAreaChange} />
-				<QuestionProgress done={progressDone} total={progressTotal} />
-
-				{/* Daily area — real flow */}
-				{activeArea === "daily" && (
-					<AnimatePresence mode="wait">
-						{currentContentSection === "question" && currentQuestion && (
-							<MotionBox
-								animate={{ opacity: 1, y: 0 }}
-								exit={{ opacity: 0, y: -12 }}
-								initial={{ opacity: 0, y: 16 }}
-								key={currentQuestion?.id}
-								transition={{ duration: 0.4, ease: "easeOut" }}
-							>
-								<DailyLogQuestion
-									logDate={logDate}
-									onAnswer={handleAnswer}
-									options={DEFAULT_OPTIONS}
-									question={currentQuestion}
-								/>
-							</MotionBox>
-						)}
-						{currentContentSection === "comment" && (
-							<CommentContent
-								dailyReflections={dailyReflectionsState}
+				<AnimatePresence mode="wait">
+					{currentContentSection === "question" && currentQuestion && (
+						<MotionBox
+							animate={{ opacity: 1, y: 0 }}
+							exit={{ opacity: 0, y: -12 }}
+							initial={{ opacity: 0, y: 16 }}
+							key={currentQuestion?.id}
+							transition={{ duration: 0.4, ease: "easeOut" }}
+						>
+							<DailyLogQuestion
 								logDate={logDate}
-								refetchDailyReflections={refetchDailyReflections}
-								setIsLoading={setIsLoading}
-								setLogDate={updateLogDate}
+								onAnswer={handleAnswer}
+								options={DEFAULT_OPTIONS}
+								question={currentQuestion}
 							/>
-						)}
-						{currentContentSection === "allFinished" && <AllFinishedContent />}
-						{currentContentSection === "missed" && (
-							<MissedContent
-								dailyReflections={dailyReflectionsState}
-								key={`${dailyReflectionsState.threeDaysAgo.checkedIn}-${dailyReflectionsState.twoDaysAgo.checkedIn}-${dailyReflectionsState.fourDaysAgo.checkedIn}`}
-								setCurrentContentSection={setCurrentContentSection}
-								setCurrentIndex={setCurrentIndex}
-								setDailyReflectionsState={setDailyReflectionsState}
-								setLogDate={updateLogDate}
-							/>
-						)}
-					</AnimatePresence>
-				)}
-
-				{/* Mock areas — Work / Eyes Health */}
-				{activeArea !== "daily" && (
-					<AnimatePresence mode="wait">
-						{mockQuestion ? (
-							<MotionBox
-								animate={{ opacity: 1, y: 0 }}
-								exit={{ opacity: 0, y: -12 }}
-								initial={{ opacity: 0, y: 16 }}
-								key={mockQuestion.id}
-								transition={{ duration: 0.4, ease: "easeOut" }}
-							>
-								<Flex align="center" direction="column" gap={{ base: 6, md: 8 }}>
-									<Flex align="center" gap={2} justify="center">
-										<Text
-											color={palette.text}
-											fontSize={{ base: "md", md: "lg" }}
-											fontWeight="700"
-										>
-											{mockQuestion.text}
-										</Text>
-										<Button
-											borderRadius="full"
-											onClick={() => setMockIndex((i) => i + 1)}
-											size="xs"
-											useCase="secondary"
-										>
-											Skip
-										</Button>
-									</Flex>
-									<Flex gap={6} justify="center">
-										<Button
-											borderRadius="full"
-											onClick={() => setMockIndex((i) => i + 1)}
-											size="2xl"
-											useCase="primary"
-										>
-											Yes
-										</Button>
-										<Button
-											borderRadius="full"
-											onClick={() => setMockIndex((i) => i + 1)}
-											size="2xl"
-											useCase="danger"
-										>
-											No
-										</Button>
-									</Flex>
-								</Flex>
-							</MotionBox>
-						) : (
-							<MotionBox
-								animate={{ opacity: 1, y: 0 }}
-								initial={{ opacity: 0, y: 16 }}
-								key="mock-done"
-								transition={{ duration: 0.4, ease: "easeOut" }}
-							>
-								<Text
-									color={palette.text}
-									fontSize={{ base: "lg", md: "xl" }}
-									fontWeight="700"
-								>
-									All {AREA_LABELS[activeArea]} questions answered!
-								</Text>
-							</MotionBox>
-						)}
-					</AnimatePresence>
-				)}
+						</MotionBox>
+					)}
+					{currentContentSection === "comment" && (
+						<CommentContent
+							dailyReflections={dailyReflectionsState}
+							logDate={logDate}
+							refetchDailyReflections={refetchDailyReflections}
+							setIsLoading={setIsLoading}
+							setLogDate={updateLogDate}
+						/>
+					)}
+					{currentContentSection === "allFinished" && <AllFinishedContent />}
+					{currentContentSection === "missed" && (
+						<MissedContent
+							dailyReflections={dailyReflectionsState}
+							key={`${dailyReflectionsState.threeDaysAgo.checkedIn}-${dailyReflectionsState.twoDaysAgo.checkedIn}-${dailyReflectionsState.fourDaysAgo.checkedIn}`}
+							setCurrentContentSection={setCurrentContentSection}
+							setCurrentIndex={setCurrentIndex}
+							setDailyReflectionsState={setDailyReflectionsState}
+							setLogDate={updateLogDate}
+						/>
+					)}
+				</AnimatePresence>
 			</Box>
 		</Box>
 	);
