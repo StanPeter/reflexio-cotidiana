@@ -16,6 +16,3 @@
 # Statistics page
 1. Add calendar feature with months/year/days change?
 2. Make filter work
-
-# Motivation page
-1. Think about what to implement there, could be AI chat or some generation of motivation etc. Or other sources too
